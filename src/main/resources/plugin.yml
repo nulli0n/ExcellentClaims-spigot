@@ -1,0 +1,11 @@
+main: su.nightexpress.excellentclaims.ClaimPlugin
+name: ExcellentClaims
+description: Advanced 2 in 1 claims plugin.
+version: '${project.version}'
+author: NightExpress
+depend:
+  - nightcore
+softdepend:
+  - ProtocolLib
+  - packetevents
+api-version: 1.21

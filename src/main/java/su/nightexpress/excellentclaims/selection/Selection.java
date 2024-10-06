@@ -1,0 +1,47 @@
+package su.nightexpress.excellentclaims.selection;
+
+import org.jetbrains.annotations.Nullable;
+import su.nightexpress.excellentclaims.util.pos.BlockPos;
+import su.nightexpress.excellentclaims.util.Cuboid;
+
+public class Selection {
+
+    private BlockPos first;
+    private BlockPos second;
+
+    public Selection() {
+
+    }
+
+    public void clear() {
+        this.setFirst(null);
+        this.setSecond(null);
+    }
+
+    public boolean isIncompleted() {
+        return this.first == null || this.second == null;
+    }
+
+    @Nullable
+    public BlockPos getFirst() {
+        return first;
+    }
+
+    public void setFirst(@Nullable BlockPos first) {
+        this.first = first;
+    }
+
+    @Nullable
+    public BlockPos getSecond() {
+        return second;
+    }
+
+    public void setSecond(@Nullable BlockPos second) {
+        this.second = second;
+    }
+
+    @Nullable
+    public Cuboid toCuboid() {
+        return this.isIncompleted() ? null : new Cuboid(this.first, this.second);
+    }
+}
