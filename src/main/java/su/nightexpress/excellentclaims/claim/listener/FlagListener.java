@@ -21,7 +21,6 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.world.StructureGrowEvent;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SpawnEggMeta;
@@ -29,16 +28,12 @@ import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.Claim;
-import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.claim.ClaimManager;
 import su.nightexpress.excellentclaims.config.Lang;
-import su.nightexpress.excellentclaims.flag.list.EntityFlags;
 import su.nightexpress.excellentclaims.flag.impl.list.BooleanFlag;
-import su.nightexpress.excellentclaims.flag.impl.list.DamageTypeListFlag;
-import su.nightexpress.excellentclaims.flag.impl.list.ListModeFlag;
+import su.nightexpress.excellentclaims.flag.list.EntityFlags;
 import su.nightexpress.excellentclaims.flag.list.NaturalFlags;
 import su.nightexpress.excellentclaims.flag.list.PlayerFlags;
-import su.nightexpress.excellentclaims.flag.type.DamageTypeList;
 import su.nightexpress.excellentclaims.flag.type.EntityList;
 import su.nightexpress.excellentclaims.flag.type.ListMode;
 import su.nightexpress.excellentclaims.flag.type.MaterialList;
@@ -56,6 +51,10 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     public FlagListener(@NotNull ClaimPlugin plugin, @NotNull ClaimManager manager) {
         super(plugin);
         this.manager = manager;
+    }
+
+    private boolean isAdminMode(@NotNull Player player) {
+        return this.plugin.getMemberManager().isAdminMode(player);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -81,15 +80,16 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockFerilize(BlockFertilizeEvent event) {
         Player player = event.getPlayer();
-        if (player != null && plugin.getMemberManager().isAdminMode(player)) return;
+        if (player != null && this.isAdminMode(player)) return;
 
         //plugin.debug("BlockFertilize = " + event.getBlock().getType().name());
 
         Block block = event.getBlock();
         Location originLocation = block.getLocation();
         Claim origin = this.manager.getPrioritizedClaim(originLocation);
+        BooleanFlag flag = PlayerFlags.BLOCK_FERTILIZE;
 
-        if (origin != null && !origin.getFlag(PlayerFlags.BLOCK_FERTILIZE) && (player != null && !origin.isOwnerOrMember(player))) {
+        if (origin != null && origin.hasFlag(flag) && !origin.getFlag(flag) && (player != null && !origin.isOwnerOrMember(player))) {
             event.setCancelled(true);
             Lang.PROTECTION_BLOCK_FERTILIZE.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())).send(player);
             return;
@@ -97,7 +97,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         event.getBlocks().removeIf(currentBlock -> {
             Relation relation = this.manager.getRelation(origin, currentBlock.getLocation());
-            return relation.getType(player) == RelationType.INVADE || (player != null && !relation.isTargetMember(player) && !relation.checkTargetFlag(PlayerFlags.BLOCK_FERTILIZE));
+            return relation.getType(player) == RelationType.INVADE || (player != null && !relation.isTargetMember(player) && !relation.checkTargetFlag(flag));
         });
 
         if (event.getBlocks().isEmpty()) {
@@ -108,18 +108,18 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onTreeGrow(StructureGrowEvent event) {
         Player player = event.getPlayer();
-        if (player != null && plugin.getMemberManager().isAdminMode(player)) return;
+        if (player != null && this.isAdminMode(player)) return;
 
         Location sourceLocation = event.getLocation();
         TreeType type = event.getSpecies();
         boolean isMushroom = type == TreeType.RED_MUSHROOM || type == TreeType.BROWN_MUSHROOM;
         boolean isBoneMeal = event.isFromBonemeal();
-        BooleanFlag flag = /*isBoneMeal ? Flags.BLOCK_FERTILIZE :*/ (isMushroom ? NaturalFlags.MUSHROOM_GROW : NaturalFlags.TREE_GROW);
+        BooleanFlag flag = isMushroom ? NaturalFlags.MUSHROOM_GROW : NaturalFlags.TREE_GROW;
 
         //plugin.debug("StructureGrow: " + player + " / isBoneMeal: " + isBoneMeal + " / " + flag.getId());
 
         Claim origin = this.manager.getPrioritizedClaim(sourceLocation);
-        if (origin != null && !origin.getFlag(flag)) {
+        if (origin != null && origin.hasFlag(flag) && !origin.getFlag(flag)) {
             event.setCancelled(true);
             return;
         }
@@ -284,7 +284,9 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     public void onLeafDecay(LeavesDecayEvent event) {
         Block block = event.getBlock();
         Claim claim = this.manager.getPrioritizedClaim(block);
-        if (claim != null && !claim.getFlag(NaturalFlags.LEAF_DECAY)) {
+        if (claim == null || !claim.hasFlag(NaturalFlags.LEAF_DECAY)) return;
+
+        if (!claim.getFlag(NaturalFlags.LEAF_DECAY)) {
             event.setCancelled(true);
         }
     }
@@ -312,7 +314,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         blockList.removeIf(block -> {
             Claim claim = this.manager.getPrioritizedClaim(block);
-            return claim != null && !claim.getFlag(flag);
+            return claim != null && claim.hasFlag(flag) && !claim.getFlag(flag);
         });
     }
 
@@ -394,10 +396,9 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         ItemStack itemStack = event.getItem();
         if (itemStack == null || itemStack.getType().isAir()) return;
         if (event.useItemInHand() == Event.Result.DENY) return;
+        if (this.isAdminMode(player)) return;
 
         //plugin.debug("PlayerInteractItem = " + player.getName() + " -> " + itemStack);
-
-        if (plugin.getMemberManager().isAdminMode(player)) return;
 
         Claim claim = this.manager.getPrioritizedClaim(player.getLocation());
         if (claim == null || claim.isOwnerOrMember(player)) return;
@@ -417,21 +418,27 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         }
 
         if (explicitFlag != null) {
-            if (!claim.getFlag(explicitFlag)) {
-                event.setUseItemInHand(Event.Result.DENY);
-            }
+            if (!claim.hasFlag(explicitFlag) || claim.getFlag(explicitFlag)) return;
+//            if (!claim.getFlag(explicitFlag)) {
+//                event.setUseItemInHand(Event.Result.DENY);
+//            }
         }
         else {
+            if (!claim.hasFlag(PlayerFlags.ITEM_USE_MODE)) return;
+
             ListMode mode = claim.getFlag(PlayerFlags.ITEM_USE_MODE);
             MaterialList materialList = claim.getFlag(PlayerFlags.ITEM_USE_LIST);
-            if (!materialList.isAllowed(mode, itemType)) {
-                event.setUseItemInHand(Event.Result.DENY);
-            }
+            if (materialList.isAllowed(mode, itemType)) return;
+
+//            if (!materialList.isAllowed(mode, itemType)) {
+//                event.setUseItemInHand(Event.Result.DENY);
+//            }
         }
 
-        if (event.useItemInHand() == Event.Result.DENY) {
+        //if (event.useItemInHand() == Event.Result.DENY) {
+            event.setUseItemInHand(Event.Result.DENY);
             Lang.PROTECTION_ITEM_USE.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(itemType)).send(player);
-        }
+        //}
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -466,43 +473,10 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerEntityInteract(PlayerInteractEntityEvent event) {
         Entity entity = event.getRightClicked();
-        EntityType entityType = entity.getType();
         Player player = event.getPlayer();
-
-        //plugin.debug("PlayerEntityInteract = " + player.getName() + " -> " + entityType.name());
-
-        if (plugin.getMemberManager().isAdminMode(player)) return;
-
-        Claim claim = this.manager.getPrioritizedClaim(entity.getLocation());
-        if (claim == null) return;
-
-        BooleanFlag explicitFlag = null;
-
-        if (entityType == EntityType.VILLAGER) {
-            explicitFlag = PlayerFlags.VILLAGER_INTERACT;
-        }
-        else if (entity instanceof Vehicle && !(entity instanceof LivingEntity)) {
-            if (entity instanceof InventoryHolder) {
-                if (entityType == EntityType.CHEST_MINECART || entityType == EntityType.CHEST_BOAT) {
-                    explicitFlag = PlayerFlags.CHEST_ACCESS;
-                }
-                else explicitFlag = PlayerFlags.CONTAINER_ACCESS;
-            }
-            else explicitFlag = PlayerFlags.VEHICLE_USE;
-        }
-
-        if (explicitFlag != null) {
-            if (claim.getFlag(explicitFlag)) return;
-        }
-        else {
-            ListMode mode = claim.getFlag(PlayerFlags.ENTITY_INTERACT_MODE);
-            EntityList list = claim.getFlag(PlayerFlags.ENTITY_INTERACT_LIST);
-            if (list.isAllowed(mode, entityType)) return;
-        }
-
-        if (!claim.isOwnerOrMember(player) || !claim.hasPermission(player, ClaimPermission.ENTITY_INTERACT)) {
+        if (!this.manager.canUseEntity(player, entity)) {
             event.setCancelled(true);
-            Lang.PROTECTION_ENTITY_INTERACT.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(player);
+            Lang.PROTECTION_ENTITY_INTERACT.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entity.getType())).send(player);
         }
     }
 
@@ -510,13 +484,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     public void onPlayerArmorStandUse(PlayerArmorStandManipulateEvent event) {
         Entity entity = event.getRightClicked();
         Player player = event.getPlayer();
-
-        if (plugin.getMemberManager().isAdminMode(player)) return;
-
-        Claim claim = this.manager.getPrioritizedClaim(entity.getLocation());
-        if (claim == null || claim.getFlag(PlayerFlags.ARMOR_STAND_USE)) return;
-
-        if (!claim.isOwnerOrMember(player) || !claim.hasPermission(player, ClaimPermission.ENTITY_INTERACT)) {
+        if (!this.manager.canUseEntity(player, entity)) {
             event.setCancelled(true);
             Lang.PROTECTION_ENTITY_INTERACT.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entity.getType())).send(player);
         }
@@ -525,7 +493,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerPortalUse(PlayerPortalEvent event) {
         Player player = event.getPlayer();
-        if (plugin.getMemberManager().isAdminMode(player)) return;
+        if (this.isAdminMode(player)) return;
 
         Claim claim = this.manager.getPrioritizedClaim(player.getLocation());
         if (claim == null || claim.isOwnerOrMember(player)) return;
@@ -536,7 +504,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
             case END_PORTAL -> PlayerFlags.END_PORTAL_USE;
             default -> null;
         };
-        if (flag == null) return;
+        if (flag == null || !claim.hasFlag(flag)) return;
 
         if (!claim.getFlag(flag)) {
             event.setCancelled(true);
@@ -562,11 +530,14 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         }
 
         if (explicitFlag != null) {
+            if (!claim.hasFlag(explicitFlag)) return;
             if (!claim.getFlag(explicitFlag)) {
                 event.setCancelled(true);
             }
             return;
         }
+
+        if (!claim.hasFlag(EntityFlags.ENTITY_SPAWN_MODE)) return;
 
         ListMode mode = claim.getFlag(EntityFlags.ENTITY_SPAWN_MODE);
         EntityList entityList = claim.getFlag(EntityFlags.ENTITY_SPAWN_LIST);
@@ -616,7 +587,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         blockList.removeIf(block -> {
             Claim claim = this.manager.getPrioritizedClaim(block);
-            return claim != null && !claim.getFlag(flag);
+            return claim != null && claim.hasFlag(flag) && !claim.getFlag(flag);
         });
     }
 
@@ -640,7 +611,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         Entity entity = event.getEntity();
         Player player = entity instanceof Player p ? p : null;
-        if (player != null && (plugin.getMemberManager().isAdminMode(player) || claim.isOwnerOrMember(player))) return;
+        if (player != null && (this.isAdminMode(player) || claim.isOwnerOrMember(player))) return;
 
         //BlockData toData = event.getBlockData();
         Material fromType = sourceBlock.getType();
@@ -673,6 +644,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         }
         else return;
 
+        if (!claim.hasFlag(flag)) return;
         if (!claim.getFlag(flag)) {
             event.setCancelled(true);
         }
@@ -705,73 +677,78 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageEvent event) {
         DamageSource source = event.getDamageSource();
-        Entity entity = event.getEntity();
+        Entity target = event.getEntity();
         Entity damager = source.getCausingEntity();
-        EntityType entityType = entity.getType();
 
-        Player playerDamager = damager instanceof Player p ? p : null;
-        if (playerDamager != null) {
-            if (entityType == EntityType.ARMOR_STAND || entityType == EntityType.END_CRYSTAL) {
-                if (!this.manager.canBreak(playerDamager, entity.getLocation())) {
-                    event.setCancelled(true);
-                    Lang.PROTECTION_BLOCK_BREAK.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
-                    return;
-                }
-            }
-        }
-
-        Claim claim = this.manager.getPrioritizedClaim(entity.getLocation());
-        if (claim == null) return;
-
-        //plugin.debug("EntityDamage Type = " + BukkitThing.toString(source.getDamageType()));
-
-        ListModeFlag modeFlag;
-        DamageTypeListFlag listFlag;
-
-        if (entity instanceof Player player) {
-            if (playerDamager != null && !claim.getFlag(PlayerFlags.PLAYER_DAMAGE_PLAYERS)) {
-                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, player.getName()).send(playerDamager);
-                event.setCancelled(true);
-                return;
-            }
-            if (damager instanceof Monster && !claim.getFlag(EntityFlags.MONSTER_DAMAGE_PLAYERS)) {
-                event.setCancelled(true);
-                return;
-            }
-            modeFlag = PlayerFlags.PLAYER_DAMAGE_MODE;
-            listFlag = PlayerFlags.PLAYER_DAMAGE_LIST;
-        }
-        else if (entityType == EntityType.VILLAGER && playerDamager != null) {
-            if (claim.isOwnerOrMember(playerDamager)) return; // Members should be able to damage villagers.
-            if (!claim.getFlag(PlayerFlags.PLAYER_DAMAGE_VILLAGERS)) {
-                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
-                event.setCancelled(true);
-            }
-            return;
-        }
-        else if (entity instanceof Animals) {
-            if (playerDamager != null) {
-                if (claim.isOwnerOrMember(playerDamager)) return; // Members should be able to damage animals.
-                if (!claim.getFlag(PlayerFlags.PLAYER_DAMAGE_ANIMALS)) {
-                    Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-            modeFlag = EntityFlags.ANIMAL_DAMAGE_MODE;
-            listFlag = EntityFlags.ANIMAL_DAMAGE_LIST;
-        }
-        else return;
-
-        ListMode mode = claim.getFlag(modeFlag);
-        DamageTypeList list = claim.getFlag(listFlag);
-
-        if (!list.isAllowed(mode, source.getDamageType())) {
+        if (!this.manager.canDamage(damager, target, source)) {
             event.setCancelled(true);
-            if (playerDamager != null) {
-                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
-            }
+            if (damager != null) Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(target.getType())).send(damager);
         }
+
+//        Player playerDamager = damager instanceof Player p ? p : null;
+//        if (playerDamager != null) {
+//            if (entityType == EntityType.ARMOR_STAND || entityType == EntityType.END_CRYSTAL) {
+//                if (!this.manager.canBreak(playerDamager, entity.getLocation())) {
+//                    event.setCancelled(true);
+//                    Lang.PROTECTION_BLOCK_BREAK.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
+//                    return;
+//                }
+//            }
+//        }
+//
+//        Claim claim = this.manager.getPrioritizedClaim(entity.getLocation());
+//        if (claim == null) return;
+//
+//        //plugin.debug("EntityDamage Type = " + BukkitThing.toString(source.getDamageType()));
+//
+//        ListModeFlag modeFlag;
+//        DamageTypeListFlag listFlag;
+//
+//        if (entity instanceof Player player) {
+//            if (playerDamager != null && claim.hasFlag(PlayerFlags.PLAYER_DAMAGE_PLAYERS) && !claim.getFlag(PlayerFlags.PLAYER_DAMAGE_PLAYERS)) {
+//                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, player.getName()).send(playerDamager);
+//                event.setCancelled(true);
+//                return;
+//            }
+//            if (damager instanceof Monster && claim.hasFlag(EntityFlags.MONSTER_DAMAGE_PLAYERS) && !claim.getFlag(EntityFlags.MONSTER_DAMAGE_PLAYERS)) {
+//                event.setCancelled(true);
+//                return;
+//            }
+//            modeFlag = PlayerFlags.PLAYER_DAMAGE_MODE;
+//            listFlag = PlayerFlags.PLAYER_DAMAGE_LIST;
+//        }
+//        else if (entityType == EntityType.VILLAGER && playerDamager != null) {
+//            if (claim.isOwnerOrMember(playerDamager)) return; // Members should be able to damage villagers.
+//            if (claim.hasFlag(PlayerFlags.PLAYER_DAMAGE_VILLAGERS) && !claim.getFlag(PlayerFlags.PLAYER_DAMAGE_VILLAGERS)) {
+//                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
+//                event.setCancelled(true);
+//            }
+//            return;
+//        }
+//        else if (entity instanceof Animals) {
+//            if (playerDamager != null) {
+//                if (claim.isOwnerOrMember(playerDamager)) return; // Members should be able to damage animals.
+//                if (claim.hasFlag(PlayerFlags.PLAYER_DAMAGE_ANIMALS) && !claim.getFlag(PlayerFlags.PLAYER_DAMAGE_ANIMALS)) {
+//                    Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
+//                    event.setCancelled(true);
+//                    return;
+//                }
+//            }
+//            modeFlag = EntityFlags.ANIMAL_DAMAGE_MODE;
+//            listFlag = EntityFlags.ANIMAL_DAMAGE_LIST;
+//        }
+//        else return;
+//
+//        if (!claim.hasFlag(modeFlag)) return;
+//        ListMode mode = claim.getFlag(modeFlag);
+//        DamageTypeList list = claim.getFlag(listFlag);
+//
+//        if (!list.isAllowed(mode, source.getDamageType())) {
+//            event.setCancelled(true);
+//            if (playerDamager != null) {
+//                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
+//            }
+//        }
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -811,10 +788,10 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onPlayerItemDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
-        if (plugin.getMemberManager().isAdminMode(player)) return;
+        if (this.isAdminMode(player)) return;
 
         Claim claim = this.manager.getPrioritizedClaim(player.getLocation());
-        if (claim == null || claim.isOwnerOrMember(player)) return;
+        if (claim == null || claim.isOwnerOrMember(player) || !claim.hasFlag(PlayerFlags.PLAYER_ITEM_DROP)) return;
 
         if (!claim.getFlag(PlayerFlags.PLAYER_ITEM_DROP)) {
             event.setCancelled(true);
@@ -828,7 +805,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         if (plugin.getMemberManager().isAdminMode(player)) return;
 
         Claim claim = this.manager.getPrioritizedClaim(player.getLocation());
-        if (claim == null || claim.isOwnerOrMember(player)) return;
+        if (claim == null || claim.isOwnerOrMember(player) || !claim.hasFlag(PlayerFlags.PLAYER_ITEM_PICKUP)) return;
 
         if (!claim.getFlag(PlayerFlags.PLAYER_ITEM_PICKUP)) {
             event.setCancelled(true);

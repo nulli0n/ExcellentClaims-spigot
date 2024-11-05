@@ -8,20 +8,22 @@ import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.api.claim.RegionClaim;
+import su.nightexpress.excellentclaims.claim.impl.Wilderness;
 import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.nightcore.command.experimental.CommandContext;
 import su.nightexpress.nightcore.command.experimental.argument.CommandArgument;
 import su.nightexpress.nightcore.command.experimental.argument.ParsedArguments;
 import su.nightexpress.nightcore.command.experimental.builder.ArgumentBuilder;
+import su.nightexpress.nightcore.util.Lists;
 
 import java.util.Collections;
 
 public class CommandArguments {
 
     public static final String PLAYER = "player";
-    public static final String NAME = "name";
+    public static final String NAME   = "name";
     public static final String REGION = "region";
-    public static final String WORLD = "world";
+    public static final String WORLD  = "world";
 
     @NotNull
     public static ArgumentBuilder<RegionClaim> regionArgument(@NotNull ClaimPlugin plugin) {
@@ -64,5 +66,34 @@ public class CommandArguments {
         }
 
         return regionClaim;
+    }
+
+    @NotNull
+    public static ArgumentBuilder<Wilderness> forWilderness(@NotNull ClaimPlugin plugin) {
+        return CommandArgument.builder(CommandArguments.WORLD, (string, context) -> plugin.getClaimManager().getWilderness(string))
+            .customFailure(Lang.ERROR_COMMAND_INVALID_WORLD_ARGUMENT)
+            .localized(Lang.COMMAND_ARGUMENT_NAME_WORLD)
+            .withSamples(context -> Lists.worldNames());
+    }
+
+    @Nullable
+    public static Wilderness getWildernessOrAtLocation(@NotNull ClaimPlugin plugin, @NotNull CommandContext context, @NotNull ParsedArguments arguments) {
+        if (arguments.hasArgument(WORLD)) {
+            return arguments.getArgument(WORLD, Wilderness.class);
+        }
+
+        Player player = context.getExecutor();
+        if (player == null) {
+            context.errorPlayerOnly();
+            return null;
+        }
+
+        Wilderness wilderness = plugin.getClaimManager().getWilderness(player.getWorld());
+        if (wilderness == null) {
+            Lang.ERROR_INVALID_WORLD.getMessage().send(player);
+            return null;
+        }
+
+        return wilderness;
     }
 }

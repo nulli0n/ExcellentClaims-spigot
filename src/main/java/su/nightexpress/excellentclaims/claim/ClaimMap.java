@@ -2,9 +2,11 @@ package su.nightexpress.excellentclaims.claim;
 
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentclaims.api.claim.ChunkClaim;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.RegionClaim;
+import su.nightexpress.excellentclaims.claim.impl.Wilderness;
 import su.nightexpress.excellentclaims.util.pos.ChunkPos;
 
 import java.util.*;
@@ -22,6 +24,8 @@ public class ClaimMap {
     private final Map<UUID, Map<String, Set<RegionClaim>>> playerRegionMap;
     private final Map<UUID, Map<String, Set<ChunkClaim>>> playerChunkMap;
 
+    private final Map<String, Wilderness> wildernessMap;
+
     public ClaimMap() {
         this.regionClaimMap = new HashMap<>();
         this.chunkClaimMap = new HashMap<>();
@@ -30,6 +34,8 @@ public class ClaimMap {
 
         this.playerRegionMap = new HashMap<>();
         this.playerChunkMap = new HashMap<>();
+
+        this.wildernessMap = new HashMap<>();
     }
 
     public void update(@NotNull Claim claim) {
@@ -38,9 +44,12 @@ public class ClaimMap {
     }
 
     public void add(@NotNull Claim claim) {
-        String worldName = claim.getWorldName();
+        String worldName = claim.getWorldName().toLowerCase();
 
-        if (claim instanceof ChunkClaim chunkClaim) {
+        if (claim instanceof Wilderness wilderness) {
+            this.wildernessMap.put(worldName, wilderness);
+        }
+        else if (claim instanceof ChunkClaim chunkClaim) {
             chunkClaim.getPositions().forEach(chunkPos -> {
                 this.chunkClaimMap.computeIfAbsent(worldName, k -> new HashMap<>()).put(chunkPos, chunkClaim);
             });
@@ -61,9 +70,12 @@ public class ClaimMap {
     }
 
     public void remove(@NotNull Claim claim) {
-        String worldName = claim.getWorldName();
+        String worldName = claim.getWorldName().toLowerCase();
 
-        if (claim instanceof ChunkClaim chunkClaim) {
+        if (claim instanceof Wilderness wilderness) {
+            this.wildernessMap.remove(worldName);
+        }
+        else if (claim instanceof ChunkClaim chunkClaim) {
             chunkClaim.getPositions().forEach(chunkPos -> {
                 this.getChunkClaimMap(worldName).remove(chunkPos);
             });
@@ -94,6 +106,22 @@ public class ClaimMap {
         this.regionsByChunkMap.clear();
         this.playerChunkMap.clear();
         this.playerRegionMap.clear();
+        this.wildernessMap.clear();
+    }
+
+    @NotNull
+    public Map<String, Wilderness> getWildernessMap() {
+        return this.wildernessMap;
+    }
+
+    @Nullable
+    public Wilderness getWilderness(@NotNull World world) {
+        return this.getWilderness(world.getName());
+    }
+
+    @Nullable
+    public Wilderness getWilderness(@NotNull String worldName) {
+        return this.wildernessMap.get(worldName.toLowerCase());
     }
 
     @NotNull

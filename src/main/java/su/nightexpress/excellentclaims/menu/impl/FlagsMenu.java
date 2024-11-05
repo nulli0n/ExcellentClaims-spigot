@@ -1,6 +1,7 @@
 package su.nightexpress.excellentclaims.menu.impl;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -42,6 +43,7 @@ public class FlagsMenu extends ConfigMenu<ClaimPlugin> implements AutoFilled<Abs
     public static final String FILE_NAME = "claim_flags.yml";
 
     private static final String ACTION = "%action%";
+    private static final String UNSET = "%unset%";
 
     private final ItemHandler returnHandler;
     private final ViewLink<Data> link;
@@ -50,6 +52,7 @@ public class FlagsMenu extends ConfigMenu<ClaimPlugin> implements AutoFilled<Abs
     private List<String> flagLore;
     private int[]        flagSlots;
     private Map<String, List<String>> flagActions;
+    private List<String> flagUnset;
 
     public record Data(Claim claim, FlagCategory category){}
 
@@ -69,7 +72,12 @@ public class FlagsMenu extends ConfigMenu<ClaimPlugin> implements AutoFilled<Abs
 
         this.getItems().forEach(menuItem -> {
             if (menuItem.getHandler() == this.returnHandler) {
-                menuItem.getOptions().addVisibilityPolicy(viewer -> this.getLink(viewer).claim.hasPermission(viewer.getPlayer(), ClaimPermission.MANAGE_CLAIM));
+                menuItem.getOptions().addVisibilityPolicy(viewer -> {
+                    Data data = this.getLink(viewer);
+                    Claim claim = data.claim;
+
+                    return !claim.isWilderness() && claim.hasPermission(viewer.getPlayer(), ClaimPermission.MANAGE_CLAIM);
+                });
             }
         });
     }
@@ -107,19 +115,27 @@ public class FlagsMenu extends ConfigMenu<ClaimPlugin> implements AutoFilled<Abs
         FlagCategory category = data.category;
 
         autoFill.setSlots(this.flagSlots);
-        autoFill.setItems(FlagRegistry.getFlags(category).stream().filter(flag -> flag.isManageAvailable(claim)).sorted(Comparator.comparing(Flag::getId)).toList());
+        autoFill.setItems(FlagRegistry.getFlags(category).stream().filter(flag -> flag.isManageAvailable(claim) && flag.hasPermission(player)).sorted(Comparator.comparing(Flag::getId)).toList());
         autoFill.setItemCreator(flag -> {
             ItemStack itemStack = flag.getIcon();
             ItemReplacer.create(itemStack).trimmed().hideFlags()
                 .setDisplayName(this.flagName)
                 .setLore(this.flagLore)
                 .replace(ACTION, this.flagActions.getOrDefault(this.getFlagType(flag), Collections.emptyList()))
+                .replace(UNSET, claim.isWilderness() ? new ArrayList<>(this.flagUnset) : Collections.emptyList())
                 .replace(flag.replacePlaceholders())
-                .replace(GENERIC_VALUE, claim.getFlagValue(flag).getLocalized())
+                .replace(GENERIC_VALUE, claim.hasFlag(flag) ? claim.getFlagValue(flag).getLocalized() : Lang.OTHER_UNSET.getString())
                 .writeMeta();
             return itemStack;
         });
         autoFill.setClickAction(flag -> (viewer1, event) -> {
+            if (claim.isWilderness() && event.getClick() == ClickType.DROP) {
+                claim.getFlags().remove(flag.getId());
+                claim.setSaveRequired(true);
+                this.runNextTick(() -> this.flush(viewer1));
+                return;
+            }
+
             flag.onManageClick(this, viewer1, event, claim);
         });
     }
@@ -180,7 +196,12 @@ public class FlagsMenu extends ConfigMenu<ClaimPlugin> implements AutoFilled<Abs
             "",
             FLAG_DESCRIPTION,
             "",
-            ACTION
+            ACTION,
+            UNSET
+        )).read(cfg);
+
+        this.flagUnset = ConfigValue.create("Flag.Unset", Lists.newList(
+            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " [Q/Drop] to " + LIGHT_YELLOW.enclose("unset") + ".")
         )).read(cfg);
 
         this.flagSlots = ConfigValue.create("Flag.Slots", IntStream.range(0, 36).toArray()).read(cfg);

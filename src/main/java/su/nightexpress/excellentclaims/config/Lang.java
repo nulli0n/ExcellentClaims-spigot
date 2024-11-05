@@ -36,6 +36,8 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.enclose("<No Description>")
     );
 
+    public static final LangString OTHER_UNSET = LangString.of("Other.Unset", "< Unset >");
+
     public static final LangString COMMAND_ARGUMENT_NAME_REGION = LangString.of("Command.Argument.Name.Region", "region");
     public static final LangString COMMAND_ARGUMENT_NAME_TEXT   = LangString.of("Command.Argument.Name.Text", "text");
 
@@ -72,9 +74,19 @@ public class Lang extends CoreLang {
     public static final LangString COMMAND_REGION_DESCRIPTION_DESC = LangString.of("Command.Region.Description.Desc", "Set region description.");
     public static final LangString COMMAND_REGION_TRANSFER_DESC    = LangString.of("Command.Region.Transfer.Desc", "Transfer region's ownership.");
 
+    public static final LangString COMMAND_WILDERNESS_DESC             = LangString.of("Command.Wilderness.Desc", "Wilderness commands.");
+    public static final LangString COMMAND_WILDERNESS_FLAGS_DESC       = LangString.of("Command.Wilderness.Flags.Desc", "Manage global world flags.");
+    public static final LangString COMMAND_WILDERNESS_RENAME_DESC      = LangString.of("Command.Wilderness.Rename.Desc", "Rename wilderness.");
+    public static final LangString COMMAND_WILDERNESS_DESCRIPTION_DESC = LangString.of("Command.Wilderness.Description.Desc", "Set wilderness description.");
+
+
     public static final LangText ADMIN_MODE_TOGGLE = LangText.of("AdminMode.Toggle",
         LIGHT_GRAY.enclose("Admin Mode: " + LIGHT_YELLOW.enclose(GENERIC_VALUE))
     );
+
+    public static final LangString WILDERNESS_DISPLAY_NAME = LangString.of("Wilderness.DisplayName", "Wilderness");
+
+    public static final LangString WILDERNESS_OWNER_NAME = LangString.of("Wilderness.OwnerName", "Server");
 
     public static final LangText REGION_SELECTION_INFO = LangText.of("Region.Selection.Info",
         LIGHT_GRAY.enclose("Set " + LIGHT_YELLOW.enclose("#" + GENERIC_VALUE) + " region position.")

@@ -44,8 +44,10 @@ public class Relation {
 
     @NotNull
     public RelationType getType(@Nullable Player player) {
+        if (this.sourceClaim != null && this.sourceClaim.isWilderness() && this.targetClaim != null && this.targetClaim.isWilderness()) return RelationType.WILDERNESS;
+
         if (this.sourceClaim != null) {
-            if (this.targetClaim == null) return RelationType.TO_WILDERNESS;
+            if (this.targetClaim == null || this.targetClaim.isWilderness()) return RelationType.TO_WILDERNESS;
             if (this.sourceClaim == this.targetClaim) return RelationType.INSIDE;
             if (player != null && this.isMemberOfBoth(player)) return RelationType.NEIGHIBOR;
 
@@ -107,7 +109,7 @@ public class Relation {
     }
 
     private boolean checkFlag(@NotNull BooleanFlag flag, @Nullable Claim claim) {
-        return claim == null || claim.getFlag(flag);
+        return claim == null || (claim.isWilderness() && !claim.hasFlag(flag)) || claim.getFlag(flag);
     }
 
 

@@ -5,6 +5,7 @@ import su.nightexpress.excellentclaims.claim.ClaimManager;
 import su.nightexpress.excellentclaims.command.impl.BaseCommands;
 import su.nightexpress.excellentclaims.command.impl.LandCommands;
 import su.nightexpress.excellentclaims.command.impl.RegionCommands;
+import su.nightexpress.excellentclaims.command.impl.WildernessCommands;
 import su.nightexpress.excellentclaims.config.Config;
 import su.nightexpress.excellentclaims.config.Keys;
 import su.nightexpress.excellentclaims.config.Lang;
@@ -90,6 +91,7 @@ public class ClaimPlugin extends NightDataPlugin<ClaimUser> implements ImprovedC
 
     private void loadCommands() {
         BaseCommands.load(this);
+        WildernessCommands.load(this);
         RegionCommands.load(this);
         LandCommands.load(this);
     }
@@ -97,37 +99,38 @@ public class ClaimPlugin extends NightDataPlugin<ClaimUser> implements ImprovedC
     private void unloadCommands() {
         RegionCommands.unload();
         LandCommands.unload();
+        WildernessCommands.unload();
     }
 
     @Override
     @NotNull
     public DataHandler getData() {
-        return dataHandler;
+        return this.dataHandler;
     }
 
     @NotNull
     @Override
     public UserManager getUserManager() {
-        return userManager;
+        return this.userManager;
     }
 
     @NotNull
     public MenuManager getMenuManager() {
-        return menuManager;
+        return this.menuManager;
     }
 
     @NotNull
     public MemberManager getMemberManager() {
-        return memberManager;
+        return this.memberManager;
     }
 
     @NotNull
     public ClaimManager getClaimManager() {
-        return claimManager;
+        return this.claimManager;
     }
 
     @NotNull
     public SelectionManager getSelectionManager() {
-        return selectionManager;
+        return this.selectionManager;
     }
 }

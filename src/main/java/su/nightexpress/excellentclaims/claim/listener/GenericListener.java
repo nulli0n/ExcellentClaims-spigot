@@ -1,7 +1,6 @@
 package su.nightexpress.excellentclaims.claim.listener;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -31,14 +30,12 @@ public class GenericListener extends AbstractListener<ClaimPlugin> {
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onWorldLoad(WorldLoadEvent event) {
-        World world = event.getWorld();
-        this.manager.getClaims(world).forEach(claim -> claim.activate(world));
+        this.manager.handleWorldLoad(event.getWorld());
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void onWorldUnload(WorldUnloadEvent event) {
-        World world = event.getWorld();
-        this.manager.getClaims(world).forEach(claim -> claim.deactivate(world));
+        this.manager.handleWorldUnload(event.getWorld());
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

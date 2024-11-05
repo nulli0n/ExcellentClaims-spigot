@@ -47,6 +47,10 @@ public interface Claim extends Placeholder {
         return !this.isActive();
     }
 
+    default boolean isWilderness() {
+        return false;
+    }
+
     void reactivate();
 
     void activate(@NotNull World world);

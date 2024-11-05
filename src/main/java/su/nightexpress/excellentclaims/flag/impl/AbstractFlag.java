@@ -23,11 +23,11 @@ import java.util.List;
 
 public abstract class AbstractFlag<T> implements ClaimFlag<T> {
 
-    private final String   id;
-    private final FlagCategory category;
-    private final Class<T> valueType;
+    private final String         id;
+    private final FlagCategory   category;
+    private final Class<T>       valueType;
     private final PlaceholderMap placeholders;
-    private final String permission;
+    private final String         permission;
 
     private T defaultValue;
 

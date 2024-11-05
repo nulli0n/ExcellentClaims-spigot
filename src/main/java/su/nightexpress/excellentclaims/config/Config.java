@@ -2,7 +2,6 @@ package su.nightexpress.excellentclaims.config;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.checkerframework.checker.units.qual.N;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
@@ -16,7 +15,8 @@ import su.nightexpress.nightcore.util.RankMap;
 import java.util.Map;
 import java.util.Set;
 
-import static su.nightexpress.excellentclaims.Placeholders.*;
+import static su.nightexpress.excellentclaims.Placeholders.PLAYER_NAME;
+import static su.nightexpress.excellentclaims.Placeholders.WIKI_ITEMS_URL;
 
 public class Config {
 
@@ -62,6 +62,11 @@ public class Config {
     public static final ConfigValue<Integer> GENERAL_MAX_DESCRIPTION_LENGTH = ConfigValue.create("General.Max_Description_Length",
         48,
         "Sets max. description length for claims when changing."
+    );
+
+    public static final ConfigValue<String[]> WILDERNESS_COMMAND_ALIASES = ConfigValue.create("Wildernes.Command_Aliases",
+        new String[]{"wilderness"},
+        "Custom aliases for wilderness commands."
     );
 
     public static final ConfigValue<String[]> REGION_COMMAND_ALIASES = ConfigValue.create("Region.Command_Aliases",

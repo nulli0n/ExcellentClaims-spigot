@@ -64,7 +64,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
     @Override
     protected boolean onLoad(@NotNull FileConfig config) {
-        this.setWorldName(config.getString("Data.World", "null"));
+        this.loadWorldInfo(config);
 
         UserInfo owner = UserInfo.read(config, "Data.Owner");
         if (owner == null) {
@@ -86,6 +86,16 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         this.setPriority(config.getInt("Settings.Priority", 0));
         this.setIcon(config.getItem("Settings.Icon"));
 
+        this.loadFlags(config);
+
+        return this.loadAdditional(config);
+    }
+
+    protected void loadWorldInfo(@NotNull FileConfig config) {
+        this.setWorldName(config.getString("Data.World", "null"));
+    }
+
+    protected void loadFlags(@NotNull FileConfig config) {
         config.getSection("Flags").forEach(flagName -> {
             ClaimFlag<?> flag = FlagRegistry.getFlag(flagName);
             if (flag == null) {
@@ -96,14 +106,11 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
             FlagValue value = flag.parse(config, "Flags." + flag.getId());
             this.flags.put(flag.getId(), value);
         });
-
-        return this.loadAdditional(config);
     }
 
     @Override
     protected void onSave(@NotNull FileConfig config) {
-        config.set("Data.World", this.worldName);
-
+        this.writeWorldInfo(config);
         this.writeMembers(config);
         this.writeSettings(config);
         this.writeFlags(config);
@@ -130,6 +137,10 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         FileConfig config = this.getConfig();
         consumer.accept(config);
         config.saveChanges();
+    }
+
+    protected void writeWorldInfo(@NotNull FileConfig config) {
+        config.set("Data.World", this.worldName);
     }
 
     protected void writeSettings(@NotNull FileConfig config) {
@@ -195,7 +206,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         World world = this.getWorld();
         if (world == null) return false;
 
-        Location location = this.spawnLocation.toLocation(world);
+        Location location = this.getSpawnLocation().toLocation(world);
 
         if (!force) {
             if (!this.isOwner(player) && !ClaimUtils.isSafeLocation(location)) {
@@ -336,7 +347,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
     @Override
     public boolean hasFlag(@NotNull Flag flag) {
-        return this.flags.containsKey(flag.getId());
+        return !this.isWilderness() || this.flags.containsKey(flag.getId());
     }
 
     @Override

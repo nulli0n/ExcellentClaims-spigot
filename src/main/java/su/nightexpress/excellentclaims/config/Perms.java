@@ -24,6 +24,11 @@ public class Perms {
 
     public static final UniPermission COMMAND_ADMIN_MODE = new UniPermission(PREFIX_COMMAND + "adminmode");
 
+    public static final UniPermission COMMAND_WILDERNESS             = new UniPermission(PREFIX_COMMAND + "wilderness");
+    public static final UniPermission COMMAND_WILDERNESS_FLAGS       = new UniPermission(PREFIX_COMMAND + "wilderness.flags");
+    public static final UniPermission COMMAND_WILDERNESS_RENAME      = new UniPermission(PREFIX_COMMAND + "wilderness.rename");
+    public static final UniPermission COMMAND_WILDERNESS_DESCRIPTION = new UniPermission(PREFIX_COMMAND + "wilderness.description");
+
     public static final UniPermission COMMAND_REGION             = new UniPermission(PREFIX_COMMAND + "region");
     public static final UniPermission COMMAND_REGION_WAND        = new UniPermission(PREFIX_COMMAND + "region.wand");
     public static final UniPermission COMMAND_REGION_CLAIM       = new UniPermission(PREFIX_COMMAND + "region.claim");
@@ -75,6 +80,12 @@ public class Perms {
 
         COMMAND.addChildren(
             COMMAND_ADMIN_MODE,
+
+            COMMAND_WILDERNESS,
+            COMMAND_WILDERNESS_DESCRIPTION,
+            COMMAND_WILDERNESS_FLAGS,
+            COMMAND_WILDERNESS_RENAME,
+
             COMMAND_REGION,
             COMMAND_REGION_WAND,
             COMMAND_REGION_CLAIM,
@@ -89,6 +100,7 @@ public class Perms {
             COMMAND_REGION_RENAME,
             COMMAND_REGION_DESCRIPTION,
             COMMAND_REGION_TRANSFER,
+
             COMMAND_LAND,
             COMMAND_LAND_CLAIM,
             COMMAND_LAND_UNCLAIM,
