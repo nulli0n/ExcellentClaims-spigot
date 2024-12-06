@@ -3,7 +3,8 @@ package su.nightexpress.excellentclaims.claim.impl;
 import org.bukkit.Chunk;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.ClaimPlugin;
-import su.nightexpress.excellentclaims.api.claim.ChunkClaim;
+import su.nightexpress.excellentclaims.Placeholders;
+import su.nightexpress.excellentclaims.api.claim.LandClaim;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.util.pos.BlockPos;
 import su.nightexpress.excellentclaims.util.pos.ChunkPos;
@@ -13,15 +14,22 @@ import java.io.File;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
-public class ClaimedChunk extends AbstractClaim implements ChunkClaim {
+public class ClaimedLand extends AbstractClaim implements LandClaim {
 
     private final Set<ChunkPos> positions;
 
-    public ClaimedChunk(@NotNull ClaimPlugin plugin, @NotNull File file) {
+    public ClaimedLand(@NotNull ClaimPlugin plugin, @NotNull File file) {
         super(plugin, ClaimType.CHUNK, file);
         this.positions = new HashSet<>();
+    }
+
+    @Override
+    @NotNull
+    public UnaryOperator<String> replacePlaceholders() {
+        return Placeholders.LAND_CLAIM.replacer(this);
     }
 
     @Override

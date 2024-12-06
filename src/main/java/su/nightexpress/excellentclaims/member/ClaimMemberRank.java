@@ -7,12 +7,12 @@ import su.nightexpress.excellentclaims.api.member.MemberRank;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.util.Lists;
 import su.nightexpress.nightcore.util.StringUtil;
-import su.nightexpress.nightcore.util.placeholder.PlaceholderMap;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 public class ClaimMemberRank implements MemberRank {
 
@@ -21,15 +21,11 @@ public class ClaimMemberRank implements MemberRank {
     private final int                  priority;
     private final Set<ClaimPermission> permissions;
 
-    private final PlaceholderMap placeholders;
-
     public ClaimMemberRank(@NotNull String id, @NotNull String displayName, int priority, @NotNull Set<ClaimPermission> permissions) {
         this.id = id.toLowerCase();
         this.displayName = displayName;
         this.priority = priority;
         this.permissions = permissions;
-
-        this.placeholders = Placeholders.forMemberRank(this);
     }
 
     @NotNull
@@ -91,10 +87,10 @@ public class ClaimMemberRank implements MemberRank {
         config.set(path + ".Permissions", Lists.modify(this.permissions, Enum::name));
     }
 
-    @NotNull
     @Override
-    public PlaceholderMap getPlaceholders() {
-        return this.placeholders;
+    @NotNull
+    public UnaryOperator<String> replacePlaceholders() {
+        return Placeholders.MEMBER_RANK.replacer(this);
     }
 
     @Override

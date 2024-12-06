@@ -4,6 +4,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.ClaimPlugin;
+import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.api.claim.MergeType;
 import su.nightexpress.excellentclaims.command.CommandArguments;
@@ -45,7 +46,8 @@ public class LandCommands {
             .playerOnly()
             .description(Lang.COMMAND_LAND_CLAIM_DESC)
             .permission(Perms.COMMAND_LAND_CLAIM)
-            .withArgument(ArgumentTypes.string(CommandArguments.NAME).localized(Lang.COMMAND_ARGUMENT_NAME_NAME).complex())
+            .withArgument(ArgumentTypes.string(CommandArguments.NAME).localized(Lang.COMMAND_ARGUMENT_NAME_NAME)
+                .withSamples(context -> plugin.getClaimManager().getLandNames(context.getPlayerOrThrow(), ClaimPermission.ALL)))
             .executes(LandCommands::claimLand)
         );
 
@@ -160,8 +162,8 @@ public class LandCommands {
 
     public static boolean claimLand(@NotNull CommandContext context, @NotNull ParsedArguments arguments) {
         Player player = context.getPlayerOrThrow();
-        String name = arguments.hasArgument(CommandArguments.NAME) ? arguments.getStringArgument(CommandArguments.NAME) : null;
-        return plugin.getClaimManager().claimChunk(player, player.getLocation(), name);
+        String name = arguments.getStringArgument(CommandArguments.NAME, player.getName());
+        return plugin.getClaimManager().claimLand(player, player.getLocation(), name);
     }
 
     public static boolean unclaimLand(@NotNull CommandContext context, @NotNull ParsedArguments arguments) {

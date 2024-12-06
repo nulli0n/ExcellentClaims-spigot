@@ -81,13 +81,10 @@ public class GenericListener extends AbstractListener<ClaimPlugin> {
         RelationType type = relation.getType();
         LangMessage greetings;
         if (type == RelationType.TO_WILDERNESS) {
-            greetings = Lang.GREETING_WILDERNESS.getMessage();
+            Lang.GREETING_WILDERNESS.getMessage().send(player);
         }
         else if (type != RelationType.WILDERNESS && type != RelationType.INSIDE) {
-            greetings = Lang.GREETING_CLAIM.getMessage().replace(relation.getTargetClaim().replacePlaceholders());
+            Lang.GREETING_CLAIM.getMessage().send(player, replacer -> replacer.replace(relation.getTargetClaim().replacePlaceholders()));
         }
-        else return;
-
-        greetings.send(player);
     }
 }

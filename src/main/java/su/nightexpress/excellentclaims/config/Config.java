@@ -1,7 +1,6 @@
 package su.nightexpress.excellentclaims.config;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
@@ -10,9 +9,9 @@ import su.nightexpress.excellentclaims.util.ClaimUtils;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.util.BukkitThing;
 import su.nightexpress.nightcore.util.Lists;
-import su.nightexpress.nightcore.util.RankMap;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
+import su.nightexpress.nightcore.util.rankmap.IntRankMap;
 
-import java.util.Map;
 import java.util.Set;
 
 import static su.nightexpress.excellentclaims.Placeholders.PLAYER_NAME;
@@ -29,6 +28,13 @@ public class Config {
         "Sets how often (in seconds) modified claims will save their changes on the disk.",
         "[Asynchronous]",
         "[Default is 600 (10 minutes)]"
+    );
+
+    public static final ConfigValue<Long> GENERAL_SELECTION_INFO_RATE = ConfigValue.create("General.Selection_Info_Rate",
+        20L,
+        "Sets refresh rate (in ticks) for region selection info display.",
+        "[Asynchronous]",
+        "[Default is 20 (1 second)]"
     );
 
     public static final ConfigValue<Boolean> GENERAL_UPDATE_PLAYER_NAMES = ConfigValue.create("General.UpdatePlayerNames",
@@ -89,27 +95,38 @@ public class Config {
         "[Default is 5]"
     );
 
-    public static final ConfigValue<ItemStack> REGION_DEFAULT_ICON = ConfigValue.create("Region.Default_Icon",
+    public static final ConfigValue<NightItem> REGION_DEFAULT_ICON = ConfigValue.create("Region.Default_Icon",
         ClaimUtils.getDefaultIcon(ClaimType.REGION),
         "Icon used for new regions."
     );
 
-    public static final ConfigValue<ItemStack> REGION_WAND_ITEM = ConfigValue.create("Region.WandItem",
+    public static final ConfigValue<NightItem> REGION_WAND_ITEM = ConfigValue.create("Region.WandItem",
         ClaimUtils.getDefaultSelectionItem(),
         "Item used to select region cuboids.",
         WIKI_ITEMS_URL
     );
 
-    public static final ConfigValue<RankMap<Integer>> REGION_AMOUNT_PER_RANK = ConfigValue.create("Region.Amount_Per_Rank",
-        (cfg, path, def) -> RankMap.readInt(cfg, path, 5),
+    public static final ConfigValue<IntRankMap> REGION_AMOUNT_PER_RANK = ConfigValue.create("Region.Amount_Per_Rank",
+        (cfg, path, def) -> IntRankMap.read(cfg, path),
         (cfg, path, map) -> map.write(cfg, path),
-        () -> new RankMap<>(RankMap.Mode.RANK, Perms.PREFIX + "regions.", 5, Map.of(
-            Placeholders.DEFAULT, 5,
-            "vip", 6,
-            "gold", 7,
-            "admin", -1
-        )),
+        () -> IntRankMap.ranked(5)
+            .addValue(Placeholders.DEFAULT, 5)
+            .addValue("vip", 6)
+            .addValue("gold", 7)
+            .addValue("admin", -1),
         "Sets max. amount of regions per player based on their rank/permissions.",
+        "Use -1 for unlimited amount."
+    );
+
+    public static final ConfigValue<IntRankMap> REGION_BLOCK_AMOUNT_PER_RANK = ConfigValue.create("Region.Block_Amount_Per_Rank",
+        (cfg, path, def) -> IntRankMap.read(cfg, path),
+        (cfg, path, map) -> map.write(cfg, path),
+        () -> IntRankMap.ranked(40_000)
+            .addValue(Placeholders.DEFAULT, 40_000)
+            .addValue("vip", 60_000)
+            .addValue("gold", 70_000)
+            .addValue("admin", -1),
+        "Sets max. amount of blocks per region per player based on their rank/permissions.",
         "Use -1 for unlimited amount."
     );
 
@@ -139,45 +156,43 @@ public class Config {
         "Use '" + PLAYER_NAME + "' for player name."
     );
 
-    public static final ConfigValue<ItemStack> LAND_DEFAULT_ICON = ConfigValue.create("Land.Default_Icon",
+    public static final ConfigValue<NightItem> LAND_DEFAULT_ICON = ConfigValue.create("Land.Default_Icon",
         ClaimUtils.getDefaultIcon(ClaimType.CHUNK),
         "Icon used for new chunks."
     );
 
-    public static final ConfigValue<ItemStack> LAND_MERGE_ITEM = ConfigValue.create("Land.MergeItem",
+    public static final ConfigValue<NightItem> LAND_MERGE_ITEM = ConfigValue.create("Land.MergeItem",
         ClaimUtils.getDefaultMergeItem(),
         "Item used to merge player's claims.",
         WIKI_ITEMS_URL
     );
 
-    public static final ConfigValue<ItemStack> LAND_SEPARATE_ITEM = ConfigValue.create("Land.SeparateItem",
+    public static final ConfigValue<NightItem> LAND_SEPARATE_ITEM = ConfigValue.create("Land.SeparateItem",
         ClaimUtils.getDefaultSeparateItem(),
         "Item used to separate player's claims.",
         WIKI_ITEMS_URL
     );
 
-    public static final ConfigValue<RankMap<Integer>> LAND_AMOUNT_PER_RANK = ConfigValue.create("Land.Amount_Per_Rank",
-        (cfg, path, def) -> RankMap.readInt(cfg, path, 5),
+    public static final ConfigValue<IntRankMap> LAND_AMOUNT_PER_RANK = ConfigValue.create("Land.Amount_Per_Rank",
+        (cfg, path, def) -> IntRankMap.read(cfg, path),
         (cfg, path, map) -> map.write(cfg, path),
-        () -> new RankMap<>(RankMap.Mode.RANK, Perms.PREFIX + "chunks.", 5, Map.of(
-            Placeholders.DEFAULT, 5,
-            "vip", 6,
-            "gold", 7,
-            "admin", -1
-        )),
+        () -> IntRankMap.ranked(5)
+            .addValue(Placeholders.DEFAULT, 5)
+            .addValue("vip", 6)
+            .addValue("gold", 7)
+            .addValue("admin", -1),
         "Sets max. amount of claimed chunks per player based on their rank/permissions.",
         "Use -1 for unlimited amount."
     );
 
-    public static final ConfigValue<RankMap<Integer>> LAND_CHUNKS_AMOUNT_PER_RANK = ConfigValue.create("Land.Chunks_Amount_Per_Rank",
-        (cfg, path, def) -> RankMap.readInt(cfg, path, 5),
+    public static final ConfigValue<IntRankMap> LAND_CHUNKS_AMOUNT_PER_RANK = ConfigValue.create("Land.Chunks_Amount_Per_Rank",
+        (cfg, path, def) -> IntRankMap.read(cfg, path),
         (cfg, path, map) -> map.write(cfg, path),
-        () -> new RankMap<>(RankMap.Mode.RANK, Perms.PREFIX + "chunks.", 5, Map.of(
-            Placeholders.DEFAULT, 4,
-            "vip", 6,
-            "gold", 8,
-            "admin", -1
-        )),
+        () -> IntRankMap.ranked(4)
+            .addValue(Placeholders.DEFAULT, 4)
+            .addValue("vip", 6)
+            .addValue("gold", 8)
+            .addValue("admin", -1),
         "Sets max. amount of merged chunks per claim based on player's rank/permissions.",
         "Use -1 for unlimited amount."
     );
@@ -231,7 +246,7 @@ public class Config {
     }
 
     @NotNull
-    public static ItemStack getDefaultIcon(@NotNull ClaimType type) {
+    public static NightItem getDefaultIcon(@NotNull ClaimType type) {
         return (type == ClaimType.REGION ? REGION_DEFAULT_ICON : LAND_DEFAULT_ICON).get();
     }
 

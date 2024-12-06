@@ -3,74 +3,60 @@ package su.nightexpress.excellentclaims.menu.impl;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.config.Config;
-import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
-import su.nightexpress.nightcore.menu.MenuOptions;
-import su.nightexpress.nightcore.menu.MenuSize;
-import su.nightexpress.nightcore.menu.MenuViewer;
-import su.nightexpress.nightcore.menu.api.AutoFill;
-import su.nightexpress.nightcore.menu.api.AutoFilled;
-import su.nightexpress.nightcore.menu.impl.ConfigMenu;
-import su.nightexpress.nightcore.menu.item.ItemHandler;
-import su.nightexpress.nightcore.menu.item.MenuItem;
-import su.nightexpress.nightcore.menu.link.Linked;
-import su.nightexpress.nightcore.menu.link.ViewLink;
-import su.nightexpress.nightcore.util.ItemReplacer;
-import su.nightexpress.nightcore.util.ItemUtil;
+import su.nightexpress.nightcore.ui.menu.MenuViewer;
+import su.nightexpress.nightcore.ui.menu.data.ConfigBased;
+import su.nightexpress.nightcore.ui.menu.data.Filled;
+import su.nightexpress.nightcore.ui.menu.data.MenuFiller;
+import su.nightexpress.nightcore.ui.menu.data.MenuLoader;
+import su.nightexpress.nightcore.ui.menu.item.ItemOptions;
+import su.nightexpress.nightcore.ui.menu.item.MenuItem;
+import su.nightexpress.nightcore.ui.menu.type.LinkedMenu;
 import su.nightexpress.nightcore.util.Lists;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
-import static su.nightexpress.excellentclaims.Placeholders.*;
+import static su.nightexpress.excellentclaims.Placeholders.CLAIM_NAME;
+import static su.nightexpress.excellentclaims.Placeholders.PLAYER_NAME;
 import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 
-public class TransferMenu extends ConfigMenu<ClaimPlugin> implements AutoFilled<Player>, Linked<Claim> {
+@SuppressWarnings("UnstableApiUsage")
+public class TransferMenu extends LinkedMenu<ClaimPlugin, Claim> implements Filled<Player>, ConfigBased {
 
     public static final String FILE_NAME = "claim_transfer.yml";
-
-    private final ViewLink<Claim> link;
-    private final ItemHandler     returnHandler;
 
     private String       playerName;
     private List<String> playerLore;
     private int[]        playerSlots;
 
     public TransferMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
-        this.link = new ViewLink<>();
+        super(plugin, MenuType.GENERIC_9X5, BLACK.enclose("Transfer Claim: " + CLAIM_NAME));
 
-        this.addHandler(this.returnHandler = ItemHandler.forReturn(this, (viewer, event) -> {
-            this.runNextTick(() -> plugin.getMenuManager().openClaimMenu(viewer.getPlayer(), this.getLink(viewer)));
-        }));
-
-        this.load();
-
-        this.getItems().forEach(menuItem -> {
-            if (menuItem.getHandler() == this.returnHandler) {
-                menuItem.getOptions().addVisibilityPolicy(viewer -> this.getLink(viewer).hasPermission(viewer.getPlayer(), ClaimPermission.MANAGE_CLAIM));
-            }
-        });
+        this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
 
     @Override
     @NotNull
-    public ViewLink<Claim> getLink() {
-        return this.link;
+    protected String getTitle(@NotNull MenuViewer viewer) {
+        return this.getLink(viewer).replacePlaceholders().apply(this.title);
     }
 
     @Override
-    protected void onPrepare(@NotNull MenuViewer viewer, @NotNull MenuOptions options) {
-        options.editTitle(title -> this.getLink(viewer).replacePlaceholders().apply(title));
+    protected void onPrepare(@NotNull MenuViewer viewer, @NotNull InventoryView view) {
         this.autoFill(viewer);
     }
 
@@ -80,30 +66,24 @@ public class TransferMenu extends ConfigMenu<ClaimPlugin> implements AutoFilled<
     }
 
     @Override
-    public void onAutoFill(@NotNull MenuViewer viewer, @NotNull AutoFill<Player> autoFill) {
+    public @NotNull MenuFiller<Player> createFiller(@NotNull MenuViewer viewer) {
         Player player = viewer.getPlayer();
         Claim claim = this.getLink(player);
         Set<Player> players = new HashSet<>(plugin.getServer().getOnlinePlayers());
         players.remove(player);
 
+        var autoFill = MenuFiller.builder(this);
+
         autoFill.setSlots(this.playerSlots);
         autoFill.setItems(players.stream().sorted(Comparator.comparing(Player::getName)).toList());
         autoFill.setItemCreator(target -> {
-            ItemStack itemStack = new ItemStack(Material.PLAYER_HEAD);
-            ItemUtil.editMeta(itemStack, meta -> {
-                if (meta instanceof SkullMeta skullMeta) {
-                    skullMeta.setOwningPlayer(target);
-                }
-            });
-            ItemReplacer.create(itemStack).trimmed().hideFlags()
+            return new NightItem(Material.PLAYER_HEAD)
+                .setSkullOwner(target)
                 .setDisplayName(this.playerName)
                 .setLore(this.playerLore)
-                .replace(Placeholders.forPlayer(target))
-                .writeMeta();
-
-            return itemStack;
+                .replacement(replacer -> replacer.replace(Placeholders.forPlayer(target)));
         });
-        autoFill.setClickAction(target -> (viewer1, event) -> {
+        autoFill.setItemClick(target -> (viewer1, event) -> {
             this.plugin.getMenuManager().openConfirm(player, Confirmation.create(
                 (viewer2, event2) -> {
                     this.plugin.getClaimManager().transferOwnership(player, claim, target);
@@ -114,51 +94,30 @@ public class TransferMenu extends ConfigMenu<ClaimPlugin> implements AutoFilled<
                 }
             ));
         });
+
+        return autoFill.build();
     }
 
     @Override
-    @NotNull
-    protected MenuOptions createDefaultOptions() {
-        return new MenuOptions(BLACK.enclose("Transfer Claim: " + CLAIM_NAME), MenuSize.CHEST_45);
-    }
-
-    @Override
-    @NotNull
-    protected List<MenuItem> createDefaultItems() {
-        List<MenuItem> list = new ArrayList<>();
-
-        ItemStack nextPage = ItemUtil.getSkinHead(SKIN_ARROW_RIGHT);
-        ItemUtil.editMeta(nextPage, meta -> {
-            meta.setDisplayName(Lang.EDITOR_ITEM_NEXT_PAGE.getLocalizedName());
-        });
-        list.add(new MenuItem(nextPage).setPriority(10).setSlots(44).setHandler(ItemHandler.forNextPage(this)));
-
-        ItemStack backPage = ItemUtil.getSkinHead(SKIN_ARROW_LEFT);
-        ItemUtil.editMeta(backPage, meta -> {
-            meta.setDisplayName(Lang.EDITOR_ITEM_PREVIOUS_PAGE.getLocalizedName());
-        });
-        list.add(new MenuItem(backPage).setPriority(10).setSlots(36).setHandler(ItemHandler.forPreviousPage(this)));
-
-        ItemStack returnItem = ItemUtil.getSkinHead(SKIN_ARROW_DOWN);
-        ItemUtil.editMeta(returnItem, meta -> {
-            meta.setDisplayName(Lang.EDITOR_ITEM_RETURN.getLocalizedName());
-        });
-        list.add(new MenuItem(returnItem).setPriority(10).setSlots(40).setHandler(this.returnHandler));
-
-        return list;
-    }
-
-    @Override
-    protected void loadAdditional() {
+    public void loadConfiguration(@NotNull FileConfig config, @NotNull MenuLoader loader) {
         this.playerName = ConfigValue.create("Player.Name",
             LIGHT_YELLOW.enclose(BOLD.enclose(PLAYER_NAME))
-        ).read(cfg);
+        ).read(config);
 
         this.playerLore = ConfigValue.create("Player.Lore", Lists.newList(
             "",
             LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("transfer ownership") + ".")
-        )).read(cfg);
+        )).read(config);
 
-        this.playerSlots = ConfigValue.create("Player.Slots", IntStream.range(0, 36).toArray()).read(cfg);
+        this.playerSlots = ConfigValue.create("Player.Slots", IntStream.range(0, 36).toArray()).read(config);
+
+        loader.addDefaultItem(MenuItem.buildNextPage(this, 44));
+        loader.addDefaultItem(MenuItem.buildPreviousPage(this, 36));
+        loader.addDefaultItem(MenuItem.buildReturn(this, 40, this.manageLink((viewer, event, claim) -> {
+            this.runNextTick(() -> plugin.getMenuManager().openClaimMenu(viewer.getPlayer(), claim));
+        }), ItemOptions.builder()
+            .setVisibilityPolicy(viewer -> this.getLink(viewer).hasPermission(viewer.getPlayer(), ClaimPermission.MANAGE_CLAIM))
+            .build())
+        );
     }
 }

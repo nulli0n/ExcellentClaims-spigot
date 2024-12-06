@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.excellentclaims.api.claim.ChunkClaim;
+import su.nightexpress.excellentclaims.api.claim.LandClaim;
 
 public class ChunkUnclaimEvent extends PlayerChunkEvent implements Cancellable {
 
@@ -12,8 +12,8 @@ public class ChunkUnclaimEvent extends PlayerChunkEvent implements Cancellable {
 
     private boolean cancelled;
 
-    public ChunkUnclaimEvent(@NotNull ChunkClaim chunkClaim, @NotNull Player player) {
-        super(chunkClaim, player);
+    public ChunkUnclaimEvent(@NotNull LandClaim landClaim, @NotNull Player player) {
+        super(landClaim, player);
     }
 
     @Override

@@ -14,7 +14,7 @@ import su.nightexpress.nightcore.command.experimental.CommandContext;
 import su.nightexpress.nightcore.command.experimental.argument.CommandArgument;
 import su.nightexpress.nightcore.command.experimental.argument.ParsedArguments;
 import su.nightexpress.nightcore.command.experimental.builder.ArgumentBuilder;
-import su.nightexpress.nightcore.util.Lists;
+import su.nightexpress.nightcore.util.BukkitThing;
 
 import java.util.Collections;
 
@@ -73,7 +73,7 @@ public class CommandArguments {
         return CommandArgument.builder(CommandArguments.WORLD, (string, context) -> plugin.getClaimManager().getWilderness(string))
             .customFailure(Lang.ERROR_COMMAND_INVALID_WORLD_ARGUMENT)
             .localized(Lang.COMMAND_ARGUMENT_NAME_WORLD)
-            .withSamples(context -> Lists.worldNames());
+            .withSamples(context -> BukkitThing.worldNames());
     }
 
     @Nullable

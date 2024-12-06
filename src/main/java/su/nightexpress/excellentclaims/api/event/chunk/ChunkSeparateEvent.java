@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.excellentclaims.api.claim.ChunkClaim;
+import su.nightexpress.excellentclaims.api.claim.LandClaim;
 import su.nightexpress.excellentclaims.util.pos.ChunkPos;
 
 public class ChunkSeparateEvent extends PlayerChunkEvent implements Cancellable {
@@ -15,7 +15,7 @@ public class ChunkSeparateEvent extends PlayerChunkEvent implements Cancellable 
 
     private boolean cancelled;
 
-    public ChunkSeparateEvent(@NotNull ChunkClaim source, @NotNull Player player, @NotNull ChunkPos target) {
+    public ChunkSeparateEvent(@NotNull LandClaim source, @NotNull Player player, @NotNull ChunkPos target) {
         super(source, player);
         this.target = target;
     }
@@ -31,7 +31,7 @@ public class ChunkSeparateEvent extends PlayerChunkEvent implements Cancellable 
     }
 
     @NotNull
-    public ChunkClaim getSource() {
+    public LandClaim getSource() {
         return this.getChunkClaim();
     }
 

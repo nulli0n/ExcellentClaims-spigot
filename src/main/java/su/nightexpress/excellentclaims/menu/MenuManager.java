@@ -42,23 +42,11 @@ public class MenuManager extends AbstractManager<ClaimPlugin> {
     protected void onShutdown() {
         if (this.confirmMenu != null) this.confirmMenu.clear();
         if (this.transferMenu != null) this.transferMenu.clear();
-        if (this.memberMenu != null) {
-            this.memberMenu.clear();
-            this.memberMenu = null;
-        }
-        if (this.membersMenu != null) {
-            this.membersMenu.clear();
-            this.membersMenu = null;
-        }
+        if (this.memberMenu != null) this.memberMenu.clear();
+        if (this.membersMenu != null) this.membersMenu.clear();
         if (this.flagsTypeMenu != null) this.flagsTypeMenu.clear();
-        if (this.flagsMenu != null) {
-            this.flagsMenu.clear();
-            this.flagsMenu = null;
-        }
-        if (this.claimMenu != null) {
-            this.claimMenu.clear();
-            this.claimMenu = null;
-        }
+        if (this.flagsMenu != null) this.flagsMenu.clear();
+        if (this.claimMenu != null) this.claimMenu.clear();
         if (this.claimsMenu != null) this.claimsMenu.clear();
     }
 

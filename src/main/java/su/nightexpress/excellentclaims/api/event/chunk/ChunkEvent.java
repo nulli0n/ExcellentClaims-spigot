@@ -1,20 +1,20 @@
 package su.nightexpress.excellentclaims.api.event.chunk;
 
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.excellentclaims.api.claim.ChunkClaim;
+import su.nightexpress.excellentclaims.api.claim.LandClaim;
 import su.nightexpress.excellentclaims.api.event.ClaimEvent;
 
 public abstract class ChunkEvent extends ClaimEvent {
 
-    protected final ChunkClaim chunkClaim;
+    protected final LandClaim landClaim;
 
-    public ChunkEvent(@NotNull ChunkClaim chunkClaim) {
-        super(chunkClaim);
-        this.chunkClaim = chunkClaim;
+    public ChunkEvent(@NotNull LandClaim landClaim) {
+        super(landClaim);
+        this.landClaim = landClaim;
     }
 
     @NotNull
-    public ChunkClaim getChunkClaim() {
-        return chunkClaim;
+    public LandClaim getChunkClaim() {
+        return landClaim;
     }
 }

@@ -5,7 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import su.nightexpress.excellentclaims.data.ClaimUser;
+import su.nightexpress.excellentclaims.data.user.ClaimUser;
 import su.nightexpress.nightcore.config.FileConfig;
 
 import java.util.UUID;

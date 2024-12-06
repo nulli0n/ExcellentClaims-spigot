@@ -4,17 +4,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.excellentclaims.api.claim.ChunkClaim;
+import su.nightexpress.excellentclaims.api.claim.LandClaim;
 
 public class ChunkMergeEvent extends PlayerChunkEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
-    private final ChunkClaim target;
+    private final LandClaim target;
 
     private boolean cancelled;
 
-    public ChunkMergeEvent(@NotNull ChunkClaim source, @NotNull Player player, @NotNull ChunkClaim target) {
+    public ChunkMergeEvent(@NotNull LandClaim source, @NotNull Player player, @NotNull LandClaim target) {
         super(source, player);
         this.target = target;
     }
@@ -30,12 +30,12 @@ public class ChunkMergeEvent extends PlayerChunkEvent implements Cancellable {
     }
 
     @NotNull
-    public ChunkClaim getSource() {
+    public LandClaim getSource() {
         return this.getChunkClaim();
     }
 
     @NotNull
-    public ChunkClaim getTarget() {
+    public LandClaim getTarget() {
         return this.target;
     }
 

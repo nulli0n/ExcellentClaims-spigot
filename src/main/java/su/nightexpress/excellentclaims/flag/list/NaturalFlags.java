@@ -1,9 +1,9 @@
 package su.nightexpress.excellentclaims.flag.list;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import su.nightexpress.excellentclaims.api.flag.FlagCategory;
 import su.nightexpress.excellentclaims.flag.impl.list.BooleanFlag;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 
 import static su.nightexpress.nightcore.util.text.tag.Tags.LIGHT_RED;
 import static su.nightexpress.nightcore.util.text.tag.Tags.LIGHT_YELLOW;
@@ -12,13 +12,13 @@ public class NaturalFlags {
 
     public static final BooleanFlag AMETHYST_FORM = new BooleanFlag("amethyst_form", FlagCategory.NATURAL,
         true,
-        new ItemStack(Material.MEDIUM_AMETHYST_BUD),
+        new NightItem(Material.MEDIUM_AMETHYST_BUD),
         "Allows " + LIGHT_YELLOW.enclose("amethysts") + " to form", "on budding amethysts."
     );
 
     public static final BooleanFlag AMETHYST_GROW = new BooleanFlag("amethyst_grow", FlagCategory.NATURAL,
         true,
-        new ItemStack(Material.AMETHYST_CLUSTER),
+        new NightItem(Material.AMETHYST_CLUSTER),
         "Allows " + LIGHT_YELLOW.enclose("amethyst") + " buds to grow."
     );
 
@@ -36,7 +36,7 @@ public class NaturalFlags {
 
     public static final BooleanFlag CORAL_DIE = new BooleanFlag("coral_die", FlagCategory.NATURAL,
         true,
-        new ItemStack(Material.FIRE_CORAL),
+        new NightItem(Material.FIRE_CORAL),
         "Allows " + LIGHT_YELLOW.enclose("corals") + " to die."
     );
 
@@ -150,7 +150,7 @@ public class NaturalFlags {
 
     public static final BooleanFlag VINE_GROW  = new BooleanFlag("vine_grow", FlagCategory.NATURAL,
         true,
-        new ItemStack(Material.VINE),
+        new NightItem(Material.VINE),
             "Allows " + LIGHT_YELLOW.enclose("vines") + " and " + LIGHT_YELLOW.enclose("kelp") + " to grow."
     );
 

@@ -3,7 +3,7 @@ package su.nightexpress.excellentclaims.claim;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import su.nightexpress.excellentclaims.api.claim.ChunkClaim;
+import su.nightexpress.excellentclaims.api.claim.LandClaim;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.RegionClaim;
 import su.nightexpress.excellentclaims.claim.impl.Wilderness;
@@ -14,23 +14,25 @@ import java.util.*;
 public class ClaimMap {
 
     // Map Claims by World -> ID/ChunkPos
-    private final Map<String, Map<String, RegionClaim>> regionClaimMap;
-    private final Map<String, Map<ChunkPos, ChunkClaim>> chunkClaimMap;
+    private final Map<String, Map<String, RegionClaim>> regionByIdMap;
+    private final Map<String, Map<String, LandClaim>>   landByIdMap;
 
     // Map Regions by World -> ChunkPos
     private final Map<String, Map<ChunkPos, Set<RegionClaim>>> regionsByChunkMap;
+    private final Map<String, Map<ChunkPos, LandClaim>>        landsByChunkMap;
 
     // Map Claims by Owner UUID -> World
     private final Map<UUID, Map<String, Set<RegionClaim>>> playerRegionMap;
-    private final Map<UUID, Map<String, Set<ChunkClaim>>> playerChunkMap;
+    private final Map<UUID, Map<String, Set<LandClaim>>>   playerChunkMap;
 
     private final Map<String, Wilderness> wildernessMap;
 
     public ClaimMap() {
-        this.regionClaimMap = new HashMap<>();
-        this.chunkClaimMap = new HashMap<>();
+        this.regionByIdMap = new HashMap<>();
+        this.landByIdMap = new HashMap<>();
 
         this.regionsByChunkMap = new HashMap<>();
+        this.landsByChunkMap = new HashMap<>();
 
         this.playerRegionMap = new HashMap<>();
         this.playerChunkMap = new HashMap<>();
@@ -49,16 +51,16 @@ public class ClaimMap {
         if (claim instanceof Wilderness wilderness) {
             this.wildernessMap.put(worldName, wilderness);
         }
-        else if (claim instanceof ChunkClaim chunkClaim) {
-            chunkClaim.getPositions().forEach(chunkPos -> {
-                this.chunkClaimMap.computeIfAbsent(worldName, k -> new HashMap<>()).put(chunkPos, chunkClaim);
+        else if (claim instanceof LandClaim landClaim) {
+            landClaim.getPositions().forEach(chunkPos -> {
+                this.landByIdMap.computeIfAbsent(worldName, k -> new HashMap<>()).put(landClaim.getId(), landClaim);
+                this.landsByChunkMap.computeIfAbsent(worldName, k -> new HashMap<>()).put(chunkPos, landClaim);
             });
-            //this.chunkClaimMap.computeIfAbsent(worldName, k -> new HashMap<>()).put(chunkClaim.getPosition(), chunkClaim);
 
-            this.playerChunkMap.computeIfAbsent(claim.getOwnerId(), k -> new HashMap<>()).computeIfAbsent(worldName,  k -> new HashSet<>()).add(chunkClaim);
+            this.playerChunkMap.computeIfAbsent(claim.getOwnerId(), k -> new HashMap<>()).computeIfAbsent(worldName,  k -> new HashSet<>()).add(landClaim);
         }
         else if (claim instanceof RegionClaim regionClaim) {
-            this.regionClaimMap.computeIfAbsent(worldName, k -> new HashMap<>()).put(regionClaim.getId(), regionClaim);
+            this.regionByIdMap.computeIfAbsent(worldName, k -> new HashMap<>()).put(regionClaim.getId(), regionClaim);
 
             Map<ChunkPos, Set<RegionClaim>> byChunkMap = this.regionsByChunkMap.computeIfAbsent(worldName, k -> new HashMap<>());
             regionClaim.getCuboid().getIntersectingChunkPositions().forEach(chunkPos -> {
@@ -75,25 +77,23 @@ public class ClaimMap {
         if (claim instanceof Wilderness wilderness) {
             this.wildernessMap.remove(worldName);
         }
-        else if (claim instanceof ChunkClaim chunkClaim) {
-            chunkClaim.getPositions().forEach(chunkPos -> {
-                this.getChunkClaimMap(worldName).remove(chunkPos);
-            });
-            //this.getChunkClaimMap(worldName).remove(chunkClaim.getPosition());
+        else if (claim instanceof LandClaim landClaim) {
+            this.getLandByIdMap(worldName).remove(landClaim.getId());
 
-            this.getPlayerChunks(claim.getOwnerId(), worldName).remove(chunkClaim);
+            var byChunkMap = this.landsByChunkMap.getOrDefault(worldName, Collections.emptyMap());
+            landClaim.getPositions().forEach(byChunkMap::remove);
+
+            this.getPlayerLands(claim.getOwnerId(), worldName).remove(landClaim);
         }
         else if (claim instanceof RegionClaim regionClaim) {
-            this.getRegionClaimMap(worldName).remove(regionClaim.getId());
+            this.getRegionByIdMap(worldName).remove(regionClaim.getId());
 
             Map<ChunkPos, Set<RegionClaim>> byChunkMap = this.regionsByChunkMap.getOrDefault(worldName, Collections.emptyMap());
-            //regionClaim.getCuboid().getIntersectingChunkPositions().forEach(byChunkMap::remove);
             regionClaim.getCuboid().getIntersectingChunkPositions().forEach(chunkPos -> {
                 var set = byChunkMap.get(chunkPos);
                 if (set != null) set.remove(regionClaim);
             });
 
-            //byChunkMap.values().forEach(regions -> regions.remove(regionClaim));
             byChunkMap.values().removeIf(Set::isEmpty);
 
             this.getPlayerRegions(claim.getOwnerId(), worldName).remove(regionClaim);
@@ -101,9 +101,10 @@ public class ClaimMap {
     }
 
     public void clear() {
-        this.chunkClaimMap.clear();
-        this.regionClaimMap.clear();
+        this.landByIdMap.clear();
+        this.regionByIdMap.clear();
         this.regionsByChunkMap.clear();
+        this.landsByChunkMap.clear();
         this.playerChunkMap.clear();
         this.playerRegionMap.clear();
         this.wildernessMap.clear();
@@ -125,35 +126,35 @@ public class ClaimMap {
     }
 
     @NotNull
-    public Map<String, Map<String, RegionClaim>> getRegionClaimMap() {
-        return this.regionClaimMap;
+    public Map<String, Map<String, RegionClaim>> getRegionByIdMap() {
+        return this.regionByIdMap;
     }
 
     @NotNull
-    public Map<String, Map<ChunkPos, ChunkClaim>> getChunkClaimMap() {
-        return this.chunkClaimMap;
-    }
-
-
-    @NotNull
-    public Map<String, RegionClaim> getRegionClaimMap(@NotNull World world) {
-        return this.getRegionClaimMap(world.getName());
-    }
-
-    @NotNull
-    public Map<ChunkPos, ChunkClaim> getChunkClaimMap(@NotNull World world) {
-        return this.getChunkClaimMap(world.getName());
+    public Map<String, Map<String, LandClaim>> getLandByIdMap() {
+        return this.landByIdMap;
     }
 
 
     @NotNull
-    public Map<String, RegionClaim> getRegionClaimMap(@NotNull String worldName) {
-        return this.regionClaimMap.getOrDefault(worldName.toLowerCase(), Collections.emptyMap());
+    public Map<String, RegionClaim> getRegionByIdMap(@NotNull World world) {
+        return this.getRegionByIdMap(world.getName());
     }
 
     @NotNull
-    public Map<ChunkPos, ChunkClaim> getChunkClaimMap(@NotNull String worldName) {
-        return this.chunkClaimMap.getOrDefault(worldName.toLowerCase(), Collections.emptyMap());
+    public Map<String, LandClaim> getLandByIdMap(@NotNull World world) {
+        return this.getLandByIdMap(world.getName());
+    }
+
+
+    @NotNull
+    public Map<String, RegionClaim> getRegionByIdMap(@NotNull String worldName) {
+        return this.regionByIdMap.getOrDefault(worldName.toLowerCase(), Collections.emptyMap());
+    }
+
+    @NotNull
+    public Map<String, LandClaim> getLandByIdMap(@NotNull String worldName) {
+        return this.landByIdMap.getOrDefault(worldName.toLowerCase(), Collections.emptyMap());
     }
 
 
@@ -181,7 +182,19 @@ public class ClaimMap {
 
 
     @NotNull
-    public Map<UUID, Map<String, Set<ChunkClaim>>> getPlayerChunkMap() {
+    public Map<ChunkPos, LandClaim> getLandByChunkMap(@NotNull World world) {
+        return this.getLandByChunkMap(world.getName());
+    }
+
+    @NotNull
+    public Map<ChunkPos, LandClaim> getLandByChunkMap(@NotNull String worldName) {
+        return this.landsByChunkMap.getOrDefault(worldName.toLowerCase(), Collections.emptyMap());
+    }
+
+
+
+    @NotNull
+    public Map<UUID, Map<String, Set<LandClaim>>> getPlayerLandMap() {
         return this.playerChunkMap;
     }
 
@@ -191,7 +204,7 @@ public class ClaimMap {
     }
 
     @NotNull
-    public Map<String, Set<ChunkClaim>> getPlayerChunks(@NotNull UUID playerId) {
+    public Map<String, Set<LandClaim>> getPlayerLands(@NotNull UUID playerId) {
         return this.playerChunkMap.getOrDefault(playerId, Collections.emptyMap());
     }
 
@@ -201,8 +214,8 @@ public class ClaimMap {
     }
 
     @NotNull
-    public Set<ChunkClaim> getPlayerChunks(@NotNull UUID playerId, @NotNull String worldName) {
-        return this.getPlayerChunks(playerId).getOrDefault(worldName.toLowerCase(), Collections.emptySet());
+    public Set<LandClaim> getPlayerLands(@NotNull UUID playerId, @NotNull String worldName) {
+        return this.getPlayerLands(playerId).getOrDefault(worldName.toLowerCase(), Collections.emptySet());
     }
 
     @NotNull

@@ -23,6 +23,7 @@ import su.nightexpress.excellentclaims.selection.visual.Tracker;
 import su.nightexpress.excellentclaims.selection.visual.highlight.BlockHighlighter;
 import su.nightexpress.excellentclaims.selection.visual.highlight.BlockPacketsHighlighter;
 import su.nightexpress.excellentclaims.selection.visual.highlight.BlockProtocolHighlighter;
+import su.nightexpress.excellentclaims.util.ClaimUtils;
 import su.nightexpress.excellentclaims.util.pos.BlockPos;
 import su.nightexpress.excellentclaims.util.pos.ChunkPos;
 import su.nightexpress.excellentclaims.util.Cuboid;
@@ -31,6 +32,7 @@ import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.manager.AbstractManager;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.nightcore.util.*;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -39,8 +41,8 @@ import java.util.function.Consumer;
 public class SelectionManager extends AbstractManager<ClaimPlugin> {
 
     private final Map<UUID, Selection>  selectionMap;
-    private final Map<UUID, Tracker>    chunkTracker;
-    private final Map<UUID, ChunkClaim> mergeMap;
+    private final Map<UUID, Tracker>   chunkTracker;
+    private final Map<UUID, LandClaim> mergeMap;
 
     private BlockHighlighter highlighter;
 
@@ -56,6 +58,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         this.loadHighlighter();
 
         this.addListener(new SelectionListener(this.plugin, this));
+        this.addAsyncTask(this::displaySelectionInfo, Config.GENERAL_SELECTION_INFO_RATE.get());
     }
 
     @Override
@@ -77,7 +80,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         }
         else return;
 
-        this.addTask(this.plugin.createAsyncTask(this::highlightBounds).setTicksInterval(Config.HIGHLIGHT_CHUNK_UPDATE_RATE.get()));
+        this.addAsyncTask(this::highlightBounds, Config.HIGHLIGHT_CHUNK_UPDATE_RATE.get());
     }
 
     // TODO Region bounds command
@@ -131,6 +134,27 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
 
             tracker.setPreviousPos(BlockPos.from(playerLocation));
         });
+    }
+
+    public void displaySelectionInfo() {
+        this.selectionMap.forEach((uuid, selection) -> {
+            Player player = plugin.getServer().getPlayer(uuid);
+            if (player == null) return;
+
+            this.displaySelectionInfo(player, selection);
+        });
+    }
+
+    public void displaySelectionInfo(@NotNull Player player, @NotNull Selection selection) {
+        Cuboid cuboid = selection.toCuboid();
+        if (cuboid == null) return;
+
+        int max = ClaimUtils.getRegionBlocksLimit(player);
+
+        Lang.SELECTION_REGION_INFO.getMessage().send(player, replacer -> replacer
+            .replace(Placeholders.GENERIC_VOLUME, NumberUtil.formatCompact(cuboid.getVolume()))
+            .replace(Placeholders.GENERIC_MAX, max < 0 ? Lang.OTHER_INFINITY.getString() : NumberUtil.formatCompact(max))
+        );
     }
 
     public void highlightSelection(@NotNull Player player) {
@@ -249,8 +273,8 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
                 if (claim instanceof RegionClaim regionClaim) {
                     cuboids.add(regionClaim.getCuboid());
                 }
-                if (claim instanceof ChunkClaim chunkClaim) {
-                    chunkClaim.getChunks().forEach(chunk -> cuboids.add(this.getCuboid(chunk, playerY, 0)));
+                if (claim instanceof LandClaim landClaim) {
+                    landClaim.getChunks().forEach(chunk -> cuboids.add(this.getCuboid(chunk, playerY, 0)));
                 }
             });
 
@@ -280,7 +304,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         }
         else {
             color = isIn ? ChatColor.WHITE : ChatColor.GRAY;
-            Claim claim = plugin.getClaimManager().getChunkClaim(world, blockPos);
+            Claim claim = plugin.getClaimManager().getLandClaim(world, blockPos);
             if (claim != null) {
                 if (claim.isOwnerOrMember(player)) {
                     color = isIn ? ChatColor.GREEN : ChatColor.DARK_GREEN;
@@ -313,13 +337,13 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
 
     @NotNull
     public ItemStack getItem(@NotNull ItemType itemType) {
-        ConfigValue<ItemStack> value = switch (itemType) {
+        ConfigValue<NightItem> value = switch (itemType) {
             case REGION_WAND -> Config.REGION_WAND_ITEM;
             case CHUNK_MERGE -> Config.LAND_MERGE_ITEM;
             case CHUNK_SEPARATE -> Config.LAND_SEPARATE_ITEM;
         };
 
-        ItemStack itemStack = new ItemStack(value.get());
+        ItemStack itemStack = value.get().getItemStack();
         PDCUtil.set(itemStack, Keys.itemType, itemType.name());
         return itemStack;
     }
@@ -422,7 +446,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         }
         else this.enableChunkBounds(player);
 
-        Lang.LAND_BOUNDS_TOGGLE.getMessage().replace(Placeholders.GENERIC_VALUE, Lang.getEnabledOrDisabled(this.canSeeChunkBounds(player))).send(player);
+        Lang.LAND_BOUNDS_TOGGLE.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, Lang.getEnabledOrDisabled(this.canSeeChunkBounds(player))));
     }
 
     public void enableChunkBounds(@NotNull Player player) {
@@ -479,7 +503,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
             this.highlightSelection(player);
         });
 
-        Lang.REGION_SELECTION_INFO.getMessage().replace(Placeholders.GENERIC_VALUE, value).send(player);
+        Lang.REGION_SELECTION_INFO.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, value));
     }
 
 
@@ -488,7 +512,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         return this.mergeMap.containsKey(player.getUniqueId());
     }
 
-    public void addInMerge(@NotNull Player player, @NotNull MergeType type, @NotNull ChunkClaim claim) {
+    public void addInMerge(@NotNull Player player, @NotNull MergeType type, @NotNull LandClaim claim) {
         this.removeFromMerge(player);
         this.mergeMap.put(player.getUniqueId(), claim);
 
@@ -502,7 +526,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
     }
 
     public void selectMergePosition(@NotNull Player player, @NotNull MergeType type, @NotNull Location location, @NotNull Action action) {
-        ChunkClaim source = this.mergeMap.get(player.getUniqueId());
+        LandClaim source = this.mergeMap.get(player.getUniqueId());
         if (source == null) return;
 
         // If claim was unloaded or removed.

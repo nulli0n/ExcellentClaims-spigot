@@ -254,4 +254,12 @@ public class Cuboid {
     public BlockPos getCenter() {
         return this.center;
     }
+
+    public int getVolume() {
+        int xLength = this.max.getX() - this.min.getX() + 1;
+        int yLength = this.max.getY() - this.min.getY() + 1;
+        int zLength = this.max.getZ() - this.min.getZ() + 1;
+
+        return xLength * zLength * yLength;
+    }
 }

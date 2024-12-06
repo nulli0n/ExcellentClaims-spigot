@@ -1,7 +1,6 @@
 package su.nightexpress.excellentclaims.flag.impl.list;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.flag.FlagCategory;
@@ -9,10 +8,10 @@ import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.excellentclaims.flag.impl.AbstractFlag;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
-import su.nightexpress.nightcore.menu.MenuViewer;
-import su.nightexpress.nightcore.menu.api.Menu;
-import su.nightexpress.nightcore.util.ItemUtil;
+import su.nightexpress.nightcore.ui.menu.Menu;
+import su.nightexpress.nightcore.ui.menu.MenuViewer;
 import su.nightexpress.nightcore.util.Lists;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 import su.nightexpress.nightcore.util.text.tag.Tags;
 
 import java.util.List;
@@ -24,13 +23,13 @@ public class BooleanFlag extends AbstractFlag<Boolean> {
                        @NotNull Boolean defaultValue,
                        @NotNull String skinURL,
                        @NotNull String... description) {
-        this(id, category, defaultValue, ItemUtil.getSkinHead(skinURL), description);
+        this(id, category, defaultValue, NightItem.asCustomHead(skinURL), description);
     }
 
     public BooleanFlag(@NotNull String id,
                        @NotNull FlagCategory category,
                        @NotNull Boolean defaultValue,
-                       @NotNull ItemStack icon,
+                       @NotNull NightItem icon,
                        @NotNull String... description) {
         super(id, category, Boolean.class, defaultValue, icon, description);
     }
@@ -51,12 +50,6 @@ public class BooleanFlag extends AbstractFlag<Boolean> {
     public void writeValue(@NotNull FileConfig config, @NotNull String path, @NotNull Boolean value) {
         config.set(path, value);
     }
-
-//    @Override
-//    @NotNull
-//    public String getManageType() {
-//        return "boolean_flag";
-//    }
 
     @Override
     @NotNull

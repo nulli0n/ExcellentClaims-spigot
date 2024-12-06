@@ -2,7 +2,6 @@ package su.nightexpress.excellentclaims.flag.impl.list;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentclaims.api.claim.Claim;
@@ -10,10 +9,11 @@ import su.nightexpress.excellentclaims.api.flag.FlagCategory;
 import su.nightexpress.excellentclaims.flag.impl.AbstractFlag;
 import su.nightexpress.excellentclaims.flag.type.EntryList;
 import su.nightexpress.nightcore.config.FileConfig;
-import su.nightexpress.nightcore.dialog.Dialog;
-import su.nightexpress.nightcore.menu.MenuViewer;
-import su.nightexpress.nightcore.menu.api.Menu;
+import su.nightexpress.nightcore.ui.dialog.Dialog;
+import su.nightexpress.nightcore.ui.menu.Menu;
+import su.nightexpress.nightcore.ui.menu.MenuViewer;
 import su.nightexpress.nightcore.util.Lists;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 import su.nightexpress.nightcore.util.text.tag.Tags;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public abstract class ListFlag<E, T extends EntryList<E>> extends AbstractFlag<T
                     @NotNull FlagCategory category,
                     @NotNull Class<T> valueType,
                     @NotNull T defaultValue,
-                    @NotNull ItemStack icon,
+                    @NotNull NightItem icon,
                     @NotNull String... description) {
         super(id, category, valueType, defaultValue, icon, description);
     }
@@ -45,8 +45,6 @@ public abstract class ListFlag<E, T extends EntryList<E>> extends AbstractFlag<T
 
     @NotNull
     public abstract T createList(@NotNull Set<E> entries);
-
-    protected abstract void onManagePrompt(@NotNull Player player, @NotNull Dialog dialog);
 
     @Override
     @NotNull
@@ -70,13 +68,15 @@ public abstract class ListFlag<E, T extends EntryList<E>> extends AbstractFlag<T
         );
     }
 
+    protected abstract Dialog.Builder onManagePrompt(@NotNull Dialog.Builder builder);
+
     @Override
     public void onManageClick(@NotNull Menu menu, @NotNull MenuViewer viewer, @NotNull InventoryClickEvent event, @NotNull Claim claim) {
         T list = claim.getFlag(this);
         Player player = viewer.getPlayer();
 
         if (event.isLeftClick()) {
-            Dialog dg = Dialog.create(viewer.getPlayer(), (dialog, input) -> {
+            menu.handleInput(this.onManagePrompt(Dialog.builder(viewer, input -> {
                 E type = this.entryFromString(input.getTextRaw());
                 if (type != null) {
                     list.getEntries().add(type);
@@ -84,10 +84,7 @@ public abstract class ListFlag<E, T extends EntryList<E>> extends AbstractFlag<T
                     claim.setSaveRequired(true);
                 }
                 return true;
-            });
-
-            menu.runNextTick(player::closeInventory);
-            this.onManagePrompt(player, dg);
+            })));
         }
         else if (event.isRightClick()) {
             list.getEntries().clear();

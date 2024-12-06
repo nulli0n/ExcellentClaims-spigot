@@ -1,0 +1,433 @@
+# Plugin Version: 1.1.0
+# 插件版本: 1.1.0
+Other:
+  ClaimPermission:
+    ALL: 全部
+    BUILDING: 建筑
+    CONTAINERS: 容器
+    BLOCK_INTERACT: 方块交互
+    ENTITY_INTERACT: 实体交互
+    MANAGE_CLAIM: 管理领地
+    MANAGE_FLAGS: 管理标志
+    VIEW_MEMBERS: 查看成员
+    MANAGE_MEMBERS: 管理成员
+    ADD_MEMBERS: 添加成员
+    REMOVE_MEMBERS: 移除成员
+    PROMOTE_MEMBERS: 提升成员
+    DEMOTE_MEMBERS: 降级成员
+    MERGE_CLAIM: 合并领地
+    SEPARATE_CLAIM: 拆分领地
+    RENAME_CLAIM: 重命名领地
+    SET_CLAIM_DESCRIPTION: 设置领地描述
+    SET_CLAIM_SPAWN: 设置领地重生点
+    SET_CLAIM_ICON: 设置领地图标
+    SET_CLAIM_PRIORITY: 设置领地优先级
+    TRANSFER_CLAIM: 转移领地所有权
+    REMOVE_CLAIM: 删除领地
+    TELEPORT: 传送
+  ListMode:
+    ENABLED: 启用
+    DISABLED: 禁用
+    WHITELIST: 白名单
+    BLACKLIST: 黑名单
+  ListEntry:
+    Good: "&a✔ &7%value%"
+    Bad: "&c✘ &7%value%"
+  EmptyList: "&7<无条目>"
+  Claim:
+    NoDescription: "&7<无描述>"
+  Unset: <未设置>
+Command:
+  Argument:
+    Name:
+      Region: 区域
+      Text: 文本
+  AdminMode:
+    Desc: 切换管理员模式
+  Land:
+    Desc: 领地命令
+    Claim:
+      Desc: 声明区块
+    Unclaim:
+      Desc: 取消声明区块
+    Flags:
+      Desc: 管理领地标志
+    Members:
+      Desc: 管理领地成员
+    Settings:
+      Desc: 管理领地设置
+    List:
+      Desc: 查看你的领地
+    ListAll:
+      Desc: 查看所有领地
+    Merge:
+      Desc: 将区块合并到领地中
+    Separate:
+      Desc: 拆分领地区块
+    SetSpawn:
+      Desc: 设置领地重生点
+    Bounds:
+      Desc: 切换领地边界
+    Rename:
+      Desc: 重命名领地
+    Description:
+      Desc: 设置领地描述
+    Transfer:
+      Desc: 转移领地的所有权
+  Region:
+    Desc: 区域命令
+    Wand:
+      Desc: 获取区域魔杖工具
+    Claim:
+      Desc: 声明区域
+    Remove:
+      Desc: 移除区域
+    Flags:
+      Desc: 管理区域标志
+    Members:
+      Desc: 管理区域成员
+    Settings:
+      Desc: 管理区域设置
+    List:
+      Desc: 查看你的区域
+    ListAll:
+      Desc: 查看所有区域
+    SetSpawn:
+      Desc: 设置区域重生点
+    Bounds:
+      Desc: 切换区域边界
+    Rename:
+      Desc: 重命名区域
+    Description:
+      Desc: 设置区域描述
+    Transfer:
+      Desc: 转移区域的所有权
+  Wilderness:
+    Desc: 野外命令
+    Flags:
+      Desc: 管理全局标志
+    Rename:
+      Desc: 重命名野外
+    Description:
+      Desc: 设置野外描述
+AdminMode:
+  Toggle: "&7管理员模式: &b%value%"
+Wilderness:
+  DisplayName: 野外
+  OwnerName: 服务器
+Region:
+  Selection:
+    Info: "&7设置 &b#%value% &7区域位置"
+  Create:
+    Success:
+      - <output:"titles:20:60:20"><sound:"block_wood_place">
+      - "&a区域创建成功!"
+      - "&7使用 &d/region settings &7管理区域"
+    Error:
+      DisabledWorld:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c被禁止的世界!"
+        - "&7你不能在此世界中创建区域"
+      NoSelection:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c未选择区域!"
+        - "&7你必须选择一个立方体来定义区域"
+      IncompleteSelection:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c选择不完整!"
+        - "&7你必须选择两个立方体角"
+      BadName:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c无效的名称!"
+        - "&7只能使用拉丁字母、数字和下划线"
+      MaxAmount:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c区域过多!"
+        - "&7你已经创建了最多的区域数量: &e%amount% &7个"
+      AlreadyExists:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c已存在!"
+        - "&7具有相同名称的区域已存在"
+      ChunkOverlap:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c区块重叠!"
+        - "&7区域立方体与已声明的区块重叠"
+      ForeignChunkOverlap:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c区块重叠!"
+        - "&7区域立方体与他人的区块重叠"
+      ForeignRegionOverlap:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c区域重叠!"
+        - "&7区域立方体与他人的区域重叠"
+  Remove:
+    Success:
+      - <output:"titles:20:60:20"><sound:"block_anvil_break">
+      - "&a区域已删除!"
+      - "&7你已删除区域 &b%claim_id%"
+    Error:
+      NoRegion:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c无效区域!"
+        - "&7具有相同名称的区域不存在"
+Land:
+  Bounds:
+    Toggle: "&7领地的边界: &e%value%"
+  Claim:
+    Success:
+      - <output:"titles:20:60:20"><sound:"entity_player_levelup">
+      - "&a区块已声明!"
+      - "&7使用 &d/land settings &7管理你的领地"
+    Error:
+      InvalidWorld:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c无效的位置!"
+        - "&7无法在你的位置声明领地"
+      DisabledWorld:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c被禁止的世界!"
+        - "&7你不能在此世界中声明区块"
+      Occupied:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c已被占用的区块!"
+        - "&7该区块已被他人声明"
+      AlreadyClaimed:
+        - <output:"titles:20:60:20"><sound:"entity_villager_ambient">
+        - "&c已声明!"
+        - "&7你已经声明了该区块"
+      MaxAmount:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c领地过多!"
+        - "&7你已经声明了最多的声明数量: &e%amount% &7个"
+      OverlapDisabled:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c区域重叠!"
+        - "&7该区块与已声明的区域重叠"
+      OverlapForeign:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c区域重叠!"
+        - "&7该区块与他人的区域重叠"
+  Unclaim:
+    Error:
+      Nothing:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c未声明!"
+        - "&7该区块未被声明"
+  Merge:
+    Error:
+      Foreign:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c不同的所有者!"
+        - "&7你不能合并并非你自己的的区块"
+      Same:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c相同的领地!"
+        - "&7你不能合并相同领地的区块"
+      DifferentWorld:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c不同的世界!"
+        - "&7你不能合并不同的世界的领地"
+      Inactive:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c无效的领地!"
+        - "&7选择用于合并的领地已经不存在"
+      Nothing:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c未声明!"
+        - "&7没有可合并的已声明区块"
+      MaxChunks:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c区块过多!"
+        - "&7此领地已达到最多的数量: &e%amount% &7个"
+    Success:
+      - <output:"titles:20:60:20"><sound:"entity_enderman_teleport">
+      - "&a领地已合并!"
+      - "&7你已成功合并已声明的区块"
+    Info: "&7使用 &b合并工具 &7选择一个你希望合并这些区块的领地"
+  Separate:
+    Info: "&7使用 &b拆分工具 &7选择一个你希望从当前领地中拆分的区块"
+    Error:
+      Nothing:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c未声明!"
+        - "&7没有可拆分的已声明区块"
+      Different:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c不同的领地!"
+        - "&7此区块不属于当前的领地"
+      NotMerged:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c无法合并!"
+        - "&7此领地只有一个区块"
+    Success:
+      - <output:"titles:20:60:20"><sound:"entity_enderman_teleport">
+      - "&a区块已拆分!"
+      - "&7你已成功将区块拆分为新的领地"
+  Unlaim:
+    Success:
+      - '<output:"titles:20:60:20"><sound:"block_anvil_break">'
+      - "<&a区块已放弃！"
+      - "&7该区块不再受领地的保护"
+Member:
+  Add:
+    Error:
+      Owner: "&a%player_name% &7是领地的所有者。&c你不能将其添加为成员"
+      AlreadyAdded: "&a%player_name% &7已经是 &b%claim_name% &7领地的成员"
+    Success: "&7你已将 &a%player_name% &7以 &b%rank_name% &7的身份添加到 &b%claim_name% &7领地中"
+    Prompt:
+      - <output:"titles:10:-1:10"><sound:"block_lava_pop">
+      - "&7输入 &a[玩家名称]"
+      - "&7将其添加为领地成员"
+Greeting:
+  Claim:
+    - <output:"titles:10:40:10">
+    - "&b%claim_name%"
+    - "&7%claim_description%"
+  Wilderness:
+    - <output:"titles:10:40:10">
+    - "&a野外"
+    - "&7"
+Claim:
+  Rename:
+    Prompt:
+      - <output:"titles:10:-1:10"><sound:"block_lava_pop">
+      - "&7输入 &a[名称]"
+      - "&7重命名你的领地"
+    Success:
+      - <output:"titles:20:60:20"><sound:"entity_villager_celebrate">
+      - "&a领地已重命名!"
+      - "&7新名称: &b%claim_name%"
+    Error:
+      TooLong:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c名称过长!"
+        - "&7名称最多为 &e%amount% &7个字符"
+  Description:
+    Prompt:
+      - <output:"titles:10:-1:10"><sound:"block_lava_pop">
+      - "&7输入 &a[描述文本]"
+      - "&7添加领地描述"
+    Success:
+      - <output:"titles:20:60:20"><sound:"entity_villager_celebrate">
+      - "&a描述已更改!"
+      - "&7新描述: &a%claim_description%"
+    Error:
+      TooLong:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c描述过长!"
+        - "&7描述最多为 &e%amount% &7个字符"
+  Priority:
+    Prompt:
+      - <output:"titles:10:-1:10"><sound:"block_lava_pop">
+      - "&7输入 &a[优先级值]"
+      - "&7以更改领地优先级"
+  SetSpawn:
+    Error:
+      OutSide:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c不在领地内!"
+        - "&7重生点必须在领地内"
+      Unsafe:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c不安全的位置!"
+        - "&7重生点必须位于坚固且无害的方块上"
+    Success:
+      - <output:"titles:20:60:20"><sound:"block_wooden_door_open">
+      - "&a重生点已设置!"
+      - "&7成功为 &b%claim_name% &7设置重生点"
+  Teleport:
+    Error:
+      Unsafe:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c不安全的位置!"
+        - "&7领地重生点有悬崖或岩浆"
+    Success: "&7你已传送至 &b%claim_name% &7的重生点"
+  TransferOwnership:
+    Error:
+      Yourself:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c所有者已经是你了!"
+        - "&7你已经是该领地的所有者"
+      TooMany:
+        - <output:"titles:20:60:20"><sound:"entity_villager_no">
+        - "&c领地过多!"
+        - "&a%player_name% &7拥有的领地已超过限制"
+    Success:
+      - <output:"titles:20:60:20"><sound:"entity_villager_celebrate">
+      - "&a所有权已转移!"
+      - "&a%player_name% &7现在是 &b%claim_name% &7领地的所有者"
+    Notify: "&a%player_name% &7将 &b%claim_name% &7的领地所有权转让给了你"
+Protection:
+  Info:
+    BlockBreak:
+      - <output:"action_bar">
+      - "&c你不能在这里破坏 &7%value%!"
+    BlockPlace:
+      - <output:"action_bar">
+      - "&c你不能在这里放置 &7%value%!"
+    BlockFertilize:
+      - <output:"action_bar">
+      - "&c你不能在这里施肥 &7%value%!"
+    BlockInteract:
+      - <output:"action_bar">
+      - "&c你不能在这里使用 &7%value%!"
+    ItemUse:
+      - <output:"action_bar">
+      - "&c你不能在这里使用 &7%value%!"
+    EntityInteract:
+      - <output:"action_bar">
+      - "&c你不能在这里使用 &7%value%!"
+    Portal:
+      - <output:"action_bar">
+      - "&c你不能在这里使用传送门!"
+    DamageEntity:
+      - <output:"action_bar">
+      - "&c你不能在这里伤害 &7%value%!"
+    ItemDrop:
+      - <output:"action_bar">
+      - "&c你不能在这里丢弃物品!"
+    ItemPickup:
+      - <output:"action_bar">
+      - "&c你不能在这里拾取物品!"
+Flag:
+  Prompt:
+    EntityType:
+      - <output:"titles:10:-1:10"><sound:"block_lava_pop">
+      - "&7输入 &a[实体类型]"
+      - "&7查看聊天中的可用值列表"
+    DamageType:
+      - <output:"titles:10:-1:10"><sound:"block_lava_pop">
+      - "&7输入 &a[伤害类型]"
+      - "&7查看聊天中的可用值列表"
+    ItemType:
+      - <output:"titles:10:-1:10"><sound:"block_lava_pop">
+      - "&7输入 &a[物品名称]"
+      - "&7"
+    BlockType:
+      - <output:"titles:10:-1:10"><sound:"block_lava_pop">
+      - "&7输入 &a[方块名称]"
+      - "&7"
+Error:
+  NotOwner:
+    - <output:"titles:20:60:20"><sound:"entity_villager_no">
+    - "&c不是你的领地!"
+    - "&7只有领地所有者可以执行此操作"
+  NoClaimPermission:
+    - <output:"titles:20:60:20"><sound:"entity_villager_no">
+    - "&c没有权限!"
+    - "&7你不能在此领地中执行此操作"
+  NoClaim:
+    - <output:"titles:20:60:20"><sound:"entity_villager_no">
+    - "&c没有领地!"
+    - "&7你的位置没有已声明的 区块/区域"
+  NoChunk:
+    - <output:"titles:20:60:20"><sound:"entity_villager_no">
+    - "&c没有区块!"
+    - "&7你的位置上没有已声明的区块"
+  NoRegion:
+    - <output:"titles:20:60:20"><sound:"entity_villager_no">
+    - "&c没有区域!"
+    - "&7你的位置上没有区域"
+  Command:
+    Argument:
+      InvalidRegion: "&b%value% &c不是有效的区域!"

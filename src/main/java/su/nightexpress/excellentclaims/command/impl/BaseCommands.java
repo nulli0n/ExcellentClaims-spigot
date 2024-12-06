@@ -7,7 +7,7 @@ import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.command.CommandArguments;
 import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.excellentclaims.config.Perms;
-import su.nightexpress.excellentclaims.data.ClaimUser;
+import su.nightexpress.excellentclaims.data.user.ClaimUser;
 import su.nightexpress.nightcore.command.experimental.CommandContext;
 import su.nightexpress.nightcore.command.experimental.argument.ArgumentTypes;
 import su.nightexpress.nightcore.command.experimental.argument.ParsedArguments;
@@ -19,9 +19,9 @@ import su.nightexpress.nightcore.util.CommandUtil;
 public class BaseCommands {
 
     public static void load(@NotNull ClaimPlugin plugin) {
-        ReloadCommand.inject(plugin, plugin.getRootNode(), Perms.COMMAND_RELOAD);
-
         ChainedNode root = plugin.getRootNode();
+
+        root.addChildren(ReloadCommand.builder(plugin, Perms.COMMAND_RELOAD));
 
         root.addChildren(DirectNode.builder(plugin, "adminmode")
             .description(Lang.COMMAND_ADMIN_MODE_DESC)
@@ -38,9 +38,9 @@ public class BaseCommands {
             return false;
         }
 
-        ClaimUser user = plugin.getUserManager().getUserData(player);
+        ClaimUser user = plugin.getUserManager().getOrFetch(player);
         user.setAdminMode(!user.isAdminMode());
-        Lang.ADMIN_MODE_TOGGLE.getMessage().replace(Placeholders.GENERIC_VALUE, Lang.getEnabledOrDisabled(user.isAdminMode())).send(player);
+        Lang.ADMIN_MODE_TOGGLE.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, Lang.getEnabledOrDisabled(user.isAdminMode())));
         return true;
     }
 }

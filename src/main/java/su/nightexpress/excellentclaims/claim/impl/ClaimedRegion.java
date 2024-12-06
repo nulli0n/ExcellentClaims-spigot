@@ -2,6 +2,7 @@ package su.nightexpress.excellentclaims.claim.impl;
 
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.ClaimPlugin;
+import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.api.claim.RegionClaim;
 import su.nightexpress.excellentclaims.util.pos.BlockPos;
@@ -9,6 +10,7 @@ import su.nightexpress.excellentclaims.util.Cuboid;
 import su.nightexpress.nightcore.config.FileConfig;
 
 import java.io.File;
+import java.util.function.UnaryOperator;
 
 public class ClaimedRegion extends AbstractClaim implements RegionClaim {
 
@@ -16,6 +18,12 @@ public class ClaimedRegion extends AbstractClaim implements RegionClaim {
 
     public ClaimedRegion(@NotNull ClaimPlugin plugin, @NotNull File file) {
         super(plugin, ClaimType.REGION, file);
+    }
+
+    @Override
+    @NotNull
+    public UnaryOperator<String> replacePlaceholders() {
+        return Placeholders.CLAIM.replacer(this);
     }
 
     @Override

@@ -63,7 +63,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Block block = event.getBlock();
         if (!this.manager.canBreak(player, block)) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_BREAK.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())).send(player);
+            Lang.PROTECTION_BLOCK_BREAK.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())));
         }
     }
 
@@ -73,7 +73,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Block block = event.getBlockPlaced();
         if (!this.manager.canBuild(player, block)) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_PLACE.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())).send(player);
+            Lang.PROTECTION_BLOCK_PLACE.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())));
         }
     }
 
@@ -91,7 +91,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         if (origin != null && origin.hasFlag(flag) && !origin.getFlag(flag) && (player != null && !origin.isOwnerOrMember(player))) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_FERTILIZE.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())).send(player);
+            Lang.PROTECTION_BLOCK_FERTILIZE.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())));
             return;
         }
 
@@ -386,7 +386,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         if (!this.manager.canUseBlock(player, block, event.getAction())) {
             event.setUseInteractedBlock(Event.Result.DENY);
-            Lang.PROTECTION_BLOCK_INTERACT.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())).send(player);
+            Lang.PROTECTION_BLOCK_INTERACT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())));
         }
     }
 
@@ -437,7 +437,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         //if (event.useItemInHand() == Event.Result.DENY) {
             event.setUseItemInHand(Event.Result.DENY);
-            Lang.PROTECTION_ITEM_USE.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(itemType)).send(player);
+            Lang.PROTECTION_ITEM_USE.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(itemType)));
         //}
     }
 
@@ -447,7 +447,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Block block = event.getBlock();
         if (!this.manager.canBreak(player, block)) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_BREAK.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())).send(player);
+            Lang.PROTECTION_BLOCK_BREAK.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(block.getType())));
         }
     }
 
@@ -456,7 +456,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Player player = event.getPlayer();
         if (!this.manager.canBuild(player, event.getBlock())) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_PLACE.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(event.getBucket())).send(player);
+            Lang.PROTECTION_BLOCK_PLACE.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(event.getBucket())));
         }
     }
 
@@ -466,7 +466,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Entity entity = event.getEntity();
         if (!this.manager.canBreak(player, entity.getLocation())) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_BREAK.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entity.getType())).send(player);
+            Lang.PROTECTION_BLOCK_BREAK.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(entity.getType())));
         }
     }
 
@@ -476,7 +476,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Player player = event.getPlayer();
         if (!this.manager.canUseEntity(player, entity)) {
             event.setCancelled(true);
-            Lang.PROTECTION_ENTITY_INTERACT.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entity.getType())).send(player);
+            Lang.PROTECTION_ENTITY_INTERACT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(entity.getType())));
         }
     }
 
@@ -486,7 +486,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Player player = event.getPlayer();
         if (!this.manager.canUseEntity(player, entity)) {
             event.setCancelled(true);
-            Lang.PROTECTION_ENTITY_INTERACT.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entity.getType())).send(player);
+            Lang.PROTECTION_ENTITY_INTERACT.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(entity.getType())));
         }
     }
 
@@ -552,7 +552,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Block block = event.getBlock();
         if (player != null && !this.manager.canBuild(player, block)) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_PLACE.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(event.getEntity().getType())).send(player);
+            Lang.PROTECTION_BLOCK_PLACE.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(event.getEntity().getType())));
         }
     }
 
@@ -682,73 +682,8 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         if (!this.manager.canDamage(damager, target, source)) {
             event.setCancelled(true);
-            if (damager != null) Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(target.getType())).send(damager);
+            if (damager != null) Lang.PROTECTION_DAMAGE_ENTITY.getMessage().send(damager, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(target.getType())));
         }
-
-//        Player playerDamager = damager instanceof Player p ? p : null;
-//        if (playerDamager != null) {
-//            if (entityType == EntityType.ARMOR_STAND || entityType == EntityType.END_CRYSTAL) {
-//                if (!this.manager.canBreak(playerDamager, entity.getLocation())) {
-//                    event.setCancelled(true);
-//                    Lang.PROTECTION_BLOCK_BREAK.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
-//                    return;
-//                }
-//            }
-//        }
-//
-//        Claim claim = this.manager.getPrioritizedClaim(entity.getLocation());
-//        if (claim == null) return;
-//
-//        //plugin.debug("EntityDamage Type = " + BukkitThing.toString(source.getDamageType()));
-//
-//        ListModeFlag modeFlag;
-//        DamageTypeListFlag listFlag;
-//
-//        if (entity instanceof Player player) {
-//            if (playerDamager != null && claim.hasFlag(PlayerFlags.PLAYER_DAMAGE_PLAYERS) && !claim.getFlag(PlayerFlags.PLAYER_DAMAGE_PLAYERS)) {
-//                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, player.getName()).send(playerDamager);
-//                event.setCancelled(true);
-//                return;
-//            }
-//            if (damager instanceof Monster && claim.hasFlag(EntityFlags.MONSTER_DAMAGE_PLAYERS) && !claim.getFlag(EntityFlags.MONSTER_DAMAGE_PLAYERS)) {
-//                event.setCancelled(true);
-//                return;
-//            }
-//            modeFlag = PlayerFlags.PLAYER_DAMAGE_MODE;
-//            listFlag = PlayerFlags.PLAYER_DAMAGE_LIST;
-//        }
-//        else if (entityType == EntityType.VILLAGER && playerDamager != null) {
-//            if (claim.isOwnerOrMember(playerDamager)) return; // Members should be able to damage villagers.
-//            if (claim.hasFlag(PlayerFlags.PLAYER_DAMAGE_VILLAGERS) && !claim.getFlag(PlayerFlags.PLAYER_DAMAGE_VILLAGERS)) {
-//                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
-//                event.setCancelled(true);
-//            }
-//            return;
-//        }
-//        else if (entity instanceof Animals) {
-//            if (playerDamager != null) {
-//                if (claim.isOwnerOrMember(playerDamager)) return; // Members should be able to damage animals.
-//                if (claim.hasFlag(PlayerFlags.PLAYER_DAMAGE_ANIMALS) && !claim.getFlag(PlayerFlags.PLAYER_DAMAGE_ANIMALS)) {
-//                    Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
-//                    event.setCancelled(true);
-//                    return;
-//                }
-//            }
-//            modeFlag = EntityFlags.ANIMAL_DAMAGE_MODE;
-//            listFlag = EntityFlags.ANIMAL_DAMAGE_LIST;
-//        }
-//        else return;
-//
-//        if (!claim.hasFlag(modeFlag)) return;
-//        ListMode mode = claim.getFlag(modeFlag);
-//        DamageTypeList list = claim.getFlag(listFlag);
-//
-//        if (!list.isAllowed(mode, source.getDamageType())) {
-//            event.setCancelled(true);
-//            if (playerDamager != null) {
-//                Lang.PROTECTION_DAMAGE_ENTITY.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(entityType)).send(playerDamager);
-//            }
-//        }
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
@@ -759,7 +694,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         if (!(remover instanceof Player player) || (!this.manager.canBreak(player, location))) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_BREAK.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(hanging.getType())).send(remover);
+            Lang.PROTECTION_BLOCK_BREAK.getMessage().send(remover, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(hanging.getType())));
         }
     }
 
@@ -769,7 +704,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Block block = event.getBlock();
         if (player != null && !this.manager.canBuild(player, block)) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_PLACE.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(event.getEntity().getType())).send(player);
+            Lang.PROTECTION_BLOCK_PLACE.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(event.getEntity().getType())));
         }
     }
 
@@ -781,7 +716,7 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         if (!(remover instanceof Player player) || (!this.manager.canBreak(player, location))) {
             event.setCancelled(true);
-            Lang.PROTECTION_BLOCK_BREAK.getMessage().replace(Placeholders.GENERIC_VALUE, LangAssets.get(vehicle.getType())).send(remover);
+            Lang.PROTECTION_BLOCK_BREAK.getMessage().send(remover, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, LangAssets.get(vehicle.getType())));
         }
     }
 

@@ -114,6 +114,12 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.enclose("You can't claim chunks in this world.")
     );
 
+    public static final LangText LAND_CLAIM_ERROR_BAD_NAME = LangText.of("Land.Claim.Error.BadName",
+        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.enclose(BOLD.enclose("Invalid Name!")),
+        LIGHT_GRAY.enclose("Use only latin letters and numbers.")
+    );
+
     public static final LangText LAND_CLAIM_ERROR_OCCUPIED = LangText.of("Land.Claim.Error.Occupied",
         OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.enclose(BOLD.enclose("Occupied Chunk!")),
@@ -264,13 +270,19 @@ public class Lang extends CoreLang {
     public static final LangText REGION_CREATE_ERROR_BAD_NAME = LangText.of("Region.Create.Error.BadName",
         OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.enclose(BOLD.enclose("Invalid Name!")),
-        LIGHT_GRAY.enclose("Use only latin letters, numbers and underscore.")
+        LIGHT_GRAY.enclose("Use only latin letters and numbers.")
     );
 
     public static final LangText REGION_CREATE_ERROR_MAX_AMOUNT = LangText.of("Region.Create.Error.MaxAmount",
         OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.enclose(BOLD.enclose("Too Many Regions!")),
         LIGHT_GRAY.enclose("You already claimed maximum of " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " regions.")
+    );
+
+    public static final LangText REGION_CREATE_ERROR_MAX_BLOCKS = LangText.of("Region.Create.Error.MaxBlocks",
+        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.enclose(BOLD.enclose("Too Big Region!")),
+        LIGHT_GRAY.enclose("You can claim regions with max. of " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " blocks.")
     );
 
     public static final LangText REGION_CREATE_ERROR_ALREADY_EXISTS = LangText.of("Region.Create.Error.AlreadyExists",
@@ -329,13 +341,19 @@ public class Lang extends CoreLang {
     );
 
     public static final LangText MEMBER_ADD_SUCCESS = LangText.of("Member.Add.Success",
-        LIGHT_GRAY.enclose("You added " + LIGHT_YELLOW.enclose(PLAYER_NAME) + " member with " + LIGHT_YELLOW.enclose(RANK_NAME) + " rank to the " + LIGHT_YELLOW.enclose(CLAIM_NAME) + " claim.")
+        LIGHT_GRAY.enclose("You added " + LIGHT_YELLOW.enclose(PLAYER_NAME) + " as " + LIGHT_YELLOW.enclose(RANK_NAME) + " to the " + LIGHT_YELLOW.enclose(CLAIM_NAME) + " claim.")
     );
 
-    public static final LangText MEMBER_ADD_PROMPT = LangText.of("Member.Add.Prompt",
-        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Player Name]")),
-        LIGHT_GRAY.enclose("To add it as a claim member.")
+//    public static final LangText MEMBER_ADD_PROMPT = LangText.of("Member.Add.Prompt",
+//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Player Name]")),
+//        LIGHT_GRAY.enclose("To add it as a claim member.")
+//    );
+
+    public static final LangString MEMBER_ADD_PROMPT = LangString.of("Member.Add.Dialog",
+        //OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Player Name]"))
+        //LIGHT_GRAY.enclose("To add it as a claim member.")
     );
 
 
@@ -352,10 +370,16 @@ public class Lang extends CoreLang {
     );
 
 
-    public static final LangText CLAIM_RENAME_PROMPT = LangText.of("Claim.Rename.Prompt",
-        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Name]")),
-        LIGHT_GRAY.enclose("To rename your claim.")
+//    public static final LangText CLAIM_RENAME_PROMPT = LangText.of("Claim.Rename.Prompt",
+//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Name]")),
+//        LIGHT_GRAY.enclose("To rename your claim.")
+//    );
+
+    public static final LangString CLAIM_RENAME_PROMPT = LangString.of("Claim.Rename.Dialog",
+        //OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Claim Name]"))
+        //LIGHT_GRAY.enclose("To rename your claim.")
     );
 
     public static final LangText CLAIM_RENAME_SUCCESS = LangText.of("Claim.Rename.Success",
@@ -370,10 +394,16 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.enclose("Name must be up to " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " characters.")
     );
 
-    public static final LangText CLAIM_DESCRIPTION_PROMPT = LangText.of("Claim.Description.Prompt",
-        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Description Text]")),
-        LIGHT_GRAY.enclose("To add claim description.")
+//    public static final LangText CLAIM_DESCRIPTION_PROMPT = LangText.of("Claim.Description.Prompt",
+//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Description Text]")),
+//        LIGHT_GRAY.enclose("To add claim description.")
+//    );
+
+    public static final LangString CLAIM_DESCRIPTION_PROMPT = LangString.of("Claim.Description.Dialog",
+        //.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Description Text]"))
+        //LIGHT_GRAY.enclose("To add claim description.")
     );
 
     public static final LangText CLAIM_DESCRIPTION_SUCCESS = LangText.of("Claim.Description.Success",
@@ -388,10 +418,16 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.enclose("Description must be up to " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " characters.")
     );
 
-    public static final LangText CLAIM_PRIORITY_PROMPT = LangText.of("Claim.Priority.Prompt",
-        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Priority Value]")),
-        LIGHT_GRAY.enclose("To change claim priority.")
+//    public static final LangText CLAIM_PRIORITY_PROMPT = LangText.of("Claim.Priority.Prompt",
+//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Priority Value]")),
+//        LIGHT_GRAY.enclose("To change claim priority.")
+//    );
+
+    public static final LangString CLAIM_PRIORITY_PROMPT = LangString.of("Claim.Priority.Dialog",
+        //OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Priority Value]"))
+        //LIGHT_GRAY.enclose("To change claim priority.")
     );
 
 
@@ -449,6 +485,13 @@ public class Lang extends CoreLang {
 
 
 
+    public static final LangText SELECTION_REGION_INFO = LangText.of("Selection.Region.Info",
+        OUTPUT.enclose(OutputType.ACTION_BAR),
+        LIGHT_CYAN.enclose("Selected " + WHITE.enclose(GENERIC_VOLUME + "/" + GENERIC_MAX) + " blocks.")
+    );
+
+
+
     public static final LangText PROTECTION_BLOCK_BREAK = LangText.of("Protection.Info.BlockBreak",
         OUTPUT.enclose(OutputType.ACTION_BAR),
         LIGHT_RED.enclose("You can't break " + LIGHT_YELLOW.enclose(GENERIC_VALUE) + " here!")
@@ -500,28 +543,44 @@ public class Lang extends CoreLang {
     );
 
 
-    public static final LangText FLAG_PROMPT_ENTITY_TYPE = LangText.of("Flag.Prompt.EntityType",
-        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Entity Type]")),
-        LIGHT_GRAY.enclose("Look in chat for a list of available values.")
+//    public static final LangText FLAG_PROMPT_ENTITY_TYPE = LangText.of("Flag.Prompt.EntityType",
+//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Entity Type]")),
+//        LIGHT_GRAY.enclose("Look in chat for a list of available values.")
+//    );
+//
+//    public static final LangText FLAG_PROMPT_DAMAGE_TYPE = LangText.of("Flag.Prompt.DamageType",
+//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Damage Type]")),
+//        LIGHT_GRAY.enclose("Look in chat for a list of available values.")
+//    );
+//
+//    public static final LangText FLAG_PROMPT_ITEM_TYPE = LangText.of("Flag.Prompt.ItemType",
+//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Item Name]")),
+//        LIGHT_GRAY.enclose(" ")
+//    );
+//
+//    public static final LangText FLAG_PROMPT_BLOCK_TYPE = LangText.of("Flag.Prompt.BlockType",
+//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Block Name]")),
+//        LIGHT_GRAY.enclose(" ")
+//    );
+
+    public static final LangString FLAG_PROMPT_ENTITY_TYPE = LangString.of("Flag.Dialog.EntityType",
+        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Entity Type]"))
     );
 
-    public static final LangText FLAG_PROMPT_DAMAGE_TYPE = LangText.of("Flag.Prompt.DamageType",
-        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Damage Type]")),
-        LIGHT_GRAY.enclose("Look in chat for a list of available values.")
+    public static final LangString FLAG_PROMPT_DAMAGE_TYPE = LangString.of("Flag.Dialog.DamageType",
+        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Damage Type]"))
     );
 
-    public static final LangText FLAG_PROMPT_ITEM_TYPE = LangText.of("Flag.Prompt.ItemType",
-        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Item Name]")),
-        LIGHT_GRAY.enclose(" ")
+    public static final LangString FLAG_PROMPT_ITEM_TYPE = LangString.of("Flag.Dialog.ItemType",
+        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Item Name]"))
     );
 
-    public static final LangText FLAG_PROMPT_BLOCK_TYPE = LangText.of("Flag.Prompt.BlockType",
-        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Block Name]")),
-        LIGHT_GRAY.enclose(" ")
+    public static final LangString FLAG_PROMPT_BLOCK_TYPE = LangString.of("Flag.Dialog.BlockType",
+        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Block Name]"))
     );
 
 

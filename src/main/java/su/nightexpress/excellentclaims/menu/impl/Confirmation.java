@@ -2,8 +2,8 @@ package su.nightexpress.excellentclaims.menu.impl;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.nightcore.menu.MenuViewer;
-import su.nightexpress.nightcore.menu.click.ClickAction;
+import su.nightexpress.nightcore.ui.menu.MenuViewer;
+import su.nightexpress.nightcore.ui.menu.item.ItemClick;
 
 public interface Confirmation {
 
@@ -12,7 +12,7 @@ public interface Confirmation {
     void onDecline(@NotNull MenuViewer viewer, @NotNull InventoryClickEvent event);
 
     @NotNull
-    static Confirmation create(@NotNull ClickAction accept, @NotNull ClickAction decline) {
+    static Confirmation create(@NotNull ItemClick accept, @NotNull ItemClick decline) {
         return new Confirmation() {
 
             @Override

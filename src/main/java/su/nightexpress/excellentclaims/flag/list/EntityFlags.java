@@ -8,7 +8,7 @@ import su.nightexpress.excellentclaims.flag.impl.list.ListModeFlag;
 import su.nightexpress.excellentclaims.flag.type.DamageTypeList;
 import su.nightexpress.excellentclaims.flag.type.EntityList;
 import su.nightexpress.excellentclaims.flag.type.ListMode;
-import su.nightexpress.nightcore.util.ItemUtil;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 
 import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 
@@ -16,14 +16,14 @@ public class EntityFlags {
 
     public static final DamageTypeListFlag ANIMAL_DAMAGE_LIST = new DamageTypeListFlag("animal_damage_list", FlagCategory.ENTITY,
         new DamageTypeList(),
-        ItemUtil.getSkinHead("cefa6eeeebd3ea4bbed20ce601678f0d8636477275b8d2d93fc33ca57d5fcaa1"),
+        NightItem.asCustomHead("cefa6eeeebd3ea4bbed20ce601678f0d8636477275b8d2d93fc33ca57d5fcaa1"),
         "List of " + LIGHT_RED.enclose("damage types") + " applicable to",
         "animals depends on the " + LIGHT_YELLOW.enclose("Animal Damage Mode") + " flag."
     );
 
     public static final ListModeFlag ANIMAL_DAMAGE_MODE = new ListModeFlag("animal_damage_mode", FlagCategory.ENTITY,
         ListMode.ENABLED,
-        ItemUtil.getSkinHead("7c7f0ad90bf60aa36645f2a63ef5bd8a7035bce5ca46ca3b605842624449052f"),
+        NightItem.asCustomHead("7c7f0ad90bf60aa36645f2a63ef5bd8a7035bce5ca46ca3b605842624449052f"),
         "Controls wheter " + LIGHT_YELLOW.enclose("animals") + " can take", "damage and which type of it."
     );
 
@@ -69,13 +69,13 @@ public class EntityFlags {
 
     public static final ListModeFlag ENTITY_SPAWN_MODE = new ListModeFlag("entity_spawn_mode", FlagCategory.ENTITY,
         ListMode.ENABLED,
-        ItemUtil.getSkinHead("3d02e0e429a4a681a8686cae11554a73d4d0622c87f42d11cd9a87aa95611903"),
+        NightItem.asCustomHead("3d02e0e429a4a681a8686cae11554a73d4d0622c87f42d11cd9a87aa95611903"),
         "Controls whether entities can spawn."
     );
 
     public static final EntityListFlag ENTITY_SPAWN_LIST = new EntityListFlag("entity_spawn_list", FlagCategory.ENTITY,
         new EntityList(),
-        ItemUtil.getSkinHead("647e2e5d55b6d04943519bed2557c6329e33b60b909dee8923cd88b115210"),
+        NightItem.asCustomHead("647e2e5d55b6d04943519bed2557c6329e33b60b909dee8923cd88b115210"),
         "Controls which " + LIGHT_GREEN.enclose("entities") + " can spawn",
         "depends on the " + LIGHT_YELLOW.enclose("Entity Spawn Mode") + " flag."
     );

@@ -1,18 +1,20 @@
 package su.nightexpress.excellentclaims.claim.impl;
 
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.ClaimPlugin;
+import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.excellentclaims.util.UserInfo;
 import su.nightexpress.excellentclaims.util.pos.BlockPos;
 import su.nightexpress.excellentclaims.util.pos.DirectionalPos;
 import su.nightexpress.nightcore.config.FileConfig;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 
 import java.io.File;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 
 public class Wilderness extends AbstractClaim {
 
@@ -24,13 +26,19 @@ public class Wilderness extends AbstractClaim {
     }
 
     @Override
+    @NotNull
+    public UnaryOperator<String> replacePlaceholders() {
+        return Placeholders.CLAIM.replacer(this);
+    }
+
+    @Override
     protected boolean onLoad(@NotNull FileConfig config) {
         this.loadWorldInfo(config);
         this.loadFlags(config);
         this.setDisplayName(Lang.WILDERNESS_DISPLAY_NAME.getString());
         this.setDescription("");
         this.setPriority(0);
-        this.setIcon(new ItemStack(Material.GRASS_BLOCK));
+        this.setIcon(new NightItem(Material.GRASS_BLOCK));
         this.setSpawnLocation(DirectionalPos.empty());
 
         return this.loadAdditional(config);

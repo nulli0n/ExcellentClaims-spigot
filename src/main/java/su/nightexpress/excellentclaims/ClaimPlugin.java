@@ -10,20 +10,19 @@ import su.nightexpress.excellentclaims.config.Config;
 import su.nightexpress.excellentclaims.config.Keys;
 import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.excellentclaims.config.Perms;
-import su.nightexpress.excellentclaims.data.ClaimUser;
-import su.nightexpress.excellentclaims.data.DataHandler;
-import su.nightexpress.excellentclaims.data.UserManager;
+import su.nightexpress.excellentclaims.data.storage.DataManager;
+import su.nightexpress.excellentclaims.data.user.UserManager;
 import su.nightexpress.excellentclaims.flag.FlagRegistry;
 import su.nightexpress.excellentclaims.member.MemberManager;
 import su.nightexpress.excellentclaims.menu.MenuManager;
 import su.nightexpress.excellentclaims.selection.SelectionManager;
-import su.nightexpress.nightcore.NightDataPlugin;
+import su.nightexpress.nightcore.NightPlugin;
 import su.nightexpress.nightcore.command.experimental.ImprovedCommands;
 import su.nightexpress.nightcore.config.PluginDetails;
 
-public class ClaimPlugin extends NightDataPlugin<ClaimUser> implements ImprovedCommands {
+public class ClaimPlugin extends NightPlugin implements ImprovedCommands {
 
-    private DataHandler dataHandler;
+    private DataManager dataManager;
     private UserManager userManager;
 
     private MemberManager    memberManager;
@@ -47,10 +46,10 @@ public class ClaimPlugin extends NightDataPlugin<ClaimUser> implements ImprovedC
         this.loadFlags();
         this.loadCommands();
 
-        this.dataHandler = new DataHandler(this);
-        this.dataHandler.setup();
+        this.dataManager = new DataManager(this);
+        this.dataManager.setup();
 
-        this.userManager = new UserManager(this);
+        this.userManager = new UserManager(this, this.dataManager);
         this.userManager.setup();
 
         this.memberManager = new MemberManager(this);
@@ -102,14 +101,12 @@ public class ClaimPlugin extends NightDataPlugin<ClaimUser> implements ImprovedC
         WildernessCommands.unload();
     }
 
-    @Override
     @NotNull
-    public DataHandler getData() {
-        return this.dataHandler;
+    public DataManager getDataManager() {
+        return this.dataManager;
     }
 
     @NotNull
-    @Override
     public UserManager getUserManager() {
         return this.userManager;
     }

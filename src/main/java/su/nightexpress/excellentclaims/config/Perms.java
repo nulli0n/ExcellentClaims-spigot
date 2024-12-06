@@ -67,6 +67,7 @@ public class Perms {
     public static final UniPermission BYPASS_REGION_CLAIM_OVERLAP = new UniPermission(PREFIX_BYPASS + "region.claim.overlap");
     public static final UniPermission BYPASS_CHUNK_CLAIM_WORLD    = new UniPermission(PREFIX_BYPASS + "chunk.claim.world");
     public static final UniPermission BYPASS_REGION_CLAIM_WORLD   = new UniPermission(PREFIX_BYPASS + "region.claim.world");
+    public static final UniPermission BYPASS_REGION_BLOCKS_AMOUNT = new UniPermission(PREFIX_BYPASS + "region.blocks.amount");
     public static final UniPermission BYPASS_NAME_LENGTH          = new UniPermission(PREFIX_BYPASS + "name.length");
     public static final UniPermission BYPASS_DESCRIPTION_LENGTH   = new UniPermission(PREFIX_BYPASS + "description.length");
 
@@ -125,6 +126,7 @@ public class Perms {
             BYPASS_CHUNK_CLAIM_WORLD,
             BYPASS_REGION_CLAIM_OVERLAP,
             BYPASS_REGION_CLAIM_WORLD,
+            BYPASS_REGION_BLOCKS_AMOUNT,
             BYPASS_NAME_LENGTH,
             BYPASS_DESCRIPTION_LENGTH
         );

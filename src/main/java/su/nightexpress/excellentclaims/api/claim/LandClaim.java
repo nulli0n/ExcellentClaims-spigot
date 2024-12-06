@@ -6,7 +6,7 @@ import su.nightexpress.excellentclaims.util.pos.ChunkPos;
 
 import java.util.Set;
 
-public interface ChunkClaim extends Claim {
+public interface LandClaim extends Claim {
 
     boolean contains(@NotNull ChunkPos chunkPos);
 

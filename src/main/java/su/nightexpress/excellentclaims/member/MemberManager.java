@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.Claim;
+import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.member.Member;
 import su.nightexpress.excellentclaims.api.member.MemberRank;
 import su.nightexpress.excellentclaims.config.Lang;
@@ -104,7 +105,56 @@ public class MemberManager extends AbstractManager<ClaimPlugin> {
     }
 
     public boolean isAdminMode(@NotNull Player player) {
-        return this.plugin.getUserManager().getUserData(player).isAdminMode();
+        return this.plugin.getUserManager().getOrFetch(player).isAdminMode();
+    }
+
+    public boolean canPromote(@NotNull Player promoter, @NotNull Claim claim, @NotNull Member member) {
+        return claim.hasPermission(promoter, ClaimPermission.PROMOTE_MEMBERS) && this.getPromoteRank(promoter, claim, member) != null;
+    }
+
+    public boolean canDemote(@NotNull Player promoter, @NotNull Claim claim, @NotNull Member member) {
+        return claim.hasPermission(promoter, ClaimPermission.DEMOTE_MEMBERS) && this.getDemoteRank(promoter, claim, member) != null;
+    }
+
+    public boolean canKick(@NotNull Player kicker, @NotNull Claim claim, @NotNull Member member) {
+        if (!this.isAdminMode(kicker) && member.isPlayer(kicker)) return false;
+
+        return claim.hasPermission(kicker, ClaimPermission.REMOVE_MEMBERS);
+    }
+
+    @Nullable
+    public MemberRank getPromoteRank(@NotNull Player promoter, @NotNull Claim claim, @NotNull Member member) {
+        boolean adminMode = this.isAdminMode(promoter);
+
+        if (!adminMode && member.isPlayer(promoter)) return null;
+        if (claim.isOwner(member.getPlayerId())) return null;
+
+        MemberRank rank = member.getRank();
+        MemberRank nextRank = this.getNextRank(rank);
+        if (nextRank == null) return null;
+
+        MemberRank userRank = claim.getMemberRank(promoter);
+        if (!adminMode) {
+            if (userRank == null || nextRank == userRank || nextRank.isAbove(userRank)) return null;
+        }
+
+        return nextRank;
+    }
+
+    @Nullable
+    public MemberRank getDemoteRank(@NotNull Player demoter, @NotNull Claim claim, @NotNull Member member) {
+        boolean adminMode = this.isAdminMode(demoter);
+
+        if (!adminMode && member.isPlayer(demoter)) return null;
+        if (claim.isOwner(member.getPlayerId())) return null;
+
+        MemberRank rank = member.getRank();
+        MemberRank userRank = claim.getMemberRank(demoter);
+        if (!adminMode) {
+            if (userRank == null || rank == userRank || rank.isAbove(userRank)) return null;
+        }
+
+        return this.getPreviousRank(rank);
     }
 
     public void addMember(@NotNull Player player, @NotNull Claim claim, @NotNull String name) {
@@ -123,18 +173,16 @@ public class MemberManager extends AbstractManager<ClaimPlugin> {
             }
 
             if (claim.isOwner(user.getId())) {
-                Lang.MEMBER_ADD_ERROR_OWNER.getMessage()
+                Lang.MEMBER_ADD_ERROR_OWNER.getMessage().send(player, replacer -> replacer
                     .replace(claim.replacePlaceholders())
-                    .replace(Placeholders.PLAYER_NAME, user.getName())
-                    .send(player);
+                    .replace(Placeholders.PLAYER_NAME, user.getName()));
                 return;
             }
 
             if (claim.isMember(user.getId())) {
-                Lang.MEMBER_ADD_ERROR_ALREADY.getMessage()
+                Lang.MEMBER_ADD_ERROR_ALREADY.getMessage().send(player, replacer -> replacer
                     .replace(claim.replacePlaceholders())
-                    .replace(Placeholders.PLAYER_NAME, user.getName())
-                    .send(player);
+                    .replace(Placeholders.PLAYER_NAME, user.getName()));
                 return;
             }
 
@@ -143,11 +191,10 @@ public class MemberManager extends AbstractManager<ClaimPlugin> {
             claim.addMember(member);
             claim.setSaveRequired(true);
 
-            Lang.MEMBER_ADD_SUCCESS.getMessage()
+            Lang.MEMBER_ADD_SUCCESS.getMessage().send(player, replacer -> replacer
                 .replace(rank.replacePlaceholders())
                 .replace(claim.replacePlaceholders())
-                .replace(Placeholders.PLAYER_NAME, user.getName())
-                .send(player);
+                .replace(Placeholders.PLAYER_NAME, user.getName()));
         });
     }
 }

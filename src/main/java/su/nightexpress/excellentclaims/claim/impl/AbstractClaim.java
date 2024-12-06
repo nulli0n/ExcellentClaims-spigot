@@ -3,11 +3,9 @@ package su.nightexpress.excellentclaims.claim.impl;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentclaims.ClaimPlugin;
-import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
@@ -19,16 +17,16 @@ import su.nightexpress.excellentclaims.api.member.MemberRank;
 import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.excellentclaims.flag.FlagRegistry;
 import su.nightexpress.excellentclaims.member.ClaimMember;
-import su.nightexpress.excellentclaims.util.pos.BlockPos;
 import su.nightexpress.excellentclaims.util.ClaimUtils;
-import su.nightexpress.excellentclaims.util.pos.DirectionalPos;
 import su.nightexpress.excellentclaims.util.UserInfo;
+import su.nightexpress.excellentclaims.util.pos.BlockPos;
+import su.nightexpress.excellentclaims.util.pos.DirectionalPos;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.manager.AbstractFileData;
 import su.nightexpress.nightcore.util.LocationUtil;
 import su.nightexpress.nightcore.util.StringUtil;
-import su.nightexpress.nightcore.util.placeholder.PlaceholderMap;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 
 import java.io.File;
 import java.util.*;
@@ -39,7 +37,6 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     protected final ClaimType              type;
     protected final Map<UUID, Member>      members;
     protected final Map<String, FlagValue> flags;
-    protected final PlaceholderMap         placeholders;
 
     private boolean active;
     private boolean saveRequired;
@@ -50,7 +47,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     protected String         displayName;
     protected String         description;
     protected int            priority;
-    protected ItemStack      icon;
+    protected NightItem      icon;
     protected DirectionalPos spawnLocation;
 
     public AbstractClaim(@NotNull ClaimPlugin plugin, @NotNull ClaimType type, @NotNull File file) {
@@ -58,8 +55,6 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         this.type = type;
         this.members = new HashMap<>();
         this.flags = new HashMap<>();
-
-        this.placeholders = Placeholders.forClaim(this);
     }
 
     @Override
@@ -84,7 +79,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         this.setDisplayName(ConfigValue.create("Settings.DisplayName", StringUtil.capitalizeUnderscored(this.getId())).read(config));
         this.setDescription(config.getString("Settings.Description"));
         this.setPriority(config.getInt("Settings.Priority", 0));
-        this.setIcon(config.getItem("Settings.Icon"));
+        this.setIcon(config.getCosmeticItem("Settings.Icon"));
 
         this.loadFlags(config);
 
@@ -148,7 +143,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         config.set("Settings.DisplayName", this.displayName);
         config.set("Settings.Description", this.description);
         config.set("Settings.Priority", this.priority);
-        config.setItem("Settings.Icon", this.icon);
+        config.set("Settings.Icon", this.icon);
     }
 
     protected void writeMembers(@NotNull FileConfig config) {
@@ -168,12 +163,6 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     protected abstract boolean loadAdditional(@NotNull FileConfig config);
 
     protected abstract void saveAdditional(@NotNull FileConfig config);
-
-    @NotNull
-    @Override
-    public PlaceholderMap getPlaceholders() {
-        return this.placeholders;
-    }
 
     protected abstract boolean contains(@NotNull BlockPos blockPos);
 
@@ -210,7 +199,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
         if (!force) {
             if (!this.isOwner(player) && !ClaimUtils.isSafeLocation(location)) {
-                Lang.CLAIM_TELEPORT_ERROR_UNSAFE.getMessage().replace(this.replacePlaceholders()).send(player);
+                Lang.CLAIM_TELEPORT_ERROR_UNSAFE.getMessage().send(player, replacer -> replacer.replace(this.replacePlaceholders()));
                 return false;
             }
         }
@@ -221,7 +210,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
             return false;
         }
 
-        Lang.CLAIM_TELEPORT_SUCCESS.getMessage().replace(this.replacePlaceholders()).send(player);
+        Lang.CLAIM_TELEPORT_SUCCESS.getMessage().send(player, replacer -> replacer.replace(this.replacePlaceholders()));
         return true;
     }
 
@@ -464,13 +453,13 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
     @NotNull
     @Override
-    public ItemStack getIcon() {
-        return new ItemStack(this.icon);
+    public NightItem getIcon() {
+        return this.icon.copy();
     }
 
     @Override
-    public void setIcon(@NotNull ItemStack icon) {
-        this.icon = new ItemStack(icon);
+    public void setIcon(@NotNull NightItem icon) {
+        this.icon = icon.copy();
     }
 
     @NotNull

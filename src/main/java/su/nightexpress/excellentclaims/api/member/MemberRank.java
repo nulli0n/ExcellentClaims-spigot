@@ -2,11 +2,13 @@ package su.nightexpress.excellentclaims.api.member;
 
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
-import su.nightexpress.nightcore.util.placeholder.Placeholder;
 
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
-public interface MemberRank extends Placeholder {
+public interface MemberRank {
+
+    @NotNull UnaryOperator<String> replacePlaceholders();
 
     @NotNull String getId();
 

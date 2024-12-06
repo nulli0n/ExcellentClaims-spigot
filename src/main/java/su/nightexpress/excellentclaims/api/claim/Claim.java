@@ -5,7 +5,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentclaims.api.flag.ClaimFlag;
@@ -13,17 +12,20 @@ import su.nightexpress.excellentclaims.api.flag.Flag;
 import su.nightexpress.excellentclaims.api.flag.FlagValue;
 import su.nightexpress.excellentclaims.api.member.Member;
 import su.nightexpress.excellentclaims.api.member.MemberRank;
+import su.nightexpress.excellentclaims.util.UserInfo;
 import su.nightexpress.excellentclaims.util.pos.BlockPos;
 import su.nightexpress.excellentclaims.util.pos.DirectionalPos;
-import su.nightexpress.excellentclaims.util.UserInfo;
-import su.nightexpress.nightcore.util.placeholder.Placeholder;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 
 import java.io.File;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.UnaryOperator;
 
-public interface Claim extends Placeholder {
+public interface Claim {
+
+    @NotNull UnaryOperator<String> replacePlaceholders();
 
     void save();
 
@@ -111,9 +113,9 @@ public interface Claim extends Placeholder {
 
     void setPriority(int priority);
 
-    @NotNull ItemStack getIcon();
+    @NotNull NightItem getIcon();
 
-    void setIcon(@NotNull ItemStack icon);
+    void setIcon(@NotNull NightItem icon);
 
     @NotNull DirectionalPos getSpawnLocation();
 

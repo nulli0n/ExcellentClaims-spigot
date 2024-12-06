@@ -1,15 +1,15 @@
 package su.nightexpress.excellentclaims.flag.impl.list;
 
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.flag.FlagCategory;
 import su.nightexpress.excellentclaims.flag.impl.AbstractFlag;
 import su.nightexpress.nightcore.config.FileConfig;
-import su.nightexpress.nightcore.menu.MenuViewer;
-import su.nightexpress.nightcore.menu.api.Menu;
+import su.nightexpress.nightcore.ui.menu.Menu;
+import su.nightexpress.nightcore.ui.menu.MenuViewer;
 import su.nightexpress.nightcore.util.Lists;
+import su.nightexpress.nightcore.util.bukkit.NightItem;
 import su.nightexpress.nightcore.util.text.tag.Tags;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public abstract class EnumFlag<E extends Enum<E>> extends AbstractFlag<E> {
                     @NotNull FlagCategory category,
                     @NotNull Class<E> valueType,
                     @NotNull E defaultValue,
-                    @NotNull ItemStack icon,
+                    @NotNull NightItem icon,
                     @NotNull String... description) {
         super(id, category, valueType, defaultValue, icon, description);
     }
