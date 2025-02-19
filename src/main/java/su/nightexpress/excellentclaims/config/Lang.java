@@ -150,6 +150,12 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.enclose("The chunk overlaps with foreign regions.")
     );
 
+    public static final LangText LAND_CLAIM_ERROR_INSUFFICIENT_FUNDS = LangText.of("Land.Claim.Error.InsufficientFunds",
+        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.enclose(BOLD.enclose("Insufficient Funds!")),
+        LIGHT_GRAY.enclose("You need " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " to claim a chunk.")
+    );
+
     public static final LangText LAND_UNCLAIM_SUCCESS = LangText.of("Land.Unlaim.Success",
         OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.BLOCK_ANVIL_BREAK),
         LIGHT_GREEN.enclose(BOLD.enclose("Chunk Unclaimed!")),
@@ -307,6 +313,12 @@ public class Lang extends CoreLang {
         OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.enclose(BOLD.enclose("Region Overlap!")),
         LIGHT_GRAY.enclose("Region cuboid overlaps with foreign regions.")
+    );
+
+    public static final LangText REGION_CREATE_ERROR_INSUFFICIENT_FUNDS = LangText.of("Region.Create.Error.InsufficientFunds",
+        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.enclose(BOLD.enclose("Insufficient Funds!")),
+        LIGHT_GRAY.enclose("You need " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " to claim a region.")
     );
 
     public static final LangText REGION_REMOVE_SUCCESS = LangText.of("Region.Remove.Success",

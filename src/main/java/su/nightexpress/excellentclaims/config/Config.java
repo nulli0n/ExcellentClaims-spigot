@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
+import su.nightexpress.excellentclaims.hook.Hooks;
 import su.nightexpress.excellentclaims.selection.visual.HighlightType;
 import su.nightexpress.excellentclaims.util.ClaimUtils;
 import su.nightexpress.nightcore.config.ConfigValue;
@@ -14,8 +15,7 @@ import su.nightexpress.nightcore.util.rankmap.IntRankMap;
 
 import java.util.Set;
 
-import static su.nightexpress.excellentclaims.Placeholders.PLAYER_NAME;
-import static su.nightexpress.excellentclaims.Placeholders.WIKI_ITEMS_URL;
+import static su.nightexpress.excellentclaims.Placeholders.*;
 
 public class Config {
 
@@ -70,6 +70,27 @@ public class Config {
         "Sets max. description length for claims when changing."
     );
 
+    public static final ConfigValue<Boolean> ECONOMY_ENABLED = ConfigValue.create("Economy.Enabled",
+        false,
+        "Controls whether economy features are enabled.",
+        "[*] You must have " + Hooks.ECONOMY_BRIDGE + " installed for this feature to work."
+    );
+
+    public static final ConfigValue<String> ECONOMY_PROVIDER = ConfigValue.create("Economy.Provider",
+        "vault",
+        "Controls which currency will be used for economy features."
+    );
+
+    public static final ConfigValue<Double> ECONOMY_LAND_CLAIM_COST = ConfigValue.create("Economy.ClaimCost.Land",
+        500D,
+        "Sets land (chunk) claim cost."
+    );
+
+    public static final ConfigValue<Double> ECONOMY_REGION_CLAIM_COST = ConfigValue.create("Economy.ClaimCost.Region",
+        500D,
+        "Sets region claim cost."
+    );
+
     public static final ConfigValue<String[]> WILDERNESS_COMMAND_ALIASES = ConfigValue.create("Wildernes.Command_Aliases",
         new String[]{"wilderness"},
         "Custom aliases for wilderness commands."
@@ -103,7 +124,14 @@ public class Config {
     public static final ConfigValue<NightItem> REGION_WAND_ITEM = ConfigValue.create("Region.WandItem",
         ClaimUtils.getDefaultSelectionItem(),
         "Item used to select region cuboids.",
-        WIKI_ITEMS_URL
+        URL_WIKI_ITEMS
+    );
+
+    public static final ConfigValue<Boolean> REGION_CLAIM_MAX_HEIGHT = ConfigValue.create("Region.Claim.MaxHeight",
+        false,
+        "Allows regions to occupy the whole Y axis when claimed.",
+        "This setting uses the min/max world's height values.",
+        "If world height is changed, the regions claimed prior this change will retain their bounds."
     );
 
     public static final ConfigValue<IntRankMap> REGION_AMOUNT_PER_RANK = ConfigValue.create("Region.Amount_Per_Rank",
@@ -164,13 +192,13 @@ public class Config {
     public static final ConfigValue<NightItem> LAND_MERGE_ITEM = ConfigValue.create("Land.MergeItem",
         ClaimUtils.getDefaultMergeItem(),
         "Item used to merge player's claims.",
-        WIKI_ITEMS_URL
+        URL_WIKI_ITEMS
     );
 
     public static final ConfigValue<NightItem> LAND_SEPARATE_ITEM = ConfigValue.create("Land.SeparateItem",
         ClaimUtils.getDefaultSeparateItem(),
         "Item used to separate player's claims.",
-        WIKI_ITEMS_URL
+        URL_WIKI_ITEMS
     );
 
     public static final ConfigValue<IntRankMap> LAND_AMOUNT_PER_RANK = ConfigValue.create("Land.Amount_Per_Rank",
@@ -240,6 +268,15 @@ public class Config {
         "Block type used for a fake block display entity for region selection's corners connections.",
         "[Default is " + BukkitThing.toString(Material.CHAIN) + "]"
     );
+
+
+    public static boolean isEconomyEnabled() {
+        return ECONOMY_ENABLED.get();
+    }
+
+    public static boolean isRegionsMaxHeight() {
+        return REGION_CLAIM_MAX_HEIGHT.get();
+    }
 
     public static int getDefaultPriority(@NotNull ClaimType type) {
         return (type == ClaimType.REGION ? REGION_DEFAULT_PRIORITY : LAND_DEFAULT_PRIORITY).get();

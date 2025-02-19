@@ -70,6 +70,7 @@ public class Perms {
     public static final UniPermission BYPASS_REGION_BLOCKS_AMOUNT = new UniPermission(PREFIX_BYPASS + "region.blocks.amount");
     public static final UniPermission BYPASS_NAME_LENGTH          = new UniPermission(PREFIX_BYPASS + "name.length");
     public static final UniPermission BYPASS_DESCRIPTION_LENGTH   = new UniPermission(PREFIX_BYPASS + "description.length");
+    public static final UniPermission BYPASS_ECONOMY_CLAIM_COST   = new UniPermission(PREFIX_BYPASS + "economy.claim.cost");
 
     static {
         PLUGIN.addChildren(
@@ -128,7 +129,8 @@ public class Perms {
             BYPASS_REGION_CLAIM_WORLD,
             BYPASS_REGION_BLOCKS_AMOUNT,
             BYPASS_NAME_LENGTH,
-            BYPASS_DESCRIPTION_LENGTH
+            BYPASS_DESCRIPTION_LENGTH,
+            BYPASS_ECONOMY_CLAIM_COST
         );
 
         for (FlagCategory category : FlagCategory.values()) {

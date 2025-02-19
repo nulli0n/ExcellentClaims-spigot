@@ -8,4 +8,5 @@ depend:
 softdepend:
   - ProtocolLib
   - packetevents
+  - EconomyBridge
 api-version: 1.21

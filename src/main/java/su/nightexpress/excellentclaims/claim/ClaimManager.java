@@ -13,6 +13,7 @@ import org.bukkit.projectiles.BlockProjectileSource;
 import org.bukkit.projectiles.ProjectileSource;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.economybridge.api.Currency;
 import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.*;
@@ -39,6 +40,7 @@ import su.nightexpress.excellentclaims.flag.type.DamageTypeList;
 import su.nightexpress.excellentclaims.flag.type.EntityList;
 import su.nightexpress.excellentclaims.flag.type.ListMode;
 import su.nightexpress.excellentclaims.flag.type.MaterialList;
+import su.nightexpress.excellentclaims.hook.Hooks;
 import su.nightexpress.excellentclaims.selection.Selection;
 import su.nightexpress.excellentclaims.util.*;
 import su.nightexpress.excellentclaims.util.pos.BlockPos;
@@ -314,6 +316,12 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
             }
         }
 
+        if (Config.isEconomyEnabled()) {
+            if (!this.payForClaim(player, Config.ECONOMY_LAND_CLAIM_COST.get(), Lang.LAND_CLAIM_ERROR_INSUFFICIENT_FUNDS)) {
+                return false;
+            }
+        }
+
         ChunkClaimEvent claimEvent = new ChunkClaimEvent(player, world, chunkPos);
         this.plugin.getPluginManager().callEvent(claimEvent);
         if (claimEvent.isCancelled()) return false;
@@ -471,6 +479,9 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
         }
 
         World world = player.getWorld();
+        if (Config.REGION_CLAIM_MAX_HEIGHT.get()) {
+            cuboid = cuboid.maxHeight(world);
+        }
 
         if (!this.claimRegion(player, world, cuboid, name)) {
             return false;
@@ -500,7 +511,11 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
         }
 
         int maxBlocks = ClaimUtils.getRegionBlocksLimit(player);
-        if (maxBlocks > 0 && !player.hasPermission(Perms.BYPASS_REGION_BLOCKS_AMOUNT) && cuboid.getVolume() > maxBlocks) {
+        // Do not care about Y axis if all regions must be expanded to the whole Y axis.
+        DimensionType type = Config.isRegionsMaxHeight() ? DimensionType._2D : DimensionType._3D;
+        int volume = cuboid.getVolume(type);
+
+        if (maxBlocks > 0 && !player.hasPermission(Perms.BYPASS_REGION_BLOCKS_AMOUNT) && volume > maxBlocks) {
             Lang.REGION_CREATE_ERROR_MAX_BLOCKS.getMessage().send(player, replacer -> replacer
                 .replace(Placeholders.GENERIC_AMOUNT, NumberUtil.formatCompact(maxBlocks))
             );
@@ -540,6 +555,12 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
                     Lang.REGION_CREATE_ERROR_OVERLAP_FOREIGN_REGION.getMessage().send(player);
                     return false;
                 }
+            }
+        }
+
+        if (Config.isEconomyEnabled()) {
+            if (!this.payForClaim(player, Config.ECONOMY_REGION_CLAIM_COST.get(), Lang.REGION_CREATE_ERROR_INSUFFICIENT_FUNDS)) {
+                return false;
             }
         }
 
@@ -884,7 +905,7 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
         }
         else if (entity instanceof Vehicle && !(entity instanceof LivingEntity)) {
             if (entity instanceof InventoryHolder) {
-                if (entityType == EntityType.CHEST_MINECART || entityType == EntityType.CHEST_BOAT) {
+                if (entityType == EntityType.CHEST_MINECART || entity instanceof ChestBoat) {
                     explicitFlag = PlayerFlags.CHEST_ACCESS;
                 }
                 else explicitFlag = PlayerFlags.CONTAINER_ACCESS;
@@ -997,6 +1018,23 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
 
         Relation relation = this.getRelation(location);
         return relation.hasTargetPermission(player, ClaimPermission.BUILDING) || relation.checkTargetFlag(PlayerFlags.BLOCK_PLACE);
+    }
+
+    private boolean payForClaim(@NotNull Player player, double cost, @NotNull LangText error) {
+        if (cost <= 0D) return false;
+        if (!Hooks.hasEconomyBridge()) return false;
+        if (ClaimUtils.hasClaimCostBypass(player)) return false;
+
+        Currency currency = ClaimUtils.getEconomyProvider();
+        if (currency == null) return false;
+
+        if (currency.getBalance(player) < cost) {
+            error.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_AMOUNT, currency.format(cost)));
+            return false;
+        }
+
+        currency.take(player, cost);
+        return true;
     }
 
     @NotNull

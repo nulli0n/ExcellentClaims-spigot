@@ -150,9 +150,12 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         if (cuboid == null) return;
 
         int max = ClaimUtils.getRegionBlocksLimit(player);
+        // Do not care about Y axis if all regions must be expanded to the whole Y axis.
+        DimensionType type = Config.isRegionsMaxHeight() ? DimensionType._2D : DimensionType._3D;
+        int volume = cuboid.getVolume(type);
 
         Lang.SELECTION_REGION_INFO.getMessage().send(player, replacer -> replacer
-            .replace(Placeholders.GENERIC_VOLUME, NumberUtil.formatCompact(cuboid.getVolume()))
+            .replace(Placeholders.GENERIC_VOLUME, NumberUtil.formatCompact(volume))
             .replace(Placeholders.GENERIC_MAX, max < 0 ? Lang.OTHER_INFINITY.getString() : NumberUtil.formatCompact(max))
         );
     }

@@ -62,6 +62,14 @@ public class Cuboid {
         this.intersectingChunks = new HashSet<>(this.getIntersectingChunks());
     }
 
+    @NotNull
+    public Cuboid maxHeight(@NotNull World world) {
+        BlockPos min = new BlockPos(this.min.getX(), world.getMinHeight(), this.min.getZ());
+        BlockPos max = new BlockPos(this.max.getX(), world.getMaxHeight(), this.max.getZ());
+
+        return new Cuboid(min, max);
+    }
+
     public boolean isSimilar(@NotNull Cuboid other) {
         if (this.isEmpty() || other.isEmpty()) return false;
 
@@ -256,8 +264,12 @@ public class Cuboid {
     }
 
     public int getVolume() {
+        return this.getVolume(DimensionType._3D);
+    }
+
+    public int getVolume(@NotNull DimensionType dimensionType) {
         int xLength = this.max.getX() - this.min.getX() + 1;
-        int yLength = this.max.getY() - this.min.getY() + 1;
+        int yLength = dimensionType == DimensionType._2D ? 1 : this.max.getY() - this.min.getY() + 1;
         int zLength = this.max.getZ() - this.min.getZ() + 1;
 
         return xLength * zLength * yLength;

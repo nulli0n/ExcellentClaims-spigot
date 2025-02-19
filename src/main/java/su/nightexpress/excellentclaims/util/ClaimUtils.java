@@ -7,10 +7,13 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import su.nightexpress.economybridge.EconomyBridge;
+import su.nightexpress.economybridge.api.Currency;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.config.Config;
+import su.nightexpress.excellentclaims.config.Perms;
 import su.nightexpress.excellentclaims.util.pos.ChunkPos;
 import su.nightexpress.nightcore.util.Lists;
 import su.nightexpress.nightcore.util.StringUtil;
@@ -20,6 +23,15 @@ import su.nightexpress.nightcore.util.rankmap.IntRankMap;
 import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 
 public class ClaimUtils {
+
+    @Nullable
+    public static Currency getEconomyProvider() {
+        return EconomyBridge.getCurrency(Config.ECONOMY_PROVIDER.get());
+    }
+
+    public static boolean hasClaimCostBypass(@NotNull Player player) {
+        return player.hasPermission(Perms.BYPASS_ECONOMY_CLAIM_COST);
+    }
 
     public static int getMaxClaimChunksAmount(@NotNull Player player) {
         return Config.LAND_CHUNKS_AMOUNT_PER_RANK.get().getGreatestOrNegative(player);
