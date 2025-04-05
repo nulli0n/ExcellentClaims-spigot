@@ -24,7 +24,7 @@ public class ConfirmMenu extends LinkedMenu<ClaimPlugin, Confirmation> implement
     public static final String FILE_NAME = "confirmation.yml";
 
     public ConfirmMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, MenuType.HOPPER, BLACK.enclose("Are you sure?"));
+        super(plugin, MenuType.HOPPER, BLACK.wrap("Are you sure?"));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
@@ -42,7 +42,7 @@ public class ConfirmMenu extends LinkedMenu<ClaimPlugin, Confirmation> implement
     @Override
     public void loadConfiguration(@NotNull FileConfig config, @NotNull MenuLoader loader) {
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_WRONG_MARK)
-            .setDisplayName(LIGHT_RED.enclose(BOLD.enclose("Cancel")))
+            .setDisplayName(LIGHT_RED.wrap(BOLD.wrap("Cancel")))
             .toMenuItem()
             .setPriority(10)
             .setSlots(0)
@@ -52,7 +52,7 @@ public class ConfirmMenu extends LinkedMenu<ClaimPlugin, Confirmation> implement
         );
 
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_CHECK_MARK)
-            .setDisplayName(LIGHT_GREEN.enclose(BOLD.enclose("Accept")))
+            .setDisplayName(LIGHT_GREEN.wrap(BOLD.wrap("Accept")))
             .toMenuItem()
             .setPriority(10)
             .setSlots(4)

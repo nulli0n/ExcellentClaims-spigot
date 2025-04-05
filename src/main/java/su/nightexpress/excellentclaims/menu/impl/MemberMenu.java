@@ -45,7 +45,7 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
     public record Data(@NotNull Claim claim, @NotNull Member member) {}
 
     public MemberMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, MenuType.GENERIC_9X4, BLACK.enclose("Member Settings: " + PLAYER_NAME));
+        super(plugin, MenuType.GENERIC_9X4, BLACK.wrap("Member Settings: " + PLAYER_NAME));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
@@ -104,25 +104,25 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
         // Plugs
 
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_LOCK)
-            .setDisplayName(DARK_GRAY.enclose("Promote Member") + " " + RED.enclose("[Locked]"))
+            .setDisplayName(DARK_GRAY.wrap("Promote Member") + " " + RED.wrap("[Locked]"))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("This action is not available.")
+                LIGHT_GRAY.wrap("This action is not available.")
             ))
             .toMenuItem().setPriority(1).setSlots(11)
         );
 
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_LOCK)
-            .setDisplayName(DARK_GRAY.enclose("Demote Member") + " " + RED.enclose("[Locked]"))
+            .setDisplayName(DARK_GRAY.wrap("Demote Member") + " " + RED.wrap("[Locked]"))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("This action is not available.")
+                LIGHT_GRAY.wrap("This action is not available.")
             ))
             .toMenuItem().setPriority(1).setSlots(13)
         );
 
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_LOCK)
-            .setDisplayName(DARK_GRAY.enclose("Kick Member") + " " + RED.enclose("[Locked]"))
+            .setDisplayName(DARK_GRAY.wrap("Kick Member") + " " + RED.wrap("[Locked]"))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("This action is not available.")
+                LIGHT_GRAY.wrap("This action is not available.")
             ))
             .toMenuItem().setPriority(1).setSlots(15)
         );
@@ -144,11 +144,11 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
         };
 
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_UP)
-            .setDisplayName(CYAN.enclose(BOLD.enclose("Promote Member")))
+            .setDisplayName(CYAN.wrap(BOLD.wrap("Promote Member")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Promotion: " + CYAN.enclose(RANK_NAME) + " → " + CYAN.enclose(NEXT_RANK)),
+                LIGHT_GRAY.wrap("Promotion: " + CYAN.wrap(RANK_NAME) + " → " + CYAN.wrap(NEXT_RANK)),
                 "",
-                LIGHT_GRAY.enclose(CYAN.enclose("[▶]") + " Click to " + CYAN.enclose("promote") + ".")
+                LIGHT_GRAY.wrap(CYAN.wrap("[▶]") + " Click to " + CYAN.wrap("promote") + ".")
             ))
             .toMenuItem()
             .setPriority(10).setSlots(11).setHandler(ItemHandler.forLink("promote", this, (viewer, event, data) -> {
@@ -167,11 +167,11 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
         );
 
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_DOWN)
-            .setDisplayName(ORANGE.enclose(BOLD.enclose("Demote Member")))
+            .setDisplayName(ORANGE.wrap(BOLD.wrap("Demote Member")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Demotion: " + ORANGE.enclose(RANK_NAME)) + " → " + ORANGE.enclose(PREVIOUS_RANK),
+                LIGHT_GRAY.wrap("Demotion: " + ORANGE.wrap(RANK_NAME)) + " → " + ORANGE.wrap(PREVIOUS_RANK),
                 "",
-                LIGHT_GRAY.enclose(ORANGE.enclose("[▶]") + " Click to " + ORANGE.enclose("demote") + ".")
+                LIGHT_GRAY.wrap(ORANGE.wrap("[▶]") + " Click to " + ORANGE.wrap("demote") + ".")
             ))
             .toMenuItem()
             .setPriority(10).setSlots(13).setHandler(new ItemHandler("demote", this.manageLink((viewer, event, data) -> {
@@ -190,12 +190,12 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("bb72ad8369eb6cd8990cec1f54d1778442a108b0186622c5918eb85159e2fb9e")
-            .setDisplayName(RED.enclose(BOLD.enclose("Kick Member")))
+            .setDisplayName(RED.wrap(BOLD.wrap("Kick Member")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Revoke all claim permissions and"),
-                LIGHT_GRAY.enclose("remove it from the claim completely."),
+                LIGHT_GRAY.wrap("Revoke all claim permissions and"),
+                LIGHT_GRAY.wrap("remove it from the claim completely."),
                 "",
-                LIGHT_GRAY.enclose(RED.enclose("[▶]") + " Click to " + RED.enclose("kick") + ".")
+                LIGHT_GRAY.wrap(RED.wrap("[▶]") + " Click to " + RED.wrap("kick") + ".")
             ))
             .toMenuItem()
             .setPriority(10).setSlots(15).setHandler(new ItemHandler("kick", this.manageLink((viewer, event, data) -> {
@@ -222,7 +222,7 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
         // Generic
 
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_ARROW_DOWN)
-            .localized(Lang.EDITOR_ITEM_RETURN)
+            .localized(Lang.EDITOR_ITEM_BACK)
             .toMenuItem()
             .setPriority(10)
             .setSlots(31)

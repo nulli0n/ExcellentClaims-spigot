@@ -21,19 +21,19 @@ public class Lang extends CoreLang {
     public static final LangEnum<ListMode>        LIST_MODE        = LangEnum.of("Other.ListMode", ListMode.class);
 
     public static final LangString OTHER_LIST_ENTRY_GOOD = LangString.of("Other.ListEntry.Good",
-        LIGHT_GREEN.enclose("✔") + " " + LIGHT_GRAY.enclose(GENERIC_VALUE)
+        LIGHT_GREEN.wrap("✔") + " " + LIGHT_GRAY.wrap(GENERIC_VALUE)
     );
 
     public static final LangString OTHER_LIST_ENTRY_BAD = LangString.of("Other.ListEntry.Bad",
-        LIGHT_RED.enclose("✘") + " " + LIGHT_GRAY.enclose(GENERIC_VALUE)
+        LIGHT_RED.wrap("✘") + " " + LIGHT_GRAY.wrap(GENERIC_VALUE)
     );
 
     public static final LangString OTHER_EMPTY_LIST = LangString.of("Other.EmptyList",
-        LIGHT_GRAY.enclose("< No Entries >")
+        LIGHT_GRAY.wrap("< No Entries >")
     );
 
     public static final LangString OTHER_NO_DESCRIPTION = LangString.of("Other.Claim.NoDescription",
-        LIGHT_GRAY.enclose("<No Description>")
+        LIGHT_GRAY.wrap("<No Description>")
     );
 
     public static final LangString OTHER_UNSET = LangString.of("Other.Unset", "< Unset >");
@@ -81,7 +81,7 @@ public class Lang extends CoreLang {
 
 
     public static final LangText ADMIN_MODE_TOGGLE = LangText.of("AdminMode.Toggle",
-        LIGHT_GRAY.enclose("Admin Mode: " + LIGHT_YELLOW.enclose(GENERIC_VALUE))
+        LIGHT_GRAY.wrap("Admin Mode: " + LIGHT_YELLOW.wrap(GENERIC_VALUE))
     );
 
     public static final LangString WILDERNESS_DISPLAY_NAME = LangString.of("Wilderness.DisplayName", "Wilderness");
@@ -89,544 +89,544 @@ public class Lang extends CoreLang {
     public static final LangString WILDERNESS_OWNER_NAME = LangString.of("Wilderness.OwnerName", "Server");
 
     public static final LangText REGION_SELECTION_INFO = LangText.of("Region.Selection.Info",
-        LIGHT_GRAY.enclose("Set " + LIGHT_YELLOW.enclose("#" + GENERIC_VALUE) + " region position.")
+        LIGHT_GRAY.wrap("Set " + LIGHT_YELLOW.wrap("#" + GENERIC_VALUE) + " region position.")
     );
 
     public static final LangText LAND_BOUNDS_TOGGLE = LangText.of("Land.Bounds.Toggle",
-        LIGHT_GRAY.enclose("Chunk claim bounds: " + LIGHT_YELLOW.enclose(GENERIC_VALUE))
+        LIGHT_GRAY.wrap("Chunk claim bounds: " + LIGHT_YELLOW.wrap(GENERIC_VALUE))
     );
 
     public static final LangText LAND_CLAIM_SUCCESS = LangText.of("Land.Claim.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_PLAYER_LEVELUP),
-        LIGHT_GREEN.enclose(BOLD.enclose("Chunk Claimed!")),
-        LIGHT_GRAY.enclose("Use " + LIGHT_GREEN.enclose("/" + Config.getLandAlias() + " " + LandCommands.DEF_SETTINGS) + " to manage your claim.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_PLAYER_LEVELUP),
+        LIGHT_GREEN.wrap(BOLD.wrap("Chunk Claimed!")),
+        LIGHT_GRAY.wrap("Use " + LIGHT_GREEN.wrap("/" + Config.getLandAlias() + " " + LandCommands.DEF_SETTINGS) + " to manage your claim.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_INVALID_WORLD = LangText.of("Land.Claim.Error.InvalidWorld",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Invalid Location!")),
-        LIGHT_GRAY.enclose("Could not claim land at your location.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Invalid Location!")),
+        LIGHT_GRAY.wrap("Could not claim land at your location.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_BAD_WORLD = LangText.of("Land.Claim.Error.DisabledWorld",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Forbidden World!")),
-        LIGHT_GRAY.enclose("You can't claim chunks in this world.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Forbidden World!")),
+        LIGHT_GRAY.wrap("You can't claim chunks in this world.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_BAD_NAME = LangText.of("Land.Claim.Error.BadName",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Invalid Name!")),
-        LIGHT_GRAY.enclose("Use only latin letters and numbers.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Invalid Name!")),
+        LIGHT_GRAY.wrap("Use only latin letters and numbers.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_OCCUPIED = LangText.of("Land.Claim.Error.Occupied",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Occupied Chunk!")),
-        LIGHT_GRAY.enclose("The chunk is already claimed by someone.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Occupied Chunk!")),
+        LIGHT_GRAY.wrap("The chunk is already claimed by someone.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_ALREADY_CLAIMED = LangText.of("Land.Claim.Error.AlreadyClaimed",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_AMBIENT),
-        LIGHT_RED.enclose(BOLD.enclose("Already Claimed!")),
-        LIGHT_GRAY.enclose("You already claimed this chunk.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_AMBIENT),
+        LIGHT_RED.wrap(BOLD.wrap("Already Claimed!")),
+        LIGHT_GRAY.wrap("You already claimed this chunk.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_MAX_AMOUNT = LangText.of("Land.Claim.Error.MaxAmount",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Too Many Claims!")),
-        LIGHT_GRAY.enclose("You already claimed maximum of " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " chunks.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Too Many Claims!")),
+        LIGHT_GRAY.wrap("You already claimed maximum of " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " chunks.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_OVERLAP_DISABLED = LangText.of("Land.Claim.Error.OverlapDisabled",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Region Overlap!")),
-        LIGHT_GRAY.enclose("The chunk overlaps with claimed regions.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Region Overlap!")),
+        LIGHT_GRAY.wrap("The chunk overlaps with claimed regions.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_OVERLAP_FOREIGN = LangText.of("Land.Claim.Error.OverlapForeign",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Region Overlap!")),
-        LIGHT_GRAY.enclose("The chunk overlaps with foreign regions.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Region Overlap!")),
+        LIGHT_GRAY.wrap("The chunk overlaps with foreign regions.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_INSUFFICIENT_FUNDS = LangText.of("Land.Claim.Error.InsufficientFunds",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Insufficient Funds!")),
-        LIGHT_GRAY.enclose("You need " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " to claim a chunk.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Insufficient Funds!")),
+        LIGHT_GRAY.wrap("You need " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " to claim a chunk.")
     );
 
     public static final LangText LAND_UNCLAIM_SUCCESS = LangText.of("Land.Unlaim.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.BLOCK_ANVIL_BREAK),
-        LIGHT_GREEN.enclose(BOLD.enclose("Chunk Unclaimed!")),
-        LIGHT_GRAY.enclose("The chunk is no longer protected.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.BLOCK_ANVIL_BREAK),
+        LIGHT_GREEN.wrap(BOLD.wrap("Chunk Unclaimed!")),
+        LIGHT_GRAY.wrap("The chunk is no longer protected.")
     );
 
     public static final LangText LAND_UNCLAIM_ERROR_NOTHING = LangText.of("Land.Unclaim.Error.Nothing",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("No Claim!")),
-        LIGHT_GRAY.enclose("The chunk is not claimed.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("No Claim!")),
+        LIGHT_GRAY.wrap("The chunk is not claimed.")
     );
 
 //    public static final LangText LAND_ERROR_NOT_OWNER = LangText.of("Land.Error.NotOwner",
-//        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-//        LIGHT_RED.enclose(BOLD.enclose("Not Your Claim!")),
-//        LIGHT_GRAY.enclose("You do not own this chunk.")
+//        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+//        LIGHT_RED.wrap(BOLD.wrap("Not Your Claim!")),
+//        LIGHT_GRAY.wrap("You do not own this chunk.")
 //    );
 
     public static final LangText LAND_MERGE_ERROR_FOREIGN = LangText.of("Land.Merge.Error.Foreign",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Foreign Claim!")),
-        LIGHT_GRAY.enclose("You can't merge chunks with different owners.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Foreign Claim!")),
+        LIGHT_GRAY.wrap("You can't merge chunks with different owners.")
     );
 
     public static final LangText LAND_MERGE_ERROR_SAME = LangText.of("Land.Merge.Error.Same",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Same Claim!")),
-        LIGHT_GRAY.enclose("You can't merge chunks of the same claim.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Same Claim!")),
+        LIGHT_GRAY.wrap("You can't merge chunks of the same claim.")
     );
 
     public static final LangText LAND_MERGE_ERROR_DIFFERENT_WORLD = LangText.of("Land.Merge.Error.DifferentWorld",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Different Worlds!")),
-        LIGHT_GRAY.enclose("You can't merge claims of different worlds.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Different Worlds!")),
+        LIGHT_GRAY.wrap("You can't merge claims of different worlds.")
     );
 
     public static final LangText LAND_MERGE_ERROR_INACTIVE = LangText.of("Land.Merge.Error.Inactive",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Invalid Claim!")),
-        LIGHT_GRAY.enclose("Claim selected for merge does not exist anymore.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Invalid Claim!")),
+        LIGHT_GRAY.wrap("Claim selected for merge does not exist anymore.")
     );
 
     public static final LangText LAND_MERGE_ERROR_NOTHING = LangText.of("Land.Merge.Error.Nothing",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("No Claim!")),
-        LIGHT_GRAY.enclose("There is no claimed chunk to merge into.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("No Claim!")),
+        LIGHT_GRAY.wrap("There is no claimed chunk to merge into.")
     );
 
     public static final LangText LAND_MERGE_ERROR_MAX_CHUNKS = LangText.of("Land.Merge.Error.MaxChunks",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Too Many Chunks!")),
-        LIGHT_GRAY.enclose("This claim has maximum of " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " merged chunks.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Too Many Chunks!")),
+        LIGHT_GRAY.wrap("This claim has maximum of " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " merged chunks.")
     );
 
     public static final LangText LAND_MERGE_SUCCESS = LangText.of("Land.Merge.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_ENDERMAN_TELEPORT),
-        LIGHT_GREEN.enclose(BOLD.enclose("Claims Merged!")),
-        LIGHT_GRAY.enclose("You successfully merged the claimed chunks.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_ENDERMAN_TELEPORT),
+        LIGHT_GREEN.wrap(BOLD.wrap("Claims Merged!")),
+        LIGHT_GRAY.wrap("You successfully merged the claimed chunks.")
     );
 
     public static final LangText LAND_MERGE_INFO = LangText.of("Land.Merge.Info",
-        LIGHT_GRAY.enclose("Select a claim where you want to merge this claim chunks by using the " + LIGHT_YELLOW.enclose("Merge Tool") + ".")
+        LIGHT_GRAY.wrap("Select a claim where you want to merge this claim chunks by using the " + LIGHT_YELLOW.wrap("Merge Tool") + ".")
     );
 
     public static final LangText LAND_SEPARATE_INFO = LangText.of("Land.Separate.Info",
-        LIGHT_GRAY.enclose("Select a chunk you want to separate from this claim by using the " + LIGHT_YELLOW.enclose("Separate Tool") + ".")
+        LIGHT_GRAY.wrap("Select a chunk you want to separate from this claim by using the " + LIGHT_YELLOW.wrap("Separate Tool") + ".")
     );
 
     public static final LangText LAND_SEPARATE_ERROR_NOTHING = LangText.of("Land.Separate.Error.Nothing",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("No Claim!")),
-        LIGHT_GRAY.enclose("There is no claimed chunk to separate.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("No Claim!")),
+        LIGHT_GRAY.wrap("There is no claimed chunk to separate.")
     );
 
     public static final LangText LAND_SEPARATE_ERROR_DIFFERENT = LangText.of("Land.Separate.Error.Different",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Different Claim!")),
-        LIGHT_GRAY.enclose("This chunk is not from current claim.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Different Claim!")),
+        LIGHT_GRAY.wrap("This chunk is not from current claim.")
     );
 
     public static final LangText LAND_SEPARATE_ERROR_NOT_MERGED = LangText.of("Land.Separate.Error.NotMerged",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Not Merged!")),
-        LIGHT_GRAY.enclose("This claim has single chunk only.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Not Merged!")),
+        LIGHT_GRAY.wrap("This claim has single chunk only.")
     );
 
     public static final LangText LAND_SEPARATE_SUCCESS = LangText.of("Land.Separate.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_ENDERMAN_TELEPORT),
-        LIGHT_GREEN.enclose(BOLD.enclose("Chunk Separated!")),
-        LIGHT_GRAY.enclose("You successfully separated chunk into the new claim.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_ENDERMAN_TELEPORT),
+        LIGHT_GREEN.wrap(BOLD.wrap("Chunk Separated!")),
+        LIGHT_GRAY.wrap("You successfully separated chunk into the new claim.")
     );
 
 
     public static final LangText REGION_CREATE_SUCCESS = LangText.of("Region.Create.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.BLOCK_WOOD_PLACE),
-        LIGHT_GREEN.enclose(BOLD.enclose("Region Created!")),
-        LIGHT_GRAY.enclose("Manage region using " + LIGHT_GREEN.enclose("/" + Config.getRegionAlias() + " " + RegionCommands.DEF_SETTINGS))
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.BLOCK_WOOD_PLACE),
+        LIGHT_GREEN.wrap(BOLD.wrap("Region Created!")),
+        LIGHT_GRAY.wrap("Manage region using " + LIGHT_GREEN.wrap("/" + Config.getRegionAlias() + " " + RegionCommands.DEF_SETTINGS))
     );
 
     public static final LangText REGION_CREATE_ERROR_BAD_WORLD = LangText.of("Region.Create.Error.DisabledWorld",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Forbidden World!")),
-        LIGHT_GRAY.enclose("You can't create regions in this world.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Forbidden World!")),
+        LIGHT_GRAY.wrap("You can't create regions in this world.")
     );
 
     public static final LangText REGION_CREATE_ERROR_NO_SELECTION = LangText.of("Region.Create.Error.NoSelection",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("No Selection!")),
-        LIGHT_GRAY.enclose("You must select a cuboid to define a region.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("No Selection!")),
+        LIGHT_GRAY.wrap("You must select a cuboid to define a region.")
     );
 
     public static final LangText REGION_CREATE_ERROR_INCOMPLETE_SELECTION = LangText.of("Region.Create.Error.IncompleteSelection",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Incomplete Selection!")),
-        LIGHT_GRAY.enclose("You must select two cuboid corners.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Incomplete Selection!")),
+        LIGHT_GRAY.wrap("You must select two cuboid corners.")
     );
 
     public static final LangText REGION_CREATE_ERROR_BAD_NAME = LangText.of("Region.Create.Error.BadName",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Invalid Name!")),
-        LIGHT_GRAY.enclose("Use only latin letters and numbers.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Invalid Name!")),
+        LIGHT_GRAY.wrap("Use only latin letters and numbers.")
     );
 
     public static final LangText REGION_CREATE_ERROR_MAX_AMOUNT = LangText.of("Region.Create.Error.MaxAmount",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Too Many Regions!")),
-        LIGHT_GRAY.enclose("You already claimed maximum of " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " regions.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Too Many Regions!")),
+        LIGHT_GRAY.wrap("You already claimed maximum of " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " regions.")
     );
 
     public static final LangText REGION_CREATE_ERROR_MAX_BLOCKS = LangText.of("Region.Create.Error.MaxBlocks",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Too Big Region!")),
-        LIGHT_GRAY.enclose("You can claim regions with max. of " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " blocks.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Too Big Region!")),
+        LIGHT_GRAY.wrap("You can claim regions with max. of " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " blocks.")
     );
 
     public static final LangText REGION_CREATE_ERROR_ALREADY_EXISTS = LangText.of("Region.Create.Error.AlreadyExists",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Already Exists!")),
-        LIGHT_GRAY.enclose("Region with such name already exists.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Already Exists!")),
+        LIGHT_GRAY.wrap("Region with such name already exists.")
     );
 
     public static final LangText REGION_CREATE_ERROR_OVERLAP_CHUNK = LangText.of("Region.Create.Error.ChunkOverlap",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Chunk Overlap!")),
-        LIGHT_GRAY.enclose("Region cuboid overlaps with claimed chunks.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Chunk Overlap!")),
+        LIGHT_GRAY.wrap("Region cuboid overlaps with claimed chunks.")
     );
 
     public static final LangText REGION_CREATE_ERROR_OVERLAP_FOREIGN_CHUNK = LangText.of("Region.Create.Error.ForeignChunkOverlap",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Chunk Overlap!")),
-        LIGHT_GRAY.enclose("Region cuboid overlaps with foreign chunks.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Chunk Overlap!")),
+        LIGHT_GRAY.wrap("Region cuboid overlaps with foreign chunks.")
     );
 
     public static final LangText REGION_CREATE_ERROR_OVERLAP_FOREIGN_REGION = LangText.of("Region.Create.Error.ForeignRegionOverlap",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Region Overlap!")),
-        LIGHT_GRAY.enclose("Region cuboid overlaps with foreign regions.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Region Overlap!")),
+        LIGHT_GRAY.wrap("Region cuboid overlaps with foreign regions.")
     );
 
     public static final LangText REGION_CREATE_ERROR_INSUFFICIENT_FUNDS = LangText.of("Region.Create.Error.InsufficientFunds",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Insufficient Funds!")),
-        LIGHT_GRAY.enclose("You need " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " to claim a region.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Insufficient Funds!")),
+        LIGHT_GRAY.wrap("You need " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " to claim a region.")
     );
 
     public static final LangText REGION_REMOVE_SUCCESS = LangText.of("Region.Remove.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.BLOCK_ANVIL_BREAK),
-        LIGHT_GREEN.enclose(BOLD.enclose("Region Removed!")),
-        LIGHT_GRAY.enclose("You removed region " + LIGHT_GREEN.enclose(CLAIM_ID) + ".")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.BLOCK_ANVIL_BREAK),
+        LIGHT_GREEN.wrap(BOLD.wrap("Region Removed!")),
+        LIGHT_GRAY.wrap("You removed region " + LIGHT_GREEN.wrap(CLAIM_ID) + ".")
     );
 
     public static final LangText REGION_REMOVE_ERROR_NO_REGION = LangText.of("Region.Remove.Error.NoRegion",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Invalid Region!")),
-        LIGHT_GRAY.enclose("Region with such name does not exists.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Invalid Region!")),
+        LIGHT_GRAY.wrap("Region with such name does not exists.")
     );
 
 //    public static final LangText REGION_ERROR_NOT_OWNER = LangText.of("Region.Error.NotOwner",
-//        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-//        LIGHT_RED.enclose(BOLD.enclose("Not Your Region!")),
-//        LIGHT_GRAY.enclose("You're not the region owner.")
+//        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+//        LIGHT_RED.wrap(BOLD.wrap("Not Your Region!")),
+//        LIGHT_GRAY.wrap("You're not the region owner.")
 //    );
 
 
     public static final LangText MEMBER_ADD_ERROR_OWNER = LangText.of("Member.Add.Error.Owner",
-        LIGHT_GRAY.enclose(LIGHT_RED.enclose(PLAYER_NAME) + " is the claim owner. You can't add it as a member.")
+        LIGHT_GRAY.wrap(LIGHT_RED.wrap(PLAYER_NAME) + " is the claim owner. You can't add it as a member.")
     );
 
 //    public static final LangText MEMBER_ADD_ERROR_SELF = LangText.of("Member.Add.Error.Self",
-//        LIGHT_GRAY.enclose("You can't add yourself to members.")
+//        LIGHT_GRAY.wrap("You can't add yourself to members.")
 //    );
 
     public static final LangText MEMBER_ADD_ERROR_ALREADY = LangText.of("Member.Add.Error.AlreadyAdded",
-        LIGHT_GRAY.enclose(LIGHT_RED.enclose(PLAYER_NAME) + " is already a member of the " + LIGHT_YELLOW.enclose(CLAIM_NAME) + " claim.")
+        LIGHT_GRAY.wrap(LIGHT_RED.wrap(PLAYER_NAME) + " is already a member of the " + LIGHT_YELLOW.wrap(CLAIM_NAME) + " claim.")
     );
 
     public static final LangText MEMBER_ADD_SUCCESS = LangText.of("Member.Add.Success",
-        LIGHT_GRAY.enclose("You added " + LIGHT_YELLOW.enclose(PLAYER_NAME) + " as " + LIGHT_YELLOW.enclose(RANK_NAME) + " to the " + LIGHT_YELLOW.enclose(CLAIM_NAME) + " claim.")
+        LIGHT_GRAY.wrap("You added " + LIGHT_YELLOW.wrap(PLAYER_NAME) + " as " + LIGHT_YELLOW.wrap(RANK_NAME) + " to the " + LIGHT_YELLOW.wrap(CLAIM_NAME) + " claim.")
     );
 
 //    public static final LangText MEMBER_ADD_PROMPT = LangText.of("Member.Add.Prompt",
-//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Player Name]")),
-//        LIGHT_GRAY.enclose("To add it as a claim member.")
+//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Player Name]")),
+//        LIGHT_GRAY.wrap("To add it as a claim member.")
 //    );
 
     public static final LangString MEMBER_ADD_PROMPT = LangString.of("Member.Add.Dialog",
-        //OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Player Name]"))
-        //LIGHT_GRAY.enclose("To add it as a claim member.")
+        //OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Player Name]"))
+        //LIGHT_GRAY.wrap("To add it as a claim member.")
     );
 
 
     public static final LangText GREETING_CLAIM = LangText.of("Greeting.Claim",
-        OUTPUT.enclose(10, 40),
-        LIGHT_YELLOW.enclose(CLAIM_NAME),
-        LIGHT_GRAY.enclose(CLAIM_DESCRIPTION)
+        OUTPUT.wrap(10, 40),
+        LIGHT_YELLOW.wrap(CLAIM_NAME),
+        LIGHT_GRAY.wrap(CLAIM_DESCRIPTION)
     );
 
     public static final LangText GREETING_WILDERNESS = LangText.of("Greeting.Wilderness",
-        OUTPUT.enclose(10, 40),
-        LIGHT_GREEN.enclose(BOLD.enclose("Wilderness")),
-        LIGHT_GRAY.enclose("")
+        OUTPUT.wrap(10, 40),
+        LIGHT_GREEN.wrap(BOLD.wrap("Wilderness")),
+        LIGHT_GRAY.wrap("")
     );
 
 
 //    public static final LangText CLAIM_RENAME_PROMPT = LangText.of("Claim.Rename.Prompt",
-//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Name]")),
-//        LIGHT_GRAY.enclose("To rename your claim.")
+//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Name]")),
+//        LIGHT_GRAY.wrap("To rename your claim.")
 //    );
 
     public static final LangString CLAIM_RENAME_PROMPT = LangString.of("Claim.Rename.Dialog",
-        //OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Claim Name]"))
-        //LIGHT_GRAY.enclose("To rename your claim.")
+        //OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Claim Name]"))
+        //LIGHT_GRAY.wrap("To rename your claim.")
     );
 
     public static final LangText CLAIM_RENAME_SUCCESS = LangText.of("Claim.Rename.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_CELEBRATE),
-        LIGHT_GREEN.enclose(BOLD.enclose("Claim Renamed!")),
-        LIGHT_GRAY.enclose("New name: " + LIGHT_GREEN.enclose(CLAIM_NAME))
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_CELEBRATE),
+        LIGHT_GREEN.wrap(BOLD.wrap("Claim Renamed!")),
+        LIGHT_GRAY.wrap("New name: " + LIGHT_GREEN.wrap(CLAIM_NAME))
     );
 
     public static final LangText CLAIM_RENAME_ERROR_TOO_LONG = LangText.of("Claim.Rename.Error.TooLong",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Long Name!")),
-        LIGHT_GRAY.enclose("Name must be up to " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " characters.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Long Name!")),
+        LIGHT_GRAY.wrap("Name must be up to " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " characters.")
     );
 
 //    public static final LangText CLAIM_DESCRIPTION_PROMPT = LangText.of("Claim.Description.Prompt",
-//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Description Text]")),
-//        LIGHT_GRAY.enclose("To add claim description.")
+//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Description Text]")),
+//        LIGHT_GRAY.wrap("To add claim description.")
 //    );
 
     public static final LangString CLAIM_DESCRIPTION_PROMPT = LangString.of("Claim.Description.Dialog",
-        //.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Description Text]"))
-        //LIGHT_GRAY.enclose("To add claim description.")
+        //.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Description Text]"))
+        //LIGHT_GRAY.wrap("To add claim description.")
     );
 
     public static final LangText CLAIM_DESCRIPTION_SUCCESS = LangText.of("Claim.Description.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_CELEBRATE),
-        LIGHT_GREEN.enclose(BOLD.enclose("Description Changed!")),
-        LIGHT_GRAY.enclose("New description: " + LIGHT_GREEN.enclose(CLAIM_DESCRIPTION))
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_CELEBRATE),
+        LIGHT_GREEN.wrap(BOLD.wrap("Description Changed!")),
+        LIGHT_GRAY.wrap("New description: " + LIGHT_GREEN.wrap(CLAIM_DESCRIPTION))
     );
 
     public static final LangText CLAIM_DESCRIPTION_ERROR_TOO_LONG = LangText.of("Claim.Description.Error.TooLong",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Long Description!")),
-        LIGHT_GRAY.enclose("Description must be up to " + LIGHT_RED.enclose(GENERIC_AMOUNT) + " characters.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Long Description!")),
+        LIGHT_GRAY.wrap("Description must be up to " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " characters.")
     );
 
 //    public static final LangText CLAIM_PRIORITY_PROMPT = LangText.of("Claim.Priority.Prompt",
-//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Priority Value]")),
-//        LIGHT_GRAY.enclose("To change claim priority.")
+//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Priority Value]")),
+//        LIGHT_GRAY.wrap("To change claim priority.")
 //    );
 
     public static final LangString CLAIM_PRIORITY_PROMPT = LangString.of("Claim.Priority.Dialog",
-        //OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Priority Value]"))
-        //LIGHT_GRAY.enclose("To change claim priority.")
+        //OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Priority Value]"))
+        //LIGHT_GRAY.wrap("To change claim priority.")
     );
 
 
     public static final LangText CLAIM_SET_SPAWN_ERROR_OUTSIDE = LangText.of("Claim.SetSpawn.Error.OutSide",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Not in Claim!")),
-        LIGHT_GRAY.enclose("Spawn location must be inside the claim.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Not in Claim!")),
+        LIGHT_GRAY.wrap("Spawn location must be inside the claim.")
     );
 
     public static final LangText CLAIM_SET_SPAWN_ERROR_UNSAFE = LangText.of("Claim.SetSpawn.Error.Unsafe",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Unsafe Location!")),
-        LIGHT_GRAY.enclose("Spawn location must be on solid, harmless block.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Unsafe Location!")),
+        LIGHT_GRAY.wrap("Spawn location must be on solid, harmless block.")
     );
 
     public static final LangText CLAIM_SET_SPAWN_SUCCESS = LangText.of("Claim.SetSpawn.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.BLOCK_WOODEN_DOOR_OPEN),
-        LIGHT_GREEN.enclose(BOLD.enclose("Spawn Set!")),
-        LIGHT_GRAY.enclose("Successfully set spawn for " + LIGHT_GREEN.enclose(CLAIM_NAME) + ".")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.BLOCK_WOODEN_DOOR_OPEN),
+        LIGHT_GREEN.wrap(BOLD.wrap("Spawn Set!")),
+        LIGHT_GRAY.wrap("Successfully set spawn for " + LIGHT_GREEN.wrap(CLAIM_NAME) + ".")
     );
 
 
     public static final LangText CLAIM_TELEPORT_ERROR_UNSAFE = LangText.of("Claim.Teleport.Error.Unsafe",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Unsafe Location!")),
-        LIGHT_GRAY.enclose("There is a hole or lava at claim spawn point.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Unsafe Location!")),
+        LIGHT_GRAY.wrap("There is a hole or lava at claim spawn point.")
     );
 
     public static final LangText CLAIM_TELEPORT_SUCCESS = LangText.of("Claim.Teleport.Success",
-        LIGHT_GRAY.enclose("You teleported to the " + LIGHT_GREEN.enclose(CLAIM_NAME) + " spawn point.")
+        LIGHT_GRAY.wrap("You teleported to the " + LIGHT_GREEN.wrap(CLAIM_NAME) + " spawn point.")
     );
 
 
     public static final LangText CLAIM_TRANSFER_ERROR_YOURSELF = LangText.of("Claim.TransferOwnership.Error.Yourself",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Already Yours!")),
-        LIGHT_GRAY.enclose("You're already claim owner.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Already Yours!")),
+        LIGHT_GRAY.wrap("You're already claim owner.")
     );
 
     public static final LangText CLAIM_TRANSFER_ERROR_TOO_MANY = LangText.of("Claim.TransferOwnership.Error.TooMany",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Too Many Claims!")),
-        LIGHT_GRAY.enclose(LIGHT_RED.enclose(PLAYER_NAME) + " already owns too many claims.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Too Many Claims!")),
+        LIGHT_GRAY.wrap(LIGHT_RED.wrap(PLAYER_NAME) + " already owns too many claims.")
     );
 
     public static final LangText CLAIM_TRANSFER_SUCCESS = LangText.of("Claim.TransferOwnership.Success",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_CELEBRATE),
-        LIGHT_GREEN.enclose(BOLD.enclose("Ownership Transferred!")),
-        LIGHT_GRAY.enclose(LIGHT_GREEN.enclose(PLAYER_NAME) + " now owns " + LIGHT_GREEN.enclose(CLAIM_NAME) + ".")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_CELEBRATE),
+        LIGHT_GREEN.wrap(BOLD.wrap("Ownership Transferred!")),
+        LIGHT_GRAY.wrap(LIGHT_GREEN.wrap(PLAYER_NAME) + " now owns " + LIGHT_GREEN.wrap(CLAIM_NAME) + ".")
     );
 
     public static final LangText CLAIM_TRANSFER_NOTIFY = LangText.of("Claim.TransferOwnership.Notify",
-        LIGHT_GRAY.enclose(LIGHT_GREEN.enclose(PLAYER_NAME) + " transferred you ownership of the " + LIGHT_GREEN.enclose(CLAIM_NAME) + ".")
+        LIGHT_GRAY.wrap(LIGHT_GREEN.wrap(PLAYER_NAME) + " transferred you ownership of the " + LIGHT_GREEN.wrap(CLAIM_NAME) + ".")
     );
 
 
 
     public static final LangText SELECTION_REGION_INFO = LangText.of("Selection.Region.Info",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_CYAN.enclose("Selected " + WHITE.enclose(GENERIC_VOLUME + "/" + GENERIC_MAX) + " blocks.")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_CYAN.wrap("Selected " + WHITE.wrap(GENERIC_VOLUME + "/" + GENERIC_MAX) + " blocks.")
     );
 
 
 
     public static final LangText PROTECTION_BLOCK_BREAK = LangText.of("Protection.Info.BlockBreak",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't break " + LIGHT_YELLOW.enclose(GENERIC_VALUE) + " here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't break " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
     public static final LangText PROTECTION_BLOCK_PLACE = LangText.of("Protection.Info.BlockPlace",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't place " + LIGHT_YELLOW.enclose(GENERIC_VALUE) + " here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't place " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
     public static final LangText PROTECTION_BLOCK_FERTILIZE = LangText.of("Protection.Info.BlockFertilize",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't fertilize " + LIGHT_YELLOW.enclose(GENERIC_VALUE) + " here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't fertilize " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
     public static final LangText PROTECTION_BLOCK_INTERACT = LangText.of("Protection.Info.BlockInteract",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't use " + LIGHT_YELLOW.enclose(GENERIC_VALUE) + " here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't use " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
     public static final LangText PROTECTION_ITEM_USE = LangText.of("Protection.Info.ItemUse",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't use " + LIGHT_YELLOW.enclose(GENERIC_VALUE) + " here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't use " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
     public static final LangText PROTECTION_ENTITY_INTERACT = LangText.of("Protection.Info.EntityInteract",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't use " + LIGHT_YELLOW.enclose(GENERIC_VALUE) + " here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't use " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
     public static final LangText PROTECTION_PORTAL_USE = LangText.of("Protection.Info.Portal",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't use portals here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't use portals here!")
     );
 
     public static final LangText PROTECTION_DAMAGE_ENTITY = LangText.of("Protection.Info.DamageEntity",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't harm " + LIGHT_YELLOW.enclose(GENERIC_VALUE) + " here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't harm " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
     public static final LangText PROTECTION_ITEM_DROP = LangText.of("Protection.Info.ItemDrop",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't drop items here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't drop items here!")
     );
 
     public static final LangText PROTECTION_ITEM_PICKUP = LangText.of("Protection.Info.ItemPickup",
-        OUTPUT.enclose(OutputType.ACTION_BAR),
-        LIGHT_RED.enclose("You can't pickup items here!")
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't pickup items here!")
     );
 
 
 //    public static final LangText FLAG_PROMPT_ENTITY_TYPE = LangText.of("Flag.Prompt.EntityType",
-//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Entity Type]")),
-//        LIGHT_GRAY.enclose("Look in chat for a list of available values.")
+//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Entity Type]")),
+//        LIGHT_GRAY.wrap("Look in chat for a list of available values.")
 //    );
 //
 //    public static final LangText FLAG_PROMPT_DAMAGE_TYPE = LangText.of("Flag.Prompt.DamageType",
-//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Damage Type]")),
-//        LIGHT_GRAY.enclose("Look in chat for a list of available values.")
+//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Damage Type]")),
+//        LIGHT_GRAY.wrap("Look in chat for a list of available values.")
 //    );
 //
 //    public static final LangText FLAG_PROMPT_ITEM_TYPE = LangText.of("Flag.Prompt.ItemType",
-//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Item Name]")),
-//        LIGHT_GRAY.enclose(" ")
+//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Item Name]")),
+//        LIGHT_GRAY.wrap(" ")
 //    );
 //
 //    public static final LangText FLAG_PROMPT_BLOCK_TYPE = LangText.of("Flag.Prompt.BlockType",
-//        OUTPUT.enclose(10, -1) + SOUND.enclose(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Block Name]")),
-//        LIGHT_GRAY.enclose(" ")
+//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
+//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Block Name]")),
+//        LIGHT_GRAY.wrap(" ")
 //    );
 
     public static final LangString FLAG_PROMPT_ENTITY_TYPE = LangString.of("Flag.Dialog.EntityType",
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Entity Type]"))
+        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Entity Type]"))
     );
 
     public static final LangString FLAG_PROMPT_DAMAGE_TYPE = LangString.of("Flag.Dialog.DamageType",
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Damage Type]"))
+        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Damage Type]"))
     );
 
     public static final LangString FLAG_PROMPT_ITEM_TYPE = LangString.of("Flag.Dialog.ItemType",
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Item Name]"))
+        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Item Name]"))
     );
 
     public static final LangString FLAG_PROMPT_BLOCK_TYPE = LangString.of("Flag.Dialog.BlockType",
-        LIGHT_GRAY.enclose("Enter " + LIGHT_GREEN.enclose("[Block Name]"))
+        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Block Name]"))
     );
 
 
     public static final LangText ERROR_NOT_OWNER = LangText.of("Error.NotOwner",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("Not Your Claim!")),
-        LIGHT_GRAY.enclose("Only claim owner can do that.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Not Your Claim!")),
+        LIGHT_GRAY.wrap("Only claim owner can do that.")
     );
 
     public static final LangText ERROR_NO_CLAIM_PERMISSION = LangText.of("Error.NoClaimPermission",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("No Permission!")),
-        LIGHT_GRAY.enclose("You can't do that in this claim.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("No Permission!")),
+        LIGHT_GRAY.wrap("You can't do that in this claim.")
     );
 
     public static final LangText ERROR_NO_CLAIM = LangText.of("Error.NoClaim",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("No Claims!")),
-        LIGHT_GRAY.enclose("There are no claimed chunks/regions at your location.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("No Claims!")),
+        LIGHT_GRAY.wrap("There are no claimed chunks/regions at your location.")
     );
 
     public static final LangText ERROR_NO_CHUNK = LangText.of("Error.NoChunk",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("No Claim!")),
-        LIGHT_GRAY.enclose("There are no claimed chunks at your location.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("No Claim!")),
+        LIGHT_GRAY.wrap("There are no claimed chunks at your location.")
     );
 
     public static final LangText ERROR_NO_REGION = LangText.of("Error.NoRegion",
-        OUTPUT.enclose(20, 60) + SOUND.enclose(Sound.ENTITY_VILLAGER_NO),
-        LIGHT_RED.enclose(BOLD.enclose("No Region!")),
-        LIGHT_GRAY.enclose("There are no regions at your location.")
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("No Region!")),
+        LIGHT_GRAY.wrap("There are no regions at your location.")
     );
 
     public static final LangText ERROR_COMMAND_INVALID_REGION_ARGUMENT = LangText.of("Error.Command.Argument.InvalidRegion",
-        LIGHT_GRAY.enclose(LIGHT_RED.enclose(GENERIC_VALUE) + " is not a valid region!")
+        LIGHT_GRAY.wrap(LIGHT_RED.wrap(GENERIC_VALUE) + " is not a valid region!")
     );
 }

@@ -35,7 +35,7 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
     public static final String FILE_NAME = "claim_menu.yml";
 
     public ClaimMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, MenuType.GENERIC_9X5, BLACK.enclose("Claim Settings: " + CLAIM_NAME));
+        super(plugin, MenuType.GENERIC_9X5, BLACK.wrap("Claim Settings: " + CLAIM_NAME));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
@@ -80,11 +80,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         };
 
         loader.addDefaultItem(NightItem.asCustomHead("3e17932e01422531653739d3becfbb5cf78f5f76a3d7b769e2f661f52c2af2da")
-            .setDisplayName(RED.enclose(BOLD.enclose("Remove Claim")))
+            .setDisplayName(RED.wrap(BOLD.wrap("Remove Claim")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Remove claim permanently."),
+                LIGHT_GRAY.wrap("Remove claim permanently."),
                 "",
-                LIGHT_GRAY.enclose(RED.enclose("[▶]") + " Click to " + RED.enclose("remove") + ".")
+                LIGHT_GRAY.wrap(RED.wrap("[▶]") + " Click to " + RED.wrap("remove") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -97,11 +97,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("f5a19af0e61ca42532c0599fa0a391753df6b71f9fa4a177f1aa9b1d81fe6ee2")
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Display Name")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Display Name")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Current: " + LIGHT_YELLOW.enclose(CLAIM_NAME)),
+                LIGHT_GRAY.wrap("Current: " + LIGHT_YELLOW.wrap(CLAIM_NAME)),
                 "",
-                LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("change") + ".")
+                LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("change") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -119,11 +119,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("1d111a029754d5d2681b65ade843b721d0a814a80dc16a38ea04cae61913ae20")
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Description")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Description")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Current: " + LIGHT_YELLOW.enclose(CLAIM_DESCRIPTION)),
+                LIGHT_GRAY.wrap("Current: " + LIGHT_YELLOW.wrap(CLAIM_DESCRIPTION)),
                 "",
-                LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("change") + ".")
+                LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("change") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -141,11 +141,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("89f7a04ac334fcaf618da9e841f03c00d749002dc592f8540ef9534442cecf42")
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Icon")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Icon")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Represents the claim in GUIs."),
+                LIGHT_GRAY.wrap("Represents the claim in GUIs."),
                 "",
-                LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Drag-n-Drop to " + LIGHT_YELLOW.enclose("change") + ".")
+                LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Drag-n-Drop to " + LIGHT_YELLOW.wrap("change") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -168,11 +168,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("97e6e5657b8f85f3af2c835b3533856607682f8571a4548967e2bdb535ac56b7")
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Members")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Members")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("View and manage claim members."),
+                LIGHT_GRAY.wrap("View and manage claim members."),
                 "",
-                LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("navigate") + ".")
+                LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("navigate") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -187,11 +187,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("88366f62f0e8ec73145937b3c9b3be646b175132c97d0738b2b2dc84ae424e61")
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Flags")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Flags")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("View and manage claim flags."),
+                LIGHT_GRAY.wrap("View and manage claim flags."),
                 "",
-                LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("navigate") + ".")
+                LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("navigate") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -206,11 +206,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("5daf7746ec23ffa4667cf64ba72c941e1683a9c7794875b8428139867642fdf")
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Priority")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Priority")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Current: " + LIGHT_YELLOW.enclose(CLAIM_PRIORITY)),
+                LIGHT_GRAY.wrap("Current: " + LIGHT_YELLOW.wrap(CLAIM_PRIORITY)),
                 "",
-                LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("change") + ".")
+                LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("change") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -229,11 +229,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("b0bfc2577f6e26c6c6f7365c2c4076bccee653124989382ce93bca4fc9e39b")
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Teleport")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Teleport")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Teleport to claim's spawn point."),
+                LIGHT_GRAY.wrap("Teleport to claim's spawn point."),
                 "",
-                LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("teleport") + ".")
+                LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("teleport") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -248,11 +248,11 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("29142c7688f08447dd0c1aa6b5768b3d6767c64ea93046fd38e5833fa6702ea1")
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Transfer Ownership")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Transfer Ownership")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Transfer claim to other player."),
+                LIGHT_GRAY.wrap("Transfer claim to other player."),
                 "",
-                LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("navigate") + ".")
+                LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("navigate") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -269,12 +269,12 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         // ------------ Chunks only ------------ //
 
         loader.addDefaultItem(NightItem.asCustomHead("e7742034f59db890c8004156b727c77ca695c4399d8e0da5ce9227cf836bb8e2")
-            .setDisplayName(CYAN.enclose(BOLD.enclose("Merge Claim")))
+            .setDisplayName(CYAN.wrap(BOLD.wrap("Merge Claim")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Merge chunks(s) of this claim"),
-                LIGHT_GRAY.enclose("into another claim."),
+                LIGHT_GRAY.wrap("Merge chunks(s) of this claim"),
+                LIGHT_GRAY.wrap("into another claim."),
                 "",
-                LIGHT_GRAY.enclose(CYAN.enclose("[▶]") + " Click to " + CYAN.enclose("merge") + ".")
+                LIGHT_GRAY.wrap(CYAN.wrap("[▶]") + " Click to " + CYAN.wrap("merge") + ".")
             ))
             .toMenuItem()
             .setPriority(10)
@@ -289,12 +289,12 @@ public class ClaimMenu extends LinkedMenu<ClaimPlugin, Claim> implements ConfigB
         );
 
         loader.addDefaultItem(NightItem.asCustomHead("f3514f23d6b09e1840cdec7c0d6912dcd30f82110858c133a7f7778c728566dd")
-            .setDisplayName(ORANGE.enclose(BOLD.enclose("Separate Claim")))
+            .setDisplayName(ORANGE.wrap(BOLD.wrap("Separate Claim")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.enclose("Separate a chunk of this"),
-                LIGHT_GRAY.enclose("claim as a dedicated claim."),
+                LIGHT_GRAY.wrap("Separate a chunk of this"),
+                LIGHT_GRAY.wrap("claim as a dedicated claim."),
                 "",
-                LIGHT_GRAY.enclose(ORANGE.enclose("[▶]") + " Click to " + ORANGE.enclose("separate") + ".")
+                LIGHT_GRAY.wrap(ORANGE.wrap("[▶]") + " Click to " + ORANGE.wrap("separate") + ".")
             ))
             .toMenuItem()
             .setPriority(10)

@@ -79,13 +79,13 @@ public class NaturalFlags {
     public static final BooleanFlag ICE_FORM = new BooleanFlag("ice_form", FlagCategory.NATURAL,
         true,
         "ff83f255c35605bf2eb7d314d1f150c16f86ad0c313349fd1c08d4ddbbfe5957",
-        "Allows " + LIGHT_YELLOW.enclose("iec") + " to form in snow biomes."
+        "Allows " + LIGHT_YELLOW.enclose("ice") + " to form in snow biomes."
     );
 
     public static final BooleanFlag ICE_MELT = new BooleanFlag("ice_melt", FlagCategory.NATURAL,
         true,
         "a2644071b6c7bbae7b5e45d9f82f96ffb5ee8e177a23b825a4465607f1c9c",
-        "Allows " + LIGHT_YELLOW.enclose("iec") + " to melt."
+        "Allows " + LIGHT_YELLOW.enclose("ice") + " to melt."
     );
 
     public static final BooleanFlag LEAF_DECAY = new BooleanFlag("leaf_decay", FlagCategory.NATURAL,

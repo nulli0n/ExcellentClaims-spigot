@@ -30,7 +30,7 @@ public class FlagsTypeMenu extends LinkedMenu<ClaimPlugin, Claim> implements Con
     public static final String FILE_NAME = "flag_types.yml";
 
     public FlagsTypeMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, MenuType.GENERIC_9X4, BLACK.enclose("Select category..."));
+        super(plugin, MenuType.GENERIC_9X4, BLACK.wrap("Select category..."));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
@@ -52,7 +52,7 @@ public class FlagsTypeMenu extends LinkedMenu<ClaimPlugin, Claim> implements Con
     @Override
     public void loadConfiguration(@NotNull FileConfig config, @NotNull MenuLoader loader) {
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_ARROW_DOWN)
-            .localized(Lang.EDITOR_ITEM_RETURN)
+            .localized(Lang.EDITOR_ITEM_BACK)
             .toMenuItem()
             .setPriority(10)
             .setSlots(31)
@@ -72,36 +72,36 @@ public class FlagsTypeMenu extends LinkedMenu<ClaimPlugin, Claim> implements Con
             MenuItem menuItem = (switch (category) {
                 case NATURAL ->
                     NightItem.asCustomHead("89f7a04ac334fcaf618da9e841f03c00d749002dc592f8540ef9534442cecf42")
-                        .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Natural Flags")))
+                        .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Natural Flags")))
                         .setLore(Lists.newList(
-                            LIGHT_GRAY.enclose("Flags to control natural"),
-                            LIGHT_GRAY.enclose("world behavior inside a claim."),
+                            LIGHT_GRAY.wrap("Flags to control natural"),
+                            LIGHT_GRAY.wrap("world behavior inside a claim."),
                             "",
-                            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("navigate") + ".")))
+                            LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("navigate") + ".")))
                         .toMenuItem()
                         .setPriority(10)
                         .setSlots(11)
                         .setHandler(handler);
                 case PLAYER ->
                     NightItem.asCustomHead("97e6e5657b8f85f3af2c835b3533856607682f8571a4548967e2bdb535ac56b7")
-                        .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Player Flags")))
+                        .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Player Flags")))
                         .setLore(Lists.newList(
-                            LIGHT_GRAY.enclose("Flags to control player and"),
-                            LIGHT_GRAY.enclose("non-member activity inside a claim."),
+                            LIGHT_GRAY.wrap("Flags to control player and"),
+                            LIGHT_GRAY.wrap("non-member activity inside a claim."),
                             "",
-                            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("navigate") + ".")))
+                            LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("navigate") + ".")))
                         .toMenuItem()
                         .setPriority(10)
                         .setSlots(13)
                         .setHandler(handler);
                 case ENTITY ->
                     NightItem.asCustomHead("1c26ec209756ff5d5b81f25ca4db2ee4dceb52874e5f35bb98ce82cace8ac506")
-                        .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Entity Flags")))
+                        .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Entity Flags")))
                         .setLore(Lists.newList(
-                            LIGHT_GRAY.enclose("Flags to control entity activity"),
-                            LIGHT_GRAY.enclose("and behavior inside a claim."),
+                            LIGHT_GRAY.wrap("Flags to control entity activity"),
+                            LIGHT_GRAY.wrap("and behavior inside a claim."),
                             "",
-                            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("navigate") + ".")))
+                            LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("navigate") + ".")))
                         .toMenuItem()
                         .setPriority(10)
                         .setSlots(15)

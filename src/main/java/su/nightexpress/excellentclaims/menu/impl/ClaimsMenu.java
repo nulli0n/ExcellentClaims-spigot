@@ -60,7 +60,7 @@ public class ClaimsMenu extends LinkedMenu<ClaimPlugin, ClaimsMenu.Data> impleme
     public record Data(@NotNull ClaimType type, @Nullable UserInfo userInfo, @Nullable String worldName) {}
 
     public ClaimsMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, MenuType.GENERIC_9X5, BLACK.enclose("Claims [" + GENERIC_VALUE + "]"));
+        super(plugin, MenuType.GENERIC_9X5, BLACK.wrap("Claims [" + GENERIC_VALUE + "]"));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
@@ -171,31 +171,31 @@ public class ClaimsMenu extends LinkedMenu<ClaimPlugin, ClaimsMenu.Data> impleme
     @Override
     public void loadConfiguration(@NotNull FileConfig config, @NotNull MenuLoader loader) {
         this.titleGlobal = ConfigValue.create("Title.Global",
-            BLACK.enclose("All " + GENERIC_TYPE)
+            BLACK.wrap("All " + GENERIC_TYPE)
         ).read(config);
 
         this.titleUser = ConfigValue.create("Title.User",
-            BLACK.enclose(GENERIC_TYPE + " of " + GENERIC_VALUE)
+            BLACK.wrap(GENERIC_TYPE + " of " + GENERIC_VALUE)
         ).read(config);
 
         this.titleWorld = ConfigValue.create("Title.World",
-            BLACK.enclose(GENERIC_TYPE + " in " + GENERIC_VALUE)
+            BLACK.wrap(GENERIC_TYPE + " in " + GENERIC_VALUE)
         ).read(config);
 
         this.typeChunk = ConfigValue.create("Type.Chunk", "Claims").read(config);
         this.typeRegion = ConfigValue.create("Type.Region", "Regions").read(config);
 
         this.chunkName = ConfigValue.create("Claim.ChunkName",
-            LIGHT_YELLOW.enclose(BOLD.enclose(CLAIM_NAME))
+            LIGHT_YELLOW.wrap(BOLD.wrap(CLAIM_NAME))
         ).read(config);
 
         this.regionName = ConfigValue.create("Claim.RegionName",
-            LIGHT_YELLOW.enclose(BOLD.enclose(CLAIM_NAME)) + " " + GRAY.enclose("(ID: " + WHITE.enclose(CLAIM_ID) + ")")
+            LIGHT_YELLOW.wrap(BOLD.wrap(CLAIM_NAME)) + " " + GRAY.wrap("(ID: " + WHITE.wrap(CLAIM_ID) + ")")
         ).read(config);
 
         this.claimLore = ConfigValue.create("Claim.Lore", Lists.newList(
-            LIGHT_YELLOW.enclose(LIGHT_GRAY.enclose("World: ") + CLAIM_WORLD),
-            LIGHT_YELLOW.enclose(LIGHT_GRAY.enclose("Owner: ") + CLAIM_OWNER_NAME),
+            LIGHT_YELLOW.wrap(LIGHT_GRAY.wrap("World: ") + CLAIM_WORLD),
+            LIGHT_YELLOW.wrap(LIGHT_GRAY.wrap("Owner: ") + CLAIM_OWNER_NAME),
             EMPTY_IF_BELOW,
             INFO_GLOBAL,
             INFO_OWN,
@@ -206,23 +206,23 @@ public class ClaimsMenu extends LinkedMenu<ClaimPlugin, ClaimsMenu.Data> impleme
         )).read(config);
 
         this.globalInfo = ConfigValue.create("Claim.Info.Global", Lists.newList(
-            LIGHT_RED.enclose("✘ You're not a member of this claim.")
+            LIGHT_RED.wrap("✘ You're not a member of this claim.")
         )).read(config);
 
         this.ownInfo = ConfigValue.create("Claim.Info.Own", Lists.newList(
-            LIGHT_GREEN.enclose("✔ You're the owner of this claim.")
+            LIGHT_GREEN.wrap("✔ You're the owner of this claim.")
         )).read(config);
 
         this.memberInfo = ConfigValue.create("Claim.Info.Member", Lists.newList(
-            LIGHT_YELLOW.enclose("✔ You're member of this claim.")
+            LIGHT_YELLOW.wrap("✔ You're member of this claim.")
         )).read(config);
 
         this.teleportInfo = ConfigValue.create("Claim.Action.Teleport", Lists.newList(
-            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Left-Click to " + LIGHT_YELLOW.enclose("teleport") + ".")
+            LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Left-Click to " + LIGHT_YELLOW.wrap("teleport") + ".")
         )).read(config);
 
         this.manageInfo = ConfigValue.create("Claim.Action.Manage", Lists.newList(
-            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Right-Click to " + LIGHT_YELLOW.enclose("manage") + ".")
+            LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Right-Click to " + LIGHT_YELLOW.wrap("manage") + ".")
         )).read(config);
 
         this.claimSlots = ConfigValue.create("Claim.Slots", IntStream.range(0, 36).toArray()).read(config);

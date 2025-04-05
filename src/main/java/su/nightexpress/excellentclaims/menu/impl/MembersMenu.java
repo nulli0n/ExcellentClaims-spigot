@@ -50,7 +50,7 @@ public class MembersMenu extends LinkedMenu<ClaimPlugin, Claim> implements Fille
     private List<String> loreManage;
 
     public MembersMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, MenuType.GENERIC_9X5, BLACK.enclose("Claim Members of " + CLAIM_NAME));
+        super(plugin, MenuType.GENERIC_9X5, BLACK.wrap("Claim Members of " + CLAIM_NAME));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
@@ -104,11 +104,11 @@ public class MembersMenu extends LinkedMenu<ClaimPlugin, Claim> implements Fille
     @Override
     public void loadConfiguration(@NotNull FileConfig config, @NotNull MenuLoader loader) {
         this.memberName = ConfigValue.create("Member.Name",
-            LIGHT_YELLOW.enclose(BOLD.enclose(GENERIC_NAME))
+            LIGHT_YELLOW.wrap(BOLD.wrap(GENERIC_NAME))
         ).read(config);
 
         this.memberLore = ConfigValue.create("Member.Lore", Lists.newList(
-            LIGHT_GRAY.enclose("Rank: " + LIGHT_YELLOW.enclose(RANK_NAME)),
+            LIGHT_GRAY.wrap("Rank: " + LIGHT_YELLOW.wrap(RANK_NAME)),
             EMPTY_IF_BELOW,
             RANK_PERMISSIONS,
             EMPTY_IF_BELOW,
@@ -118,11 +118,11 @@ public class MembersMenu extends LinkedMenu<ClaimPlugin, Claim> implements Fille
         this.memberSlots = ConfigValue.create("Member.Slots", IntStream.range(0, 36).toArray()).read(config);
 
         this.loreManage = ConfigValue.create("Member.Manage", Lists.newList(
-            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("manage") + ".")
+            LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("manage") + ".")
         )).read(config);
 
         loader.addDefaultItem(NightItem.asCustomHead(SKIN_PLUS)
-            .setDisplayName(LIGHT_GREEN.enclose(BOLD.enclose("Add Member")))
+            .setDisplayName(LIGHT_GREEN.wrap(BOLD.wrap("Add Member")))
             .toMenuItem()
             .setPriority(10).setSlots(41).setHandler(new ItemHandler("add_member", this.manageLink((viewer, event, claim) -> {
                 this.handleInput(Dialog.builder(viewer, Lang.MEMBER_ADD_PROMPT, input -> {

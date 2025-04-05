@@ -711,7 +711,7 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
         }
 
         if (player.hasPermission(Perms.BYPASS_NAME_LENGTH)) {
-            String raw = NightMessage.stripAll(name);
+            String raw = NightMessage.stripTags(name);
             int maxLength = Config.GENERAL_MAX_NAME_LENGTH.get();
             if (raw.length() > maxLength) {
                 Lang.CLAIM_RENAME_ERROR_TOO_LONG.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_AMOUNT, maxLength));
@@ -743,7 +743,7 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
         }
 
         if (player.hasPermission(Perms.BYPASS_DESCRIPTION_LENGTH)) {
-            String raw = NightMessage.stripAll(description);
+            String raw = NightMessage.stripTags(description);
             int maxLength = Config.GENERAL_MAX_DESCRIPTION_LENGTH.get();
             if (raw.length() > maxLength) {
                 Lang.CLAIM_DESCRIPTION_ERROR_TOO_LONG.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_AMOUNT, maxLength));
@@ -995,7 +995,7 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
             if (list.isAllowed(mode, source.getDamageType())) return true;
         }
 
-        return damagerPlayer != null && claim.isOwnerOrMember(damagerPlayer);
+        return damagerPlayer != null && (claim.isOwnerOrMember(damagerPlayer) && explicitFlag != PlayerFlags.PLAYER_DAMAGE_PLAYERS);
     }
 
     public boolean canBreak(@NotNull Player player, @NotNull Block block) {

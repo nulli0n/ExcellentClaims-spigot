@@ -110,34 +110,34 @@ public class ClaimUtils {
     @NotNull
     public static NightItem getDefaultSelectionItem() {
         return new NightItem(Material.BLAZE_ROD)
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Region Wand")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Region Wand")))
             .setLore(Lists.newList(
-                DARK_GRAY.enclose("(Drop to exit selection mode)"),
+                DARK_GRAY.wrap("(Drop to exit selection mode)"),
                 "",
-                LIGHT_YELLOW.enclose("[▶] ") + LIGHT_GRAY.enclose("Left-Click to " + LIGHT_YELLOW.enclose("set 1st") + " point."),
-                LIGHT_YELLOW.enclose("[▶] ") + LIGHT_GRAY.enclose("Right-Click to " + LIGHT_YELLOW.enclose("set 2nd") + " point.")
+                LIGHT_YELLOW.wrap("[▶] ") + LIGHT_GRAY.wrap("Left-Click to " + LIGHT_YELLOW.wrap("set 1st") + " point."),
+                LIGHT_YELLOW.wrap("[▶] ") + LIGHT_GRAY.wrap("Right-Click to " + LIGHT_YELLOW.wrap("set 2nd") + " point.")
             ));
     }
 
     @NotNull
     public static NightItem getDefaultMergeItem() {
         return new NightItem(Material.STICK)
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Merge Tool")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Merge Tool")))
             .setLore(Lists.newList(
-                DARK_GRAY.enclose("(Drop to exit merge mode)"),
+                DARK_GRAY.wrap("(Drop to exit merge mode)"),
                 "",
-                LIGHT_YELLOW.enclose("[▶] ") + LIGHT_GRAY.enclose("Click to " + LIGHT_YELLOW.enclose("select chunk") + " .")
+                LIGHT_YELLOW.wrap("[▶] ") + LIGHT_GRAY.wrap("Click to " + LIGHT_YELLOW.wrap("select chunk") + " .")
             ));
     }
 
     @NotNull
     public static NightItem getDefaultSeparateItem() {
         return new NightItem(Material.STICK)
-            .setDisplayName(LIGHT_YELLOW.enclose(BOLD.enclose("Separation Tool")))
+            .setDisplayName(LIGHT_YELLOW.wrap(BOLD.wrap("Separation Tool")))
             .setLore(Lists.newList(
-                DARK_GRAY.enclose("(Drop to exit separation mode)"),
+                DARK_GRAY.wrap("(Drop to exit separation mode)"),
                 "",
-                LIGHT_YELLOW.enclose("[▶] ") + LIGHT_GRAY.enclose("Click to " + LIGHT_YELLOW.enclose("select chunk") + " .")
+                LIGHT_YELLOW.wrap("[▶] ") + LIGHT_GRAY.wrap("Click to " + LIGHT_YELLOW.wrap("select chunk") + " .")
             ));
     }
 }

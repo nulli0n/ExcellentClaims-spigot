@@ -44,7 +44,7 @@ public class TransferMenu extends LinkedMenu<ClaimPlugin, Claim> implements Fill
     private int[]        playerSlots;
 
     public TransferMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, MenuType.GENERIC_9X5, BLACK.enclose("Transfer Claim: " + CLAIM_NAME));
+        super(plugin, MenuType.GENERIC_9X5, BLACK.wrap("Transfer Claim: " + CLAIM_NAME));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
@@ -101,12 +101,12 @@ public class TransferMenu extends LinkedMenu<ClaimPlugin, Claim> implements Fill
     @Override
     public void loadConfiguration(@NotNull FileConfig config, @NotNull MenuLoader loader) {
         this.playerName = ConfigValue.create("Player.Name",
-            LIGHT_YELLOW.enclose(BOLD.enclose(PLAYER_NAME))
+            LIGHT_YELLOW.wrap(BOLD.wrap(PLAYER_NAME))
         ).read(config);
 
         this.playerLore = ConfigValue.create("Player.Lore", Lists.newList(
             "",
-            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " Click to " + LIGHT_YELLOW.enclose("transfer ownership") + ".")
+            LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " Click to " + LIGHT_YELLOW.wrap("transfer ownership") + ".")
         )).read(config);
 
         this.playerSlots = ConfigValue.create("Player.Slots", IntStream.range(0, 36).toArray()).read(config);

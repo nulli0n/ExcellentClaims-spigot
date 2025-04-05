@@ -52,7 +52,7 @@ public class FlagsMenu extends LinkedMenu<ClaimPlugin, FlagsMenu.Data> implement
     public record Data(Claim claim, FlagCategory category){}
 
     public FlagsMenu(@NotNull ClaimPlugin plugin) {
-        super(plugin, MenuType.GENERIC_9X5, BLACK.enclose("Claim Flags: " + CLAIM_NAME));
+        super(plugin, MenuType.GENERIC_9X5, BLACK.wrap("Claim Flags: " + CLAIM_NAME));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
     }
@@ -131,7 +131,7 @@ public class FlagsMenu extends LinkedMenu<ClaimPlugin, FlagsMenu.Data> implement
     @Override
     public void loadConfiguration(@NotNull FileConfig config, @NotNull MenuLoader loader) {
         this.flagName = ConfigValue.create("Flag.Name",
-            LIGHT_YELLOW.enclose(BOLD.enclose(FLAG_NAME))
+            LIGHT_YELLOW.wrap(BOLD.wrap(FLAG_NAME))
         ).read(config);
 
         this.flagLore = ConfigValue.create("Flag.Lore", Lists.newList(
@@ -144,7 +144,7 @@ public class FlagsMenu extends LinkedMenu<ClaimPlugin, FlagsMenu.Data> implement
         )).read(config);
 
         this.flagUnset = ConfigValue.create("Flag.Unset", Lists.newList(
-            LIGHT_GRAY.enclose(LIGHT_YELLOW.enclose("[▶]") + " [Q/Drop] to " + LIGHT_YELLOW.enclose("unset") + ".")
+            LIGHT_GRAY.wrap(LIGHT_YELLOW.wrap("[▶]") + " [Q/Drop] to " + LIGHT_YELLOW.wrap("unset") + ".")
         )).read(config);
 
         this.flagSlots = ConfigValue.create("Flag.Slots", IntStream.range(0, 36).toArray()).read(config);
