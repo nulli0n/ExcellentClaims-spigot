@@ -18,21 +18,22 @@ import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.excellentclaims.hook.Hooks;
 import su.nightexpress.excellentclaims.selection.listener.SelectionListener;
 import su.nightexpress.excellentclaims.selection.type.ItemType;
+import su.nightexpress.excellentclaims.selection.visual.BlockInfo;
 import su.nightexpress.excellentclaims.selection.visual.HighlightType;
 import su.nightexpress.excellentclaims.selection.visual.Tracker;
 import su.nightexpress.excellentclaims.selection.visual.highlight.BlockHighlighter;
 import su.nightexpress.excellentclaims.selection.visual.highlight.BlockPacketsHighlighter;
 import su.nightexpress.excellentclaims.selection.visual.highlight.BlockProtocolHighlighter;
 import su.nightexpress.excellentclaims.util.ClaimUtils;
-import su.nightexpress.excellentclaims.util.pos.BlockPos;
-import su.nightexpress.excellentclaims.util.pos.ChunkPos;
-import su.nightexpress.excellentclaims.util.Cuboid;
-import su.nightexpress.excellentclaims.util.DimensionType;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.manager.AbstractManager;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.nightcore.util.*;
 import su.nightexpress.nightcore.util.bukkit.NightItem;
+import su.nightexpress.nightcore.util.geodata.Cuboid;
+import su.nightexpress.nightcore.util.geodata.DimensionType;
+import su.nightexpress.nightcore.util.geodata.pos.BlockPos;
+import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +49,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
 
     public SelectionManager(@NotNull ClaimPlugin plugin) {
         super(plugin);
-        this.selectionMap = new HashMap<>();
+        this.selectionMap = new ConcurrentHashMap<>();
         this.chunkTracker = new ConcurrentHashMap<>();
         this.mergeMap = new HashMap<>();
     }
@@ -172,7 +173,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
 
         World world = player.getWorld();
         Location playerLocation = player.getLocation();
-        Chunk playerChunk = playerLocation.getChunk();
+        //Chunk playerChunk = playerLocation.getChunk();
 
         int centerX = playerLocation.getBlockX();
         int centerY = playerLocation.getBlockY();
@@ -191,7 +192,6 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         int y = Math.min(maxY, playerY);
 
         BoundingBox box = new BoundingBox(minX, centerY, minZ, maxX, centerY, maxZ);
-        Material cornerType = Config.HIGHLIGHT_CHUNK_BLOCK_CORNER.get();
 
         world.getIntersectingChunks(box).forEach(chunk -> {
             if (!chunk.isLoaded()) return;
@@ -215,10 +215,10 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
     }
 
     public void highlightCuboid(@NotNull Player player, @NotNull Cuboid cuboid, @NotNull HighlightType type) {
-        this.highlightCuboid(player, cuboid, type, true/*, true*/);
+        this.highlightCuboid(player, cuboid, type, true);
     }
 
-    public void highlightCuboid(@NotNull Player player, @NotNull Cuboid cuboid, @NotNull HighlightType type, boolean reset/*, boolean checkIntersect*/) {
+    public void highlightCuboid(@NotNull Player player, @NotNull Cuboid cuboid, @NotNull HighlightType type, boolean reset) {
         if (this.highlighter == null) return;
 
         if (reset) {
@@ -229,7 +229,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         Location playerLocation = player.getLocation();
         Material cornerType = Config.getHighlightCorner(type);
         Material wireType = Config.getHighlightWire(type);
-        Set<Pair<BlockPos, BlockData>> dataSet = new HashSet<>();
+        Set<BlockInfo> dataSet = new HashSet<>();
 
         boolean isRegionOrInChunk = type.isIntersect()
             || type == HighlightType.SELECTION
@@ -252,22 +252,22 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
 
         // Draw all visual blocks at prepated positions with prepared block data.
         dataSet.forEach(pair -> {
-            BlockPos blockPos = pair.getFirst();
+            BlockPos blockPos = pair.getBlockPos();
             Location location = blockPos.toLocation(world);
             ChatColor color = this.getBlockColor(player, world, blockPos, cuboid, type, isRegionOrInChunk);
             float size = isRegionOrInChunk ? 0.98f : 0.5f; // Size 1f will cause texture glitch when inside a block.
 
-            this.highlighter.addVisualBlock(player, location, type, pair.getSecond(), color, size);
+            this.highlighter.addVisualBlock(player, location, type, pair.getBlockData(), color, size);
         });
 
         // Draw intersecting regions only for region selection or when inside a chunk.
         if (checkIntersect && isRegionOrInChunk) {
             Set<Claim> intersecting = new HashSet<>();
             if (type == HighlightType.CHUNK) {
-                intersecting.addAll(this.plugin.getClaimManager().getRegionClaims(world, ChunkPos.from(cuboid.getMin())));
+                intersecting.addAll(this.plugin.getClaimManager().regionLookup().getAt(world, ChunkPos.from(cuboid.getMin())));
             }
             else {
-                intersecting.addAll(this.plugin.getClaimManager().getClaims(world, cuboid));
+                intersecting.addAll(this.plugin.getClaimManager().getStorage().getClaimsInCuboid(world, cuboid));
             }
 
             int playerY = playerLocation.getBlockY() - 2;
@@ -307,7 +307,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         }
         else {
             color = isIn ? ChatColor.WHITE : ChatColor.GRAY;
-            Claim claim = plugin.getClaimManager().getLandClaim(world, blockPos);
+            Claim claim = plugin.getClaimManager().getPrioritizedLand(world, blockPos);
             if (claim != null) {
                 if (claim.isOwnerOrMember(player)) {
                     color = isIn ? ChatColor.GREEN : ChatColor.DARK_GREEN;
@@ -321,10 +321,10 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         return color;
     }
 
-    private void collectBlockData(@NotNull Collection<BlockPos> source, @NotNull Set<Pair<BlockPos, BlockData>> target, @NotNull BlockData data) {
+    private void collectBlockData(@NotNull Collection<BlockPos> source, @NotNull Set<BlockInfo> target, @NotNull BlockData data) {
         if (data.getMaterial().isAir()) return;
 
-        source.stream().filter(blockPos -> blockPos != null && !blockPos.isEmpty()).map(blockPos -> Pair.of(blockPos, data)).forEach(target::add);
+        source.stream().filter(blockPos -> blockPos != null && !blockPos.isEmpty()).map(blockPos -> new BlockInfo(blockPos, data)).forEach(target::add);
     }
 
     @NotNull
@@ -362,14 +362,14 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
     @Nullable
     public ItemType getItemType(@NotNull ItemStack itemStack) {
         String raw = PDCUtil.getString(itemStack, Keys.itemType).orElse(null);
-        return raw == null ? null : StringUtil.getEnum(raw, ItemType.class).orElse(null);
+        return raw == null ? null : Enums.get(raw, ItemType.class);
     }
 
     public void onItemUse(@NotNull Player player, @NotNull ItemType itemType, @NotNull Block block, @NotNull Action action) {
         switch (itemType) {
             case REGION_WAND -> this.selectPosition(player, block.getLocation(), action);
             case CHUNK_MERGE -> this.selectMergePosition(player, MergeType.MERGE, block.getLocation(), action);
-            case CHUNK_SEPARATE -> this.selectMergePosition(player, MergeType.SEPARATE, block.getLocation(), action);
+            case CHUNK_SEPARATE -> this.selectMergePosition(player, MergeType.SPLIT, block.getLocation(), action);
         }
     }
 
@@ -410,7 +410,7 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
     public void removeVisuals(@NotNull Player player, @NotNull HighlightType type) {
         if (this.highlighter != null) {
             this.highlighter.removeVisuals(player, type);
-            if (!type.isIntersect()) {
+            if (type.getIntersectType() != null) {
                 this.highlighter.removeVisuals(player, type.getIntersectType());
             }
         }
@@ -479,11 +479,11 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
     }
 
     public void stopSelection(@NotNull Player player) {
-        this.removeVisuals(player, HighlightType.SELECTION);
-        this.removeTracker(player, tracker -> tracker.setSelection(false));
-
         Players.takeItem(player, itemStack -> this.isItem(itemStack, ItemType.REGION_WAND));
         this.selectionMap.remove(player.getUniqueId());
+
+        this.removeVisuals(player, HighlightType.SELECTION);
+        this.removeTracker(player, tracker -> tracker.setSelection(false));
     }
 
     public void selectPosition(@NotNull Player player, @NotNull Location location, @NotNull Action action) {

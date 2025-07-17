@@ -7,12 +7,16 @@ import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.excellentclaims.util.UserInfo;
-import su.nightexpress.excellentclaims.util.pos.BlockPos;
-import su.nightexpress.excellentclaims.util.pos.DirectionalPos;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.util.bukkit.NightItem;
+import su.nightexpress.nightcore.util.geodata.Cuboid;
+import su.nightexpress.nightcore.util.geodata.pos.BlockPos;
+import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
+import su.nightexpress.nightcore.util.geodata.pos.ExactPos;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.UnaryOperator;
 
@@ -39,7 +43,7 @@ public class Wilderness extends AbstractClaim {
         this.setDescription("");
         this.setPriority(0);
         this.setIcon(new NightItem(Material.GRASS_BLOCK));
-        this.setSpawnLocation(DirectionalPos.empty());
+        this.setSpawnLocation(ExactPos.empty());
 
         return this.loadAdditional(config);
     }
@@ -67,6 +71,17 @@ public class Wilderness extends AbstractClaim {
     }
 
     @Override
+    @NotNull
+    public Set<ChunkPos> getEffectiveChunkPositions() {
+        return Collections.emptySet();
+    }
+
+    @Override
+    public boolean isIntersecting(@NotNull Cuboid cuboid) {
+        return true;
+    }
+
+    @Override
     public boolean isEmpty() {
         return false;
     }
@@ -88,7 +103,7 @@ public class Wilderness extends AbstractClaim {
 
     @Override
     @NotNull
-    public DirectionalPos getSpawnLocation() {
-        return this.world == null ? DirectionalPos.empty() : DirectionalPos.from(this.world.getSpawnLocation());
+    public ExactPos getSpawnLocation() {
+        return this.world == null ? ExactPos.empty() : ExactPos.from(this.world.getSpawnLocation());
     }
 }

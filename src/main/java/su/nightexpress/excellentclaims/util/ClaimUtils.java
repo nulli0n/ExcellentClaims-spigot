@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.economybridge.EconomyBridge;
@@ -14,10 +14,10 @@ import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.config.Config;
 import su.nightexpress.excellentclaims.config.Perms;
-import su.nightexpress.excellentclaims.util.pos.ChunkPos;
 import su.nightexpress.nightcore.util.Lists;
 import su.nightexpress.nightcore.util.StringUtil;
 import su.nightexpress.nightcore.util.bukkit.NightItem;
+import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
 import su.nightexpress.nightcore.util.rankmap.IntRankMap;
 
 import static su.nightexpress.nightcore.util.text.tag.Tags.*;
@@ -78,7 +78,7 @@ public class ClaimUtils {
 
     public static boolean isSafeLocation(@NotNull Location origin) {
         Block block = origin.getBlock();
-        Block under = block.getRelative(BlockFace.DOWN);
+        //Block under = block.getRelative(BlockFace.DOWN);
 
         return !isDangerousBlock(block) && isSafeBlock(block.getRelative(BlockFace.DOWN));
     }
@@ -91,6 +91,12 @@ public class ClaimUtils {
     public static boolean isDangerousBlock(@NotNull Block block) {
         Material material = block.getType();
         return material == Material.LAVA || material == Material.MAGMA_BLOCK;
+    }
+
+    public static boolean isUsableEntity(@NotNull EntityType type) {
+        if (!type.isSpawnable() || !type.isAlive()) return false;
+
+        return type != EntityType.PLAYER;
     }
 
     @NotNull

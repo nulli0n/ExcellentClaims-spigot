@@ -4,18 +4,20 @@ import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
-import su.nightexpress.excellentclaims.hook.Hooks;
 import su.nightexpress.excellentclaims.selection.visual.HighlightType;
 import su.nightexpress.excellentclaims.util.ClaimUtils;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.util.BukkitThing;
 import su.nightexpress.nightcore.util.Lists;
+import su.nightexpress.nightcore.util.Plugins;
 import su.nightexpress.nightcore.util.bukkit.NightItem;
 import su.nightexpress.nightcore.util.rankmap.IntRankMap;
 
+import java.util.List;
 import java.util.Set;
 
-import static su.nightexpress.excellentclaims.Placeholders.*;
+import static su.nightexpress.excellentclaims.Placeholders.PLAYER_NAME;
+import static su.nightexpress.excellentclaims.Placeholders.URL_WIKI_ITEMS;
 
 public class Config {
 
@@ -70,10 +72,16 @@ public class Config {
         "Sets max. description length for claims when changing."
     );
 
+    public static final ConfigValue<List<String>> GENERAL_DEFAULT_BANNED_COMMANDS = ConfigValue.create("General.Default_Banned_Commands",
+        Lists.newList("sethome", "setwarp", "tpyes", "tpaccept"),
+        "Commands that will be added in the Command Usage's blacklist for every new claim.",
+        "These commands will be forbidden to use by non-members until claim owner changes that."
+    );
+
     public static final ConfigValue<Boolean> ECONOMY_ENABLED = ConfigValue.create("Economy.Enabled",
         false,
         "Controls whether economy features are enabled.",
-        "[*] You must have " + Hooks.ECONOMY_BRIDGE + " installed for this feature to work."
+        "[*] You must have " + Plugins.ECONOMY_BRIDGE + " installed for this feature to work."
     );
 
     public static final ConfigValue<String> ECONOMY_PROVIDER = ConfigValue.create("Economy.Provider",

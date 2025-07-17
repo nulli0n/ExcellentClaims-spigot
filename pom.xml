@@ -6,13 +6,20 @@
 
     <groupId>su.nightexpress.excellentclaims</groupId>
     <artifactId>ExcellentClaims</artifactId>
-    <version>1.3.1</version>
+    <version>1.5.0</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>nightexpress</id>
+            <url>https://repo.nightexpressdev.com/releases</url>
+        </repository>
+    </distributionManagement>
 
     <repositories>
         <repository>
@@ -55,14 +62,14 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.21.4-R0.1-SNAPSHOT</version>
+            <version>1.21.7-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>su.nightexpress.nightcore</groupId>
-            <artifactId>nightcore</artifactId>
-            <version>2.7.5</version>
+            <artifactId>main</artifactId>
+            <version>2.7.9</version>
         </dependency>
 
         <dependency>

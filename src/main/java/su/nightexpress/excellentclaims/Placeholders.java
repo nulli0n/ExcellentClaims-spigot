@@ -16,10 +16,14 @@ import java.util.stream.Collectors;
 
 public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
 
-    public static final String GENERIC_TYPE = "%type%";
-    public static final String GENERIC_VOLUME = "%volume%";
-    public static final String GENERIC_AMOUNT = "%amount%";
-    public static final String GENERIC_MAX = "%max%";
+    public static final String GENERIC_TYPE    = "%type%";
+    public static final String GENERIC_VOLUME  = "%volume%";
+    public static final String GENERIC_AMOUNT  = "%amount%";
+    public static final String GENERIC_MAX     = "%max%";
+    public static final String GENERIC_MODE    = "%mode%";
+
+    @Deprecated
+    public static final String GENERIC_ENTRIES = "%entries%";
 
     public static final String CLAIM_ID          = "%claim_id%";
     public static final String CLAIM_NAME        = "%claim_name%";
@@ -77,7 +81,7 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
             rank.getPermissions().stream().map(Lang.CLAIM_PERMISSION::getLocalized).map(Placeholders::goodEntry).collect(Collectors.joining("\n")))
     );
 
-    public static final PlaceholderList<Flag> FLAG = PlaceholderList.create(list -> list
+    public static final PlaceholderList<Flag<?>> FLAG = PlaceholderList.create(list -> list
         .add(FLAG_ID, Flag::getId)
         .add(FLAG_NAME, Flag::getDisplayName)
         .add(FLAG_DESCRIPTION, flag -> String.join("\n", flag.getDescription()))

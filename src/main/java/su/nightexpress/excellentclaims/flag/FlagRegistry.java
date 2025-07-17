@@ -4,10 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.api.flag.FlagCategory;
-import su.nightexpress.excellentclaims.flag.impl.AbstractFlag;
-import su.nightexpress.excellentclaims.flag.list.EntityFlags;
-import su.nightexpress.excellentclaims.flag.list.NaturalFlags;
-import su.nightexpress.excellentclaims.flag.list.PlayerFlags;
+import su.nightexpress.excellentclaims.flag.impl.ClaimFlag;
+import su.nightexpress.excellentclaims.flag.registry.EntityFlags;
+import su.nightexpress.excellentclaims.flag.registry.NaturalFlags;
+import su.nightexpress.excellentclaims.flag.registry.PlayerFlags;
 import su.nightexpress.nightcore.config.FileConfig;
 
 import java.util.*;
@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 public class FlagRegistry {
 
-    private static final String                       FILE_NAME        = "flags.yml";
-    private static final Map<String, AbstractFlag<?>> FLAG_MAP         = new HashMap<>();
-    private static final Set<AbstractFlag<?>>         DELAYED_REGISTER = new HashSet<>();
+    private static final String                    FILE_NAME        = "flags.yml";
+    private static final Map<String, ClaimFlag<?>> FLAG_MAP         = new HashMap<>();
+    private static final Set<ClaimFlag<?>>         DELAYED_REGISTER = new HashSet<>();
 
     private static ClaimPlugin plugin;
     private static FileConfig  config;
@@ -66,53 +66,62 @@ public class FlagRegistry {
     }
 
     private static void registerPlayerFlags() {
-        register(PlayerFlags.ARMOR_STAND_USE);
         register(PlayerFlags.BLOCK_BREAK);
         register(PlayerFlags.BLOCK_FERTILIZE);
-        register(PlayerFlags.BLOCK_INTERACT_MODE);
-        register(PlayerFlags.BLOCK_INTERACT_LIST);
+        register(PlayerFlags.BLOCK_HARVEST);
+        register(PlayerFlags.BLOCK_INTERACT);
         register(PlayerFlags.BLOCK_PLACE);
         register(PlayerFlags.BLOCK_TRAMPLING);
         register(PlayerFlags.CHEST_ACCESS);
-        register(PlayerFlags.CHORUS_FRUIT_USE);
         register(PlayerFlags.CONTAINER_ACCESS);
-        register(PlayerFlags.ENDER_PEARL_USE);
-        register(PlayerFlags.END_PORTAL_USE);
-        register(PlayerFlags.ENTITY_INTERACT_MODE);
-        register(PlayerFlags.ENTITY_INTERACT_LIST);
-        register(PlayerFlags.ITEM_USE_MODE);
-        register(PlayerFlags.ITEM_USE_LIST);
-        register(PlayerFlags.NETHER_PORTAL_USE);
-        register(PlayerFlags.PLAYER_DAMAGE_MODE);
-        register(PlayerFlags.PLAYER_DAMAGE_LIST);
+        register(PlayerFlags.EAT_CAKES);
+        register(PlayerFlags.USE_ENDER_PEARLS);
+        register(PlayerFlags.ENTITY_INTERACT);
+        register(PlayerFlags.PLAYER_DAMAGE);
+        register(PlayerFlags.PLAYER_DAMAGE_ENTITIES);
         register(PlayerFlags.PLAYER_DAMAGE_ANIMALS);
         register(PlayerFlags.PLAYER_DAMAGE_PLAYERS);
         register(PlayerFlags.PLAYER_DAMAGE_VILLAGERS);
         register(PlayerFlags.PLAYER_ITEM_DROP);
         register(PlayerFlags.PLAYER_ITEM_PICKUP);
-        register(PlayerFlags.SPAWN_EGG_USE);
+        register(PlayerFlags.PLACE_FIREWORKS);
+        register(PlayerFlags.SHOOT_BOWS);
+        register(PlayerFlags.THROW_EGGS);
+        register(PlayerFlags.THROW_ENDER_EYES);
+        register(PlayerFlags.THROW_POTIONS);
+        register(PlayerFlags.THROW_TRIDENTS);
+        register(PlayerFlags.THROW_WIND_CHARGES);
+        register(PlayerFlags.USE_ARMOR_STAND);
+        register(PlayerFlags.USE_ANVILS);
+        register(PlayerFlags.USE_BEDS);
         register(PlayerFlags.USE_BUTTONS);
-        register(PlayerFlags.USE_PLATES);
+        register(PlayerFlags.USE_CAULDRONS);
+        register(PlayerFlags.USE_CHORUS_FRUIT);
+        register(PlayerFlags.USE_COMMANDS);
+        register(PlayerFlags.USE_END_PORTAL);
         register(PlayerFlags.USE_DOORS);
+        register(PlayerFlags.USE_HORNS);
+        register(PlayerFlags.USE_LIGHTER);
+        register(PlayerFlags.USE_NETHER_PORTAL);
+        register(PlayerFlags.USE_PLATES);
+        register(PlayerFlags.USE_SIGNS);
+        register(PlayerFlags.USE_SPAWN_EGGS);
         register(PlayerFlags.USE_TRIPWIRES);
-        register(PlayerFlags.VEHICLE_USE);
-        register(PlayerFlags.VILLAGER_INTERACT);
+        register(PlayerFlags.USE_VEHICLES);
+        register(PlayerFlags.USE_VILLAGERS);
     }
 
     private static void registerEntityFlags() {
-        register(EntityFlags.ANIMAL_DAMAGE_MODE);
-        register(EntityFlags.ANIMAL_DAMAGE_LIST);
+        register(EntityFlags.ANIMAL_DAMAGE);
         register(EntityFlags.ANIMAL_GRIEF);
         register(EntityFlags.ANIMAL_SPAWN);
         register(EntityFlags.CREEPER_BLOCK_DAMAGE);
         register(EntityFlags.ENDERMAN_GRIEF);
         register(EntityFlags.ENDER_DRAGON_GRIEF);
         register(EntityFlags.END_CRYSTAL_BLOCK_DAMAGE);
-        register(EntityFlags.EXPLOSION_BLOCK_DAMAGE);
-        register(EntityFlags.ENTITY_SPAWN_MODE);
-        register(EntityFlags.ENTITY_SPAWN_LIST);
+        register(NaturalFlags.EXPLOSION_BLOCK_DAMAGE);
+        register(EntityFlags.ENTITY_SPAWN);
         register(EntityFlags.FIREBALL_BLOCK_DAMAGE);
-        register(EntityFlags.MONSTER_DAMAGE_PLAYERS);
         register(EntityFlags.MONSTER_SPAWN);
         register(EntityFlags.RAVAGER_GRIEF);
         register(EntityFlags.SILVERFISH_INFEST);
@@ -134,7 +143,7 @@ public class FlagRegistry {
     }
 
     @NotNull
-    public static <T, F extends AbstractFlag<T>> F register(@NotNull F flag) {
+    public static <T, F extends ClaimFlag<T>> F register(@NotNull F flag) {
         if (config == null || plugin == null) {
             DELAYED_REGISTER.add(flag);
             return flag;
@@ -149,17 +158,17 @@ public class FlagRegistry {
     }
 
     @Nullable
-    public static AbstractFlag<?> getFlag(@NotNull String id) {
+    public static ClaimFlag<?> getFlag(@NotNull String id) {
         return FLAG_MAP.get(id.toLowerCase());
     }
 
     @NotNull
-    public static Set<AbstractFlag<?>> getFlags() {
+    public static Set<ClaimFlag<?>> getFlags() {
         return new HashSet<>(FLAG_MAP.values());
     }
 
     @NotNull
-    public static Set<AbstractFlag<?>> getFlags(@NotNull FlagCategory category) {
+    public static Set<ClaimFlag<?>> getFlags(@NotNull FlagCategory category) {
         return FLAG_MAP.values().stream().filter(flag -> flag.getCategory() == category).collect(Collectors.toSet());
     }
 

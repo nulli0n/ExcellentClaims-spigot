@@ -13,7 +13,7 @@ Other:
     MANAGE_MEMBERS: 管理成员
     ADD_MEMBERS: 添加成员
     REMOVE_MEMBERS: 移除成员
-    PROMOTE_MEMBERS: 提升成员
+    PROMOTE_MEMBERS: 晋升成员
     DEMOTE_MEMBERS: 降级成员
     MERGE_CLAIM: 合并领地
     SEPARATE_CLAIM: 拆分领地
@@ -35,7 +35,7 @@ Other:
     Bad: "&c✘ &7%value%"
   EmptyList: "&7<无条目>"
   Claim:
-    NoDescription: "&7<无描述>"
+    NoDescription: "&7 "
   Unset: <未设置>
 Command:
   Argument:
@@ -160,6 +160,14 @@ Region:
         - <output:"titles:20:60:20"><sound:"entity_villager_no">
         - "&c区域重叠!"
         - "&7区域立方体与他人的区域重叠"
+      MaxBlocks:
+        - <output:"titles:20:60:20"><sound:"entity.villager.no">
+        - "&c区域过大!"
+        - "&7你最多可声明 &e%amount% &7方块的区域"
+      InsufficientFunds:
+        - <output:"titles:20:60:20"><sound:"entity.villager.no:0.6:1.0">
+        - "&c余额不足!"
+        - "&7声明区域需要 &6%amount%金币"
   Remove:
     Success:
       - <output:"titles:20:60:20"><sound:"block_anvil_break">
@@ -207,6 +215,14 @@ Land:
         - <output:"titles:20:60:20"><sound:"entity_villager_no">
         - "&c区域重叠!"
         - "&7该区块与他人的区域重叠"
+      BadName:
+        - <output:"titles:20:60:20"><sound:"entity.villager.no">
+        - "&c无效名称!"
+        - "&7仅允许使用拉丁字母和数字"
+      InsufficientFunds:
+        - <output:"titles:20:60:20"><sound:"entity.villager.no:0.6:1.0">
+        - "&c余额不足!"
+        - "&7声明区块需要 &6%amount%金币"
   Unclaim:
     Error:
       Nothing:
@@ -265,8 +281,8 @@ Land:
       - "&7你已成功将区块拆分为新的领地"
   Unlaim:
     Success:
-      - '<output:"titles:20:60:20"><sound:"block_anvil_break">'
-      - "<&a区块已放弃！"
+      - <output:"titles:20:60:20"><sound:"block_anvil_break">
+      - <&a区块已放弃！
       - "&7该区块不再受领地的保护"
 Member:
   Add:
@@ -278,6 +294,7 @@ Member:
       - <output:"titles:10:-1:10"><sound:"block_lava_pop">
       - "&7输入 &a[玩家名称]"
       - "&7将其添加为领地成员"
+    Dialog: "&7输入 &a[玩家名称]"
 Greeting:
   Claim:
     - <output:"titles:10:40:10">
@@ -286,7 +303,7 @@ Greeting:
   Wilderness:
     - <output:"titles:10:40:10">
     - "&a野外"
-    - "&7"
+    - "&7未被保护的开放区域，请小心!"
 Claim:
   Rename:
     Prompt:
@@ -302,6 +319,7 @@ Claim:
         - <output:"titles:20:60:20"><sound:"entity_villager_no">
         - "&c名称过长!"
         - "&7名称最多为 &e%amount% &7个字符"
+    Dialog: "&7输入 &a[领地名字]"
   Description:
     Prompt:
       - <output:"titles:10:-1:10"><sound:"block_lava_pop">
@@ -316,11 +334,13 @@ Claim:
         - <output:"titles:20:60:20"><sound:"entity_villager_no">
         - "&c描述过长!"
         - "&7描述最多为 &e%amount% &7个字符"
+    Dialog: "&7输入 &a[描述文本]"
   Priority:
     Prompt:
       - <output:"titles:10:-1:10"><sound:"block_lava_pop">
       - "&7输入 &a[优先级值]"
       - "&7以更改领地优先级"
+    Dialog: "&7输入 &a[优先级值]"
   SetSpawn:
     Error:
       OutSide:
@@ -407,6 +427,11 @@ Flag:
       - <output:"titles:10:-1:10"><sound:"block_lava_pop">
       - "&7输入 &a[方块名称]"
       - "&7"
+  Dialog:
+    EntityType: "&7输入 &a[实体类型]"
+    DamageType: "&7输入 &a[伤害类型]"
+    ItemType: "&7输入 &a[物品名称]"
+    BlockType: "&7输入 &a[方块名称]"
 Error:
   NotOwner:
     - <output:"titles:20:60:20"><sound:"entity_villager_no">
@@ -431,3 +456,8 @@ Error:
   Command:
     Argument:
       InvalidRegion: "&b%value% &c不是有效的区域!"
+Selection:
+  Region:
+    Info:
+      - <output:"action_bar">
+      - "&7选择 &e%volume%&8/&e%max% &7个方块"

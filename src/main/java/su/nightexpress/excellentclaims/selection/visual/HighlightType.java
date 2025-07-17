@@ -14,9 +14,9 @@ public enum HighlightType {
     private final boolean intersect;
     private final HighlightType intersectType;
 
-    HighlightType() {
-        this(false, null);
-    }
+//    HighlightType() {
+//        this(false, null);
+//    }
 
     HighlightType(boolean intersect) {
         this(intersect, null);
@@ -32,10 +32,10 @@ public enum HighlightType {
     }
 
     public boolean isIntersect() {
-        return intersect;
+        return this.intersect;
     }
 
     public HighlightType getIntersectType() {
-        return intersectType;
+        return this.intersectType;
     }
 }

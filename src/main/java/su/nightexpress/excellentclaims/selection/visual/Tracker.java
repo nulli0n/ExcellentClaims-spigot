@@ -1,13 +1,13 @@
 package su.nightexpress.excellentclaims.selection.visual;
 
 import org.jetbrains.annotations.Nullable;
-import su.nightexpress.excellentclaims.util.pos.BlockPos;
+import su.nightexpress.nightcore.util.geodata.pos.BlockPos;
 
 public class Tracker {
 
     private BlockPos previousPos;
-    private boolean chunkBounds;
-    private boolean selection;
+    private boolean  chunkBounds;
+    private boolean  selection;
 
     public Tracker() {
         this.previousPos = null;

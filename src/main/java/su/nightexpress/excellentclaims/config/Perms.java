@@ -8,10 +8,11 @@ import java.util.function.Function;
 
 public class Perms {
 
-    public static final String PREFIX         = "excellentclaims.";
-    public static final String PREFIX_COMMAND = PREFIX + "command.";
-    public static final String PREFIX_BYPASS  = PREFIX + "bypass.";
-    public static final String PREFIX_FLAG    = PREFIX + "flag.";
+    public static final String PREFIX          = "excellentclaims.";
+    public static final String PREFIX_COMMAND  = PREFIX + "command.";
+    public static final String PREFIX_BYPASS   = PREFIX + "bypass.";
+    public static final String PREFIX_FLAG     = PREFIX + "flag.";
+    public static final String PREFIX_ADVANCED = PREFIX + "advanced.";
 
     public static final UniPermission PLUGIN  = new UniPermission(PREFIX + Placeholders.WILDCARD);
     public static final UniPermission COMMAND = new UniPermission(PREFIX_COMMAND + Placeholders.WILDCARD);
@@ -54,7 +55,7 @@ public class Perms {
     public static final UniPermission COMMAND_LAND_LIST_OTHERS = new UniPermission(PREFIX_COMMAND + "land.list.others");
     public static final UniPermission COMMAND_LAND_LIST_ALL    = new UniPermission(PREFIX_COMMAND + "land.listall");
     public static final UniPermission COMMAND_LAND_MERGE       = new UniPermission(PREFIX_COMMAND + "land.merge");
-    public static final UniPermission COMMAND_LAND_SEPARATE    = new UniPermission(PREFIX_COMMAND + "land.separate");
+    public static final UniPermission COMMAND_LAND_SPLIT       = new UniPermission(PREFIX_COMMAND + "land.separate");
     public static final UniPermission COMMAND_LAND_SET_SPAWN   = new UniPermission(PREFIX_COMMAND + "land.setspawn");
     public static final UniPermission COMMAND_LAND_BOUNDS      = new UniPermission(PREFIX_COMMAND + "land.bounds");
     public static final UniPermission COMMAND_LAND_RENAME      = new UniPermission(PREFIX_COMMAND + "land.rename");
@@ -62,6 +63,15 @@ public class Perms {
     public static final UniPermission COMMAND_LAND_TRANSFER    = new UniPermission(PREFIX_COMMAND + "land.transfer");
 
     public static final UniPermission COMMAND_RELOAD = new UniPermission(PREFIX_COMMAND + "reload");
+
+    public static final UniPermission ADVANCED               = new UniPermission(PREFIX_ADVANCED + Placeholders.WILDCARD);
+    public static final UniPermission ADVANCED_SETTINGS      = new UniPermission(PREFIX_ADVANCED + "settings");
+    public static final UniPermission ADVANCED_MOB_SPAWNS    = new UniPermission(PREFIX_ADVANCED + "mobspawns");
+    public static final UniPermission ADVANCED_MOB_INTERACT  = new UniPermission(PREFIX_ADVANCED + "mobinteract");
+    public static final UniPermission ADVANCED_BLOCK_USAGE   = new UniPermission(PREFIX_ADVANCED + "blockusage");
+    public static final UniPermission ADVANCED_ANIMAL_DAMAGE = new UniPermission(PREFIX_ADVANCED + "animaldamage");
+    public static final UniPermission ADVANCED_PLAYER_DAMAGE = new UniPermission(PREFIX_ADVANCED + "playerdamage");
+    public static final UniPermission ADVANCED_COMMAND_USAGE = new UniPermission(PREFIX_ADVANCED + "commandusage");
 
     public static final UniPermission BYPASS_CHUNK_CLAIM_OVERLAP  = new UniPermission(PREFIX_BYPASS + "chunk.claim.overlap");
     public static final UniPermission BYPASS_REGION_CLAIM_OVERLAP = new UniPermission(PREFIX_BYPASS + "region.claim.overlap");
@@ -77,6 +87,7 @@ public class Perms {
             COMMAND,
             BYPASS,
             FLAG,
+            ADVANCED,
             CLAIMS_PRIORITY
         );
 
@@ -113,13 +124,23 @@ public class Perms {
             COMMAND_LAND_LIST_OTHERS,
             COMMAND_LAND_LIST_ALL,
             COMMAND_LAND_MERGE,
-            COMMAND_LAND_SEPARATE,
+            COMMAND_LAND_SPLIT,
             COMMAND_LAND_SET_SPAWN,
             COMMAND_LAND_BOUNDS,
             COMMAND_LAND_RENAME,
             COMMAND_LAND_DESCRIPTION,
             COMMAND_LAND_TRANSFER,
             COMMAND_RELOAD
+        );
+
+        ADVANCED.addChildren(
+            ADVANCED_ANIMAL_DAMAGE,
+            ADVANCED_BLOCK_USAGE,
+            ADVANCED_COMMAND_USAGE,
+            ADVANCED_MOB_INTERACT,
+            ADVANCED_MOB_SPAWNS,
+            ADVANCED_PLAYER_DAMAGE,
+            ADVANCED_SETTINGS
         );
 
         BYPASS.addChildren(

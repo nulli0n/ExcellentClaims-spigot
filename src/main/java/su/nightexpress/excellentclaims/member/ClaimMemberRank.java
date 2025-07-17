@@ -5,6 +5,7 @@ import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.member.MemberRank;
 import su.nightexpress.nightcore.config.FileConfig;
+import su.nightexpress.nightcore.util.Enums;
 import su.nightexpress.nightcore.util.Lists;
 import su.nightexpress.nightcore.util.StringUtil;
 
@@ -33,7 +34,7 @@ public class ClaimMemberRank implements MemberRank {
         List<ClaimMemberRank> list = new ArrayList<>();
 
         list.add(new ClaimMemberRank("member", "Member", 1, Lists.newSet(
-            ClaimPermission.BUILDING, ClaimPermission.BLOCK_INTERACT, ClaimPermission.VIEW_MEMBERS, ClaimPermission.TELEPORT))
+            ClaimPermission.BLOCK_INTERACT, ClaimPermission.VIEW_MEMBERS, ClaimPermission.TELEPORT))
         );
 
         list.add(new ClaimMemberRank("trusted", "Trusted", 5, Lists.newSet(
@@ -74,8 +75,7 @@ public class ClaimMemberRank implements MemberRank {
         String displayName = config.getString(path + ".DisplayName", StringUtil.capitalizeUnderscored(id));
         int priority = config.getInt(path + ".Priority");
 
-        Set<ClaimPermission> permissions = Lists.modify(config.getStringSet(path + ".Permissions"),
-            name -> StringUtil.getEnum(name, ClaimPermission.class).orElse(null));
+        Set<ClaimPermission> permissions = Lists.modify(config.getStringSet(path + ".Permissions"), name -> Enums.get(name, ClaimPermission.class));
         permissions.removeIf(Objects::isNull);
 
         return new ClaimMemberRank(id, displayName, priority, permissions);
@@ -100,33 +100,33 @@ public class ClaimMemberRank implements MemberRank {
 
     @Override
     public boolean isAbove(@NotNull MemberRank other) {
-        return this.getPriority() > other.getPriority();
+        return this.priority > other.getPriority();
     }
 
     @Override
     public boolean isBehind(@NotNull MemberRank other) {
-        return this.getPriority() < other.getPriority();
+        return this.priority < other.getPriority();
     }
 
     @NotNull
     @Override
     public String getId() {
-        return id;
+        return this.id;
     }
 
     @NotNull
     @Override
     public String getDisplayName() {
-        return displayName;
+        return this.displayName;
     }
 
     @Override
     public int getPriority() {
-        return priority;
+        return this.priority;
     }
 
     @Override
     public Set<ClaimPermission> getPermissions() {
-        return permissions;
+        return this.permissions;
     }
 }

@@ -1,5 +1,6 @@
 package su.nightexpress.excellentclaims.menu.impl;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -7,37 +8,38 @@ import org.bukkit.inventory.MenuType;
 import org.jetbrains.annotations.NotNull;
 import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.api.claim.Claim;
+import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.member.Member;
 import su.nightexpress.excellentclaims.api.member.MemberRank;
 import su.nightexpress.excellentclaims.config.Config;
-import su.nightexpress.excellentclaims.config.Lang;
+import su.nightexpress.excellentclaims.menu.type.ClaimMenu;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
+import su.nightexpress.nightcore.ui.UIUtils;
 import su.nightexpress.nightcore.ui.menu.MenuViewer;
+import su.nightexpress.nightcore.ui.menu.confirmation.Confirmation;
 import su.nightexpress.nightcore.ui.menu.data.ConfigBased;
 import su.nightexpress.nightcore.ui.menu.data.MenuLoader;
 import su.nightexpress.nightcore.ui.menu.item.ItemHandler;
 import su.nightexpress.nightcore.ui.menu.item.ItemOptions;
+import su.nightexpress.nightcore.ui.menu.item.MenuItem;
 import su.nightexpress.nightcore.ui.menu.type.LinkedMenu;
 import su.nightexpress.nightcore.util.Lists;
 import su.nightexpress.nightcore.util.bukkit.NightItem;
 
 import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 
-import static su.nightexpress.excellentclaims.Placeholders.*;
+import static su.nightexpress.excellentclaims.Placeholders.PLAYER_NAME;
+import static su.nightexpress.excellentclaims.Placeholders.RANK_NAME;
 import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 
-@SuppressWarnings("UnstableApiUsage")
-public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> implements ConfigBased {
+public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> implements ConfigBased, ClaimMenu {
 
     public static final String FILE_NAME = "claim_member.yml";
 
     private static final String NEXT_RANK     = "%next_rank%";
     private static final String PREVIOUS_RANK = "%previous_rank%";
-
-    private static final String SKIN_UP   = "77334cddfab45d75ad28e1a47bf8cf5017d2f0982f6737da22d4972952510661";
-    private static final String SKIN_DOWN = "7189c997db7cbfd632c2298f6db0c0a3dd4fc4cbbb278be75484fc82c6b806d4";
-    private static final String SKIN_LOCK = "e6015b480ac2ce4834c9d8f2ca5d15c6cac38a52147040a1c4c095a2319816f5";
 
     private String noNextRank;
     private String noPrevRank;
@@ -48,6 +50,11 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
         super(plugin, MenuType.GENERIC_9X4, BLACK.wrap("Member Settings: " + PLAYER_NAME));
 
         this.load(FileConfig.loadOrExtract(plugin, Config.DIR_UI, FILE_NAME));
+    }
+
+    @Override
+    public boolean hasPermission(@NotNull Player player, @NotNull Claim claim) {
+        return claim.hasPermission(player, ClaimPermission.MANAGE_MEMBERS);
     }
 
     public void open(@NotNull Player player, @NotNull Claim claim, @NotNull Member member) {
@@ -103,27 +110,21 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
 
         // Plugs
 
-        loader.addDefaultItem(NightItem.asCustomHead(SKIN_LOCK)
+        loader.addDefaultItem(NightItem.fromType(Material.GRAY_STAINED_GLASS_PANE)
             .setDisplayName(DARK_GRAY.wrap("Promote Member") + " " + RED.wrap("[Locked]"))
-            .setLore(Lists.newList(
-                LIGHT_GRAY.wrap("This action is not available.")
-            ))
+            .setLore(Lists.newList(GRAY.wrap("This action is not available.")))
             .toMenuItem().setPriority(1).setSlots(11)
         );
 
-        loader.addDefaultItem(NightItem.asCustomHead(SKIN_LOCK)
+        loader.addDefaultItem(NightItem.fromType(Material.GRAY_STAINED_GLASS_PANE)
             .setDisplayName(DARK_GRAY.wrap("Demote Member") + " " + RED.wrap("[Locked]"))
-            .setLore(Lists.newList(
-                LIGHT_GRAY.wrap("This action is not available.")
-            ))
+            .setLore(Lists.newList(GRAY.wrap("This action is not available.")))
             .toMenuItem().setPriority(1).setSlots(13)
         );
 
-        loader.addDefaultItem(NightItem.asCustomHead(SKIN_LOCK)
+        loader.addDefaultItem(NightItem.fromType(Material.GRAY_STAINED_GLASS_PANE)
             .setDisplayName(DARK_GRAY.wrap("Kick Member") + " " + RED.wrap("[Locked]"))
-            .setLore(Lists.newList(
-                LIGHT_GRAY.wrap("This action is not available.")
-            ))
+            .setLore(Lists.newList(GRAY.wrap("This action is not available.")))
             .toMenuItem().setPriority(1).setSlots(15)
         );
 
@@ -143,12 +144,12 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
             );
         };
 
-        loader.addDefaultItem(NightItem.asCustomHead(SKIN_UP)
-            .setDisplayName(CYAN.wrap(BOLD.wrap("Promote Member")))
+        loader.addDefaultItem(NightItem.fromType(Material.LIME_STAINED_GLASS_PANE)
+            .setDisplayName(GREEN.wrap(BOLD.wrap("Promote Member")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.wrap("Promotion: " + CYAN.wrap(RANK_NAME) + " → " + CYAN.wrap(NEXT_RANK)),
+                GRAY.wrap("Promotion: " + GREEN.wrap(RANK_NAME) + " → " + GREEN.wrap(NEXT_RANK)),
                 "",
-                LIGHT_GRAY.wrap(CYAN.wrap("[▶]") + " Click to " + CYAN.wrap("promote") + ".")
+                GREEN.wrap("→ " + UNDERLINED.wrap("Click to promote"))
             ))
             .toMenuItem()
             .setPriority(10).setSlots(11).setHandler(ItemHandler.forLink("promote", this, (viewer, event, data) -> {
@@ -166,12 +167,12 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
             )
         );
 
-        loader.addDefaultItem(NightItem.asCustomHead(SKIN_DOWN)
+        loader.addDefaultItem(NightItem.fromType(Material.ORANGE_STAINED_GLASS_PANE)
             .setDisplayName(ORANGE.wrap(BOLD.wrap("Demote Member")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.wrap("Demotion: " + ORANGE.wrap(RANK_NAME)) + " → " + ORANGE.wrap(PREVIOUS_RANK),
+                GRAY.wrap("Demotion: " + ORANGE.wrap(RANK_NAME) + " → " + ORANGE.wrap(PREVIOUS_RANK)),
                 "",
-                LIGHT_GRAY.wrap(ORANGE.wrap("[▶]") + " Click to " + ORANGE.wrap("demote") + ".")
+                ORANGE.wrap("→ " + UNDERLINED.wrap("Click to demote"))
             ))
             .toMenuItem()
             .setPriority(10).setSlots(13).setHandler(new ItemHandler("demote", this.manageLink((viewer, event, data) -> {
@@ -189,29 +190,31 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
             )
         );
 
-        loader.addDefaultItem(NightItem.asCustomHead("bb72ad8369eb6cd8990cec1f54d1778442a108b0186622c5918eb85159e2fb9e")
+        loader.addDefaultItem(NightItem.fromType(Material.RED_STAINED_GLASS_PANE)
             .setDisplayName(RED.wrap(BOLD.wrap("Kick Member")))
             .setLore(Lists.newList(
-                LIGHT_GRAY.wrap("Revoke all claim permissions and"),
-                LIGHT_GRAY.wrap("remove it from the claim completely."),
+                GRAY.wrap("Revoke all claim permissions and"),
+                GRAY.wrap("remove it from the claim completely."),
                 "",
-                LIGHT_GRAY.wrap(RED.wrap("[▶]") + " Click to " + RED.wrap("kick") + ".")
+                RED.wrap("→ " + UNDERLINED.wrap("Click to kick"))
             ))
             .toMenuItem()
             .setPriority(10).setSlots(15).setHandler(new ItemHandler("kick", this.manageLink((viewer, event, data) -> {
                 Player player = viewer.getPlayer();
                 if (!this.plugin.getMemberManager().canKick(player, data.claim, data.member)) return;
 
-                this.plugin.getMenuManager().openConfirm(player, Confirmation.create(
-                    (viewer1, event1) -> {
+                this.runNextTick(() -> UIUtils.openConfirmation(player, Confirmation.builder()
+                    .onAccept((viewer1, event1) -> {
                         data.claim.removeMember(data.member);
                         data.claim.setSaveRequired(true);
                         this.returnToMembers(viewer1, data);
-                    },
-                    (viewer1, event1) -> {
+                    })
+                    .onReturn((viewer1, event1) -> {
                         this.runNextTick(() -> this.open(player, data));
-                    }
-                ));
+                    })
+                    .returnOnAccept(false)
+                    .build()));
+
             }), ItemOptions.builder()
                 .setVisibilityPolicy(this::canKick)
                 .setDisplayModifier(displayMod)
@@ -219,16 +222,7 @@ public class MemberMenu extends LinkedMenu<ClaimPlugin, MemberMenu.Data> impleme
             )
         );
 
-        // Generic
-
-        loader.addDefaultItem(NightItem.asCustomHead(SKIN_ARROW_DOWN)
-            .localized(Lang.EDITOR_ITEM_BACK)
-            .toMenuItem()
-            .setPriority(10)
-            .setSlots(31)
-            .setHandler(ItemHandler.forReturn(this, (viewer, event) -> {
-                this.returnToMembers(viewer);
-            }))
-        );
+        loader.addDefaultItem(MenuItem.buildReturn(this, 31, (viewer, event) -> this.returnToMembers(viewer)));
+        loader.addDefaultItem(NightItem.fromType(Material.BLACK_STAINED_GLASS_PANE).setHideTooltip(true).toMenuItem().setPriority(-1).setSlots(IntStream.range(27, 36).toArray()));
     }
 }

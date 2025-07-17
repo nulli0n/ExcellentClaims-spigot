@@ -5,11 +5,9 @@ import su.nightexpress.nightcore.config.FileConfig;
 
 public interface FlagValue {
 
-    @NotNull Flag getFlag();
-
     @NotNull Object getValue();
 
-    @NotNull String getLocalized();
+    @NotNull FlagType<?> getType();
 
     void write(@NotNull FileConfig config, @NotNull String path);
 }

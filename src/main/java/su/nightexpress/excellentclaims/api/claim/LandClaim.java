@@ -2,7 +2,7 @@ package su.nightexpress.excellentclaims.api.claim;
 
 import org.bukkit.Chunk;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.excellentclaims.util.pos.ChunkPos;
+import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
 
 import java.util.Set;
 

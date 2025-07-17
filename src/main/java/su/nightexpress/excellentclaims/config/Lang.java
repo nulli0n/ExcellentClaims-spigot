@@ -4,11 +4,9 @@ import org.bukkit.Sound;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.command.impl.LandCommands;
 import su.nightexpress.excellentclaims.command.impl.RegionCommands;
-import su.nightexpress.excellentclaims.flag.type.ListMode;
+import su.nightexpress.excellentclaims.util.list.ListMode;
 import su.nightexpress.nightcore.core.CoreLang;
-import su.nightexpress.nightcore.language.entry.LangEnum;
-import su.nightexpress.nightcore.language.entry.LangString;
-import su.nightexpress.nightcore.language.entry.LangText;
+import su.nightexpress.nightcore.language.entry.*;
 import su.nightexpress.nightcore.language.message.OutputType;
 
 import static su.nightexpress.excellentclaims.Placeholders.*;
@@ -20,23 +18,11 @@ public class Lang extends CoreLang {
     public static final LangEnum<ClaimPermission> CLAIM_PERMISSION = LangEnum.of("Other.ClaimPermission", ClaimPermission.class);
     public static final LangEnum<ListMode>        LIST_MODE        = LangEnum.of("Other.ListMode", ListMode.class);
 
-    public static final LangString OTHER_LIST_ENTRY_GOOD = LangString.of("Other.ListEntry.Good",
-        LIGHT_GREEN.wrap("✔") + " " + LIGHT_GRAY.wrap(GENERIC_VALUE)
-    );
-
-    public static final LangString OTHER_LIST_ENTRY_BAD = LangString.of("Other.ListEntry.Bad",
-        LIGHT_RED.wrap("✘") + " " + LIGHT_GRAY.wrap(GENERIC_VALUE)
-    );
-
-    public static final LangString OTHER_EMPTY_LIST = LangString.of("Other.EmptyList",
-        LIGHT_GRAY.wrap("< No Entries >")
-    );
-
-    public static final LangString OTHER_NO_DESCRIPTION = LangString.of("Other.Claim.NoDescription",
-        LIGHT_GRAY.wrap("<No Description>")
-    );
-
-    public static final LangString OTHER_UNSET = LangString.of("Other.Unset", "< Unset >");
+    public static final LangString OTHER_LIST_ENTRY_GOOD = LangString.of("Other.ListEntry.Good", LIGHT_GREEN.wrap("✔") + " " + LIGHT_GRAY.wrap(GENERIC_VALUE));
+    public static final LangString OTHER_LIST_ENTRY_BAD  = LangString.of("Other.ListEntry.Bad", LIGHT_RED.wrap("✘") + " " + LIGHT_GRAY.wrap(GENERIC_VALUE));
+    public static final LangString OTHER_NO_DESCRIPTION  = LangString.of("Other.Claim.NoDescription", LIGHT_GRAY.wrap("<No Description>"));
+    public static final LangString OTHER_NO_CLAIM        = LangString.of("Other.NoClaim", "< No Claim >");
+    public static final LangString OTHER_UNSET           = LangString.of("Other.Unset", "< Unset >");
 
     public static final LangString COMMAND_ARGUMENT_NAME_REGION = LangString.of("Command.Argument.Name.Region", "region");
     public static final LangString COMMAND_ARGUMENT_NAME_TEXT   = LangString.of("Command.Argument.Name.Text", "text");
@@ -51,9 +37,9 @@ public class Lang extends CoreLang {
     public static final LangString COMMAND_LAND_SETTINGS_DESC    = LangString.of("Command.Land.Settings.Desc", "Manage claim settings.");
     public static final LangString COMMAND_LAND_LIST_DESC        = LangString.of("Command.Land.List.Desc", "View your claims.");
     public static final LangString COMMAND_LAND_LIST_ALL_DESC    = LangString.of("Command.Land.ListAll.Desc", "View all claims.");
-    public static final LangString COMMAND_LAND_MERGE_DESC       = LangString.of("Command.Land.Merge.Desc", "Merge chnuk to a claim.");
-    public static final LangString COMMAND_LAND_SEPARATE_DESC    = LangString.of("Command.Land.Separate.Desc", "Separate claim chunk.");
-    public static final LangString COMMAND_LAND_SET_SPAWN_DESC   = LangString.of("Command.Land.SetSpawn.Desc", "Set claim spawn.");
+    public static final LangString COMMAND_LAND_MERGE_DESC     = LangString.of("Command.Land.Merge.Desc", "Merge chnuk to a claim.");
+    public static final LangString COMMAND_LAND_SPLIT_DESC     = LangString.of("Command.Land.Split.Desc", "Split claim chunk.");
+    public static final LangString COMMAND_LAND_SET_SPAWN_DESC = LangString.of("Command.Land.SetSpawn.Desc", "Set claim spawn.");
     public static final LangString COMMAND_LAND_BOUNDS_DESC      = LangString.of("Command.Land.Bounds.Desc", "Toggle claim bounds.");
     public static final LangString COMMAND_LAND_RENAME_DESC      = LangString.of("Command.Land.Rename.Desc", "Rename claim.");
     public static final LangString COMMAND_LAND_DESCRIPTION_DESC = LangString.of("Command.Land.Description.Desc", "Set claim description.");
@@ -132,10 +118,16 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("You already claimed this chunk.")
     );
 
-    public static final LangText LAND_CLAIM_ERROR_MAX_AMOUNT = LangText.of("Land.Claim.Error.MaxAmount",
+    public static final LangText LAND_CLAIM_ERROR_MAX_LANDS = LangText.of("Land.Claim.Error.MaxAmount",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.wrap(BOLD.wrap("Too Many Claims!")),
-        LIGHT_GRAY.wrap("You already claimed maximum of " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " chunks.")
+        LIGHT_GRAY.wrap("You already have maximum of " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " claims.")
+    );
+
+    public static final LangText LAND_CLAIM_ERROR_MAX_CHUNKS = LangText.of("Land.Claim.Error.MaxChunks",
+        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
+        LIGHT_RED.wrap(BOLD.wrap("Too Many Chunks!")),
+        LIGHT_GRAY.wrap("You already claimed maximum of " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " chunks for this claim.")
     );
 
     public static final LangText LAND_CLAIM_ERROR_OVERLAP_DISABLED = LangText.of("Land.Claim.Error.OverlapDisabled",
@@ -156,7 +148,7 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("You need " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " to claim a chunk.")
     );
 
-    public static final LangText LAND_UNCLAIM_SUCCESS = LangText.of("Land.Unlaim.Success",
+    public static final LangText LAND_UNCLAIM_SUCCESS = LangText.of("Land.Unclaim.Success",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.BLOCK_ANVIL_BREAK),
         LIGHT_GREEN.wrap(BOLD.wrap("Chunk Unclaimed!")),
         LIGHT_GRAY.wrap("The chunk is no longer protected.")
@@ -220,32 +212,32 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("Select a claim where you want to merge this claim chunks by using the " + LIGHT_YELLOW.wrap("Merge Tool") + ".")
     );
 
-    public static final LangText LAND_SEPARATE_INFO = LangText.of("Land.Separate.Info",
-        LIGHT_GRAY.wrap("Select a chunk you want to separate from this claim by using the " + LIGHT_YELLOW.wrap("Separate Tool") + ".")
+    public static final LangText LAND_SPLIT_INFO = LangText.of("Land.Separate.Info",
+        LIGHT_GRAY.wrap("Select a chunk you want to split from this claim by using the " + LIGHT_YELLOW.wrap("Split Tool") + ".")
     );
 
-    public static final LangText LAND_SEPARATE_ERROR_NOTHING = LangText.of("Land.Separate.Error.Nothing",
+    public static final LangText LAND_SPLIT_ERROR_NOTHING = LangText.of("Land.Separate.Error.Nothing",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.wrap(BOLD.wrap("No Claim!")),
-        LIGHT_GRAY.wrap("There is no claimed chunk to separate.")
+        LIGHT_GRAY.wrap("There is no claimed chunk to split.")
     );
 
-    public static final LangText LAND_SEPARATE_ERROR_DIFFERENT = LangText.of("Land.Separate.Error.Different",
+    public static final LangText LAND_SPLIT_ERROR_DIFFERENT = LangText.of("Land.Separate.Error.Different",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.wrap(BOLD.wrap("Different Claim!")),
         LIGHT_GRAY.wrap("This chunk is not from current claim.")
     );
 
-    public static final LangText LAND_SEPARATE_ERROR_NOT_MERGED = LangText.of("Land.Separate.Error.NotMerged",
+    public static final LangText LAND_SPLIT_ERROR_NOT_MERGED = LangText.of("Land.Separate.Error.NotMerged",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.wrap(BOLD.wrap("Not Merged!")),
         LIGHT_GRAY.wrap("This claim has single chunk only.")
     );
 
-    public static final LangText LAND_SEPARATE_SUCCESS = LangText.of("Land.Separate.Success",
+    public static final LangText LAND_SPLIT_SUCCESS = LangText.of("Land.Separate.Success",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_ENDERMAN_TELEPORT),
-        LIGHT_GREEN.wrap(BOLD.wrap("Chunk Separated!")),
-        LIGHT_GRAY.wrap("You successfully separated chunk into the new claim.")
+        LIGHT_GREEN.wrap(BOLD.wrap("Chunk Split!")),
+        LIGHT_GRAY.wrap("You successfully split chunk as new claim.")
     );
 
 
@@ -519,6 +511,11 @@ public class Lang extends CoreLang {
         LIGHT_RED.wrap("You can't fertilize " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
+    public static final LangText PROTECTION_BLOCK_HARVEST = LangText.of("Protection.Info.BlockHarvest",
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't harvest " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
+    );
+
     public static final LangText PROTECTION_BLOCK_INTERACT = LangText.of("Protection.Info.BlockInteract",
         OUTPUT.wrap(OutputType.ACTION_BAR),
         LIGHT_RED.wrap("You can't use " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
@@ -529,9 +526,19 @@ public class Lang extends CoreLang {
         LIGHT_RED.wrap("You can't use " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
+    public static final LangText PROTECTION_PROJECTILE_THROW = LangText.of("Protection.Info.ProjectileThrow",
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't throw " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
+    );
+
+    public static final LangText PROTECTION_PROJECTILE_SHOOT = LangText.of("Protection.Info.ProjectileShoot",
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't shoot " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
+    );
+
     public static final LangText PROTECTION_ENTITY_INTERACT = LangText.of("Protection.Info.EntityInteract",
         OUTPUT.wrap(OutputType.ACTION_BAR),
-        LIGHT_RED.wrap("You can't use " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
+        LIGHT_RED.wrap("You can't interact with " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
     public static final LangText PROTECTION_PORTAL_USE = LangText.of("Protection.Info.Portal",
@@ -544,6 +551,11 @@ public class Lang extends CoreLang {
         LIGHT_RED.wrap("You can't harm " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
     );
 
+    public static final LangText PROTECTION_COMMAND_USAGE = LangText.of("Protection.Info.CommandUsage",
+        OUTPUT.wrap(OutputType.ACTION_BAR),
+        LIGHT_RED.wrap("You can't use " + LIGHT_YELLOW.wrap(GENERIC_VALUE) + " here!")
+    );
+
     public static final LangText PROTECTION_ITEM_DROP = LangText.of("Protection.Info.ItemDrop",
         OUTPUT.wrap(OutputType.ACTION_BAR),
         LIGHT_RED.wrap("You can't drop items here!")
@@ -553,48 +565,6 @@ public class Lang extends CoreLang {
         OUTPUT.wrap(OutputType.ACTION_BAR),
         LIGHT_RED.wrap("You can't pickup items here!")
     );
-
-
-//    public static final LangText FLAG_PROMPT_ENTITY_TYPE = LangText.of("Flag.Prompt.EntityType",
-//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Entity Type]")),
-//        LIGHT_GRAY.wrap("Look in chat for a list of available values.")
-//    );
-//
-//    public static final LangText FLAG_PROMPT_DAMAGE_TYPE = LangText.of("Flag.Prompt.DamageType",
-//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Damage Type]")),
-//        LIGHT_GRAY.wrap("Look in chat for a list of available values.")
-//    );
-//
-//    public static final LangText FLAG_PROMPT_ITEM_TYPE = LangText.of("Flag.Prompt.ItemType",
-//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Item Name]")),
-//        LIGHT_GRAY.wrap(" ")
-//    );
-//
-//    public static final LangText FLAG_PROMPT_BLOCK_TYPE = LangText.of("Flag.Prompt.BlockType",
-//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Block Name]")),
-//        LIGHT_GRAY.wrap(" ")
-//    );
-
-    public static final LangString FLAG_PROMPT_ENTITY_TYPE = LangString.of("Flag.Dialog.EntityType",
-        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Entity Type]"))
-    );
-
-    public static final LangString FLAG_PROMPT_DAMAGE_TYPE = LangString.of("Flag.Dialog.DamageType",
-        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Damage Type]"))
-    );
-
-    public static final LangString FLAG_PROMPT_ITEM_TYPE = LangString.of("Flag.Dialog.ItemType",
-        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Item Name]"))
-    );
-
-    public static final LangString FLAG_PROMPT_BLOCK_TYPE = LangString.of("Flag.Dialog.BlockType",
-        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Block Name]"))
-    );
-
 
     public static final LangText ERROR_NOT_OWNER = LangText.of("Error.NotOwner",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),

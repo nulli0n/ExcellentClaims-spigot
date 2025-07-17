@@ -27,7 +27,7 @@ public class MemberListener extends AbstractListener<ClaimPlugin> {
         Player player = event.getPlayer();
 
         this.plugin.runTaskAsync(task -> {
-            this.plugin.getClaimManager().getClaims(player).forEach(claim -> {
+            this.plugin.getClaimManager().getStorage().getClaimsByOwner(player).forEach(claim -> {
                 if (claim.getOwner().updatePlayerName(player)) {
                     claim.setSaveRequired(true);
                 }

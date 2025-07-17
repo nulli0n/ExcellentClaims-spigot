@@ -6,9 +6,10 @@ import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.LandClaim;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
-import su.nightexpress.excellentclaims.util.pos.BlockPos;
-import su.nightexpress.excellentclaims.util.pos.ChunkPos;
 import su.nightexpress.nightcore.config.FileConfig;
+import su.nightexpress.nightcore.util.geodata.Cuboid;
+import su.nightexpress.nightcore.util.geodata.pos.BlockPos;
+import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
 
 import java.io.File;
 import java.util.Collections;
@@ -88,6 +89,17 @@ public class ClaimedLand extends AbstractClaim implements LandClaim {
     @NotNull
     public Set<ChunkPos> getPositions() {
         return this.positions;
+    }
+
+    @Override
+    @NotNull
+    public Set<ChunkPos> getEffectiveChunkPositions() {
+        return new HashSet<>(this.positions);
+    }
+
+    @Override
+    public boolean isIntersecting(@NotNull Cuboid cuboid) {
+        return cuboid.getIntersectingChunkPositions().stream().anyMatch(this.positions::contains);
     }
 
     @Override

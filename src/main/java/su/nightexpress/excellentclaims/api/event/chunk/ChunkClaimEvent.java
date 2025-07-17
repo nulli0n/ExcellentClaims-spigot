@@ -7,7 +7,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.excellentclaims.util.pos.ChunkPos;
+import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
 
 public class ChunkClaimEvent extends Event implements Cancellable {
 

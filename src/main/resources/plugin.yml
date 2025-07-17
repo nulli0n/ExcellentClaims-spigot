@@ -9,4 +9,5 @@ softdepend:
   - ProtocolLib
   - packetevents
   - EconomyBridge
+  - PlaceholderAPI
 api-version: 1.21

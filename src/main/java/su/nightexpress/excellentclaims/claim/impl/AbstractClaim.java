@@ -1,7 +1,13 @@
 package su.nightexpress.excellentclaims.claim.impl;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.command.Command;
+import org.bukkit.damage.DamageType;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -9,24 +15,28 @@ import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
-import su.nightexpress.excellentclaims.api.flag.ClaimFlag;
 import su.nightexpress.excellentclaims.api.flag.Flag;
 import su.nightexpress.excellentclaims.api.flag.FlagValue;
 import su.nightexpress.excellentclaims.api.member.Member;
 import su.nightexpress.excellentclaims.api.member.MemberRank;
+import su.nightexpress.excellentclaims.config.Config;
 import su.nightexpress.excellentclaims.config.Lang;
 import su.nightexpress.excellentclaims.flag.FlagRegistry;
+import su.nightexpress.excellentclaims.flag.impl.ClaimFlag;
 import su.nightexpress.excellentclaims.member.ClaimMember;
 import su.nightexpress.excellentclaims.util.ClaimUtils;
 import su.nightexpress.excellentclaims.util.UserInfo;
-import su.nightexpress.excellentclaims.util.pos.BlockPos;
-import su.nightexpress.excellentclaims.util.pos.DirectionalPos;
+import su.nightexpress.excellentclaims.util.list.ListMode;
+import su.nightexpress.excellentclaims.util.list.ListTypes;
+import su.nightexpress.excellentclaims.util.list.SmartList;
 import su.nightexpress.nightcore.config.ConfigValue;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.manager.AbstractFileData;
 import su.nightexpress.nightcore.util.LocationUtil;
 import su.nightexpress.nightcore.util.StringUtil;
 import su.nightexpress.nightcore.util.bukkit.NightItem;
+import su.nightexpress.nightcore.util.geodata.pos.BlockPos;
+import su.nightexpress.nightcore.util.geodata.pos.ExactPos;
 
 import java.io.File;
 import java.util.*;
@@ -48,13 +58,27 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     protected String         description;
     protected int            priority;
     protected NightItem      icon;
-    protected DirectionalPos spawnLocation;
+    protected ExactPos spawnLocation;
+
+    protected final SmartList<EntityType> mobSpawnList;
+    protected final SmartList<EntityType> mobInteractList;
+    protected final SmartList<Material> blockUsageList;
+    protected final SmartList<DamageType> animalDamageList;
+    protected final SmartList<DamageType> playerDamageList;
+    protected final SmartList<Command>    commandUsageList;
 
     public AbstractClaim(@NotNull ClaimPlugin plugin, @NotNull ClaimType type, @NotNull File file) {
         super(plugin, file);
         this.type = type;
         this.members = new HashMap<>();
         this.flags = new HashMap<>();
+
+        this.mobSpawnList = SmartList.empty(ListMode.BLACKLIST, ListTypes.SPAWNABLE_MOB);
+        this.mobInteractList = SmartList.empty(ListMode.BLACKLIST, ListTypes.USABLE_MOB);
+        this.blockUsageList = SmartList.empty(ListMode.BLACKLIST, ListTypes.USABLE_BLOCK);
+        this.animalDamageList = SmartList.empty(ListMode.BLACKLIST, ListTypes.DAMAGE_TYPE);
+        this.playerDamageList = SmartList.empty(ListMode.BLACKLIST, ListTypes.DAMAGE_TYPE);
+        this.commandUsageList = SmartList.rawValues(ListMode.BLACKLIST, ListTypes.COMMAND, Config.GENERAL_DEFAULT_BANNED_COMMANDS.get());
     }
 
     @Override
@@ -75,11 +99,18 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
             this.members.put(member.getPlayerId(), member);
         });
 
-        this.setSpawnLocation(DirectionalPos.read(config, "Settings.SpawnPos"));
+        this.setSpawnLocation(ExactPos.read(config, "Settings.SpawnPos"));
         this.setDisplayName(ConfigValue.create("Settings.DisplayName", StringUtil.capitalizeUnderscored(this.getId())).read(config));
         this.setDescription(config.getString("Settings.Description"));
         this.setPriority(config.getInt("Settings.Priority", 0));
         this.setIcon(config.getCosmeticItem("Settings.Icon"));
+
+        this.mobSpawnList.load(config, "Settings.Advanced.MobSpawnList");
+        this.mobInteractList.load(config, "Settings.Advanced.MobInteractList");
+        this.blockUsageList.load(config, "Settings.Advanced.BlockUsageList");
+        this.animalDamageList.load(config, "Settings.Advanced.AnimalDamageList");
+        this.playerDamageList.load(config, "Settings.Advanced.PlayerDamageList");
+        this.commandUsageList.load(config, "Settings.Advanced.CommandUsageList");
 
         this.loadFlags(config);
 
@@ -144,6 +175,13 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         config.set("Settings.Description", this.description);
         config.set("Settings.Priority", this.priority);
         config.set("Settings.Icon", this.icon);
+
+        config.set("Settings.Advanced.MobSpawnList", this.mobSpawnList);
+        config.set("Settings.Advanced.MobInteractList", this.mobInteractList);
+        config.set("Settings.Advanced.BlockUsageList", this.blockUsageList);
+        config.set("Settings.Advanced.AnimalDamageList", this.animalDamageList);
+        config.set("Settings.Advanced.PlayerDamageList", this.playerDamageList);
+        config.set("Settings.Advanced.CommandUsageList", this.commandUsageList);
     }
 
     protected void writeMembers(@NotNull FileConfig config) {
@@ -155,8 +193,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     protected void writeFlags(@NotNull FileConfig config) {
         config.remove("Flags");
         this.flags.forEach((flagName, value) -> {
-            Flag flag = value.getFlag();
-            value.write(config, "Flags." + flag.getId());
+            value.write(config, "Flags." + flagName);
         });
     }
 
@@ -165,6 +202,29 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     protected abstract void saveAdditional(@NotNull FileConfig config);
 
     protected abstract boolean contains(@NotNull BlockPos blockPos);
+
+    @Override
+    public boolean isInside(@NotNull Entity entity) {
+        return this.isInside(entity.getLocation());
+    }
+
+    @Override
+    public boolean isInside(@NotNull Block block) {
+        return this.isInside(block.getLocation());
+    }
+
+    @Override
+    public boolean isInside(@NotNull Location location) {
+        World world = location.getWorld();
+        if (world == null) return false;
+
+        return this.isInside(world, BlockPos.from(location));
+    }
+
+    @Override
+    public boolean isInside(@NotNull World world, @NotNull BlockPos blockPos) {
+        return this.isInside(world.getName(), blockPos);
+    }
 
     @Override
     public boolean isInside(@NotNull String worldName, @NotNull BlockPos blockPos) {
@@ -178,7 +238,6 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
     @Override
     public boolean hasPermission(@NotNull Player player, @NotNull ClaimPermission permission) {
-        //if (player.hasPermission(Perms.BYPASS_RANK_PERMISSIONS)) return true;
         if (plugin.getMemberManager().isAdminMode(player)) return true;
 
         MemberRank rank = this.getMemberRank(player);
@@ -220,6 +279,16 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     }
 
     @Override
+    public boolean isInactive() {
+        return !this.isActive();
+    }
+
+    @Override
+    public boolean isWilderness() {
+        return false;
+    }
+
+    @Override
     public boolean isSaveRequired() {
         return this.saveRequired;
     }
@@ -251,7 +320,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         if (this.worldName.equalsIgnoreCase(world.getName())) {
             this.world = world;
             this.active = true;
-            this.plugin.debug("Claim activated: " + this.getId() + " in " + this.worldName);
+            //this.plugin.debug("Claim activated: " + this.getId() + " in " + this.worldName);
         }
     }
 
@@ -266,12 +335,39 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     public void deactivate() {
         this.world = null;
         this.active = false;
-        this.plugin.debug("Claim deactivated: " + this.getId() + " in " + this.worldName);
+        //this.plugin.debug("Claim deactivated: " + this.getId() + " in " + this.worldName);
     }
 
     @Override
     public boolean isOwner(@NotNull UUID playerId) {
         return this.getOwnerId().equals(playerId);
+    }
+
+    @NotNull
+    @Override
+    public UUID getOwnerId() {
+        return this.owner.getPlayerId();
+    }
+
+    @NotNull
+    @Override
+    public String getOwnerName() {
+        return this.owner.getPlayerName();
+    }
+
+    @Override
+    public boolean isOwnerOrMember(@NotNull Player player) {
+        return this.isOwnerOrMember(player.getUniqueId());
+    }
+
+    @Override
+    public boolean isOwnerOrMember(@NotNull UUID playerId) {
+        return this.isOwner(playerId) || this.isMember(playerId);
+    }
+
+    @Override
+    public boolean isOwner(@NotNull Player player) {
+        return this.isOwner(player.getUniqueId());
     }
 
     @Override
@@ -282,6 +378,11 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     @Override
     public void setOwner(@NotNull Player player) {
         this.setOwner(UserInfo.of(player));
+    }
+
+    @Override
+    public boolean isMember(@NotNull Player player) {
+        return this.isMember(player.getUniqueId());
     }
 
     @Override
@@ -319,8 +420,20 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
     @Override
     @Nullable
+    public Member getMember(@NotNull Player player) {
+        return this.getMember(player.getUniqueId());
+    }
+
+    @Override
+    @Nullable
     public Member getMember(@NotNull UUID playerId) {
         return this.members.get(playerId);
+    }
+
+    @Override
+    @Nullable
+    public MemberRank getMemberRank(@NotNull Player player) {
+        return this.getMemberRank(player.getUniqueId());
     }
 
     @Override
@@ -335,48 +448,64 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     }
 
     @Override
-    public boolean hasFlag(@NotNull Flag flag) {
+    public <T> boolean hasFlag(@NotNull Flag<T> flag) {
         return !this.isWilderness() || this.flags.containsKey(flag.getId());
     }
 
     @Override
-    public <T> void setFlag(@NotNull ClaimFlag<T> flag, @NotNull T value) {
-        this.flags.put(flag.getId(), flag.asValue(value));
+    public <T> void setFlag(@NotNull Flag<T> flag, @NotNull T value) {
+        this.flags.put(flag.getId(), flag.boxed(value));
     }
 
     @Override
     @NotNull
-    public <T> FlagValue getFlagValue(@NotNull ClaimFlag<T> flag) {
-        return this.flags.getOrDefault(flag.getId(), flag.asDefaultValue());
+    public <T> FlagValue getFlagValue(@NotNull Flag<T> flag) {
+        return this.flags.getOrDefault(flag.getId(), flag.boxed(flag.getDefaultValue()));
     }
 
     @Override
     @NotNull
-    public <T> T getFlag(@NotNull ClaimFlag<T> flag) {
-        return this.getFlag(flag.getId(), flag.getValueType(), flag.getDefaultValue());
+    public <T> T getFlag(@NotNull Flag<T> flag) {
+        return this.getFlag(flag, flag.getDefaultValue());
     }
 
     @Override
     @NotNull
-    public <T> T getFlag(@NotNull ClaimFlag<T> flag, @NotNull T defaultValue) {
-        return this.getFlag(flag.getId(), flag.getValueType(), defaultValue);
-    }
-
-    @Override
-    @NotNull
-    public <T> T getFlag(@NotNull String name, @NotNull Class<T> clazz, @NotNull T defaultValue) {
-        name = name.toLowerCase();
-
-        FlagValue value = this.flags.get(name.toLowerCase());
+    public <T> T getFlag(@NotNull Flag<T> flag, @NotNull T defaultValue) {
+        FlagValue value = this.flags.get(flag.getId());
         if (value == null) return defaultValue;
 
-        Object result = value.getValue();// value.getValue();
-        if (clazz.isAssignableFrom(result.getClass())) {
-            return clazz.cast(result);
-        }
-        else {
-            throw new IllegalArgumentException("Flag '" + name + "' is defined as " + result.getClass().getSimpleName() + ", not " + clazz.getSimpleName());
-        }
+        return flag.unboxed(value).orElse(defaultValue);
+    }
+
+    @Override
+    public boolean canMobSpawn(@NotNull EntityType type) {
+        return this.mobSpawnList.isAllowed(type);
+    }
+
+    @Override
+    public boolean canUseMob(@NotNull EntityType type) {
+        return this.mobInteractList.isAllowed(type);
+    }
+
+    @Override
+    public boolean canUseBlock(@NotNull Material blockType) {
+        return this.blockUsageList.isAllowed(blockType);
+    }
+
+    @Override
+    public boolean isAnimalDamageAllowed(@NotNull DamageType type) {
+        return this.animalDamageList.isAllowed(type);
+    }
+
+    @Override
+    public boolean isPlayerDamageAllowed(@NotNull DamageType type) {
+        return this.playerDamageList.isAllowed(type);
+    }
+
+    @Override
+    public boolean isCommandAllowed(@NotNull Command command) {
+        return this.commandUsageList.isAllowed(command);
     }
 
     @NotNull
@@ -464,12 +593,48 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
     @NotNull
     @Override
-    public DirectionalPos getSpawnLocation() {
+    public ExactPos getSpawnLocation() {
         return this.spawnLocation;
     }
 
     @Override
-    public void setSpawnLocation(@NotNull DirectionalPos spawnLocation) {
+    public void setSpawnLocation(@NotNull ExactPos spawnLocation) {
         this.spawnLocation = spawnLocation;
+    }
+
+    @NotNull
+    @Override
+    public SmartList<EntityType> getMobSpawnList() {
+        return this.mobSpawnList;
+    }
+
+    @Override
+    @NotNull
+    public SmartList<EntityType> getMobInteractList() {
+        return this.mobInteractList;
+    }
+
+    @Override
+    @NotNull
+    public SmartList<Material> getBlockUsageList() {
+        return this.blockUsageList;
+    }
+
+    @Override
+    @NotNull
+    public SmartList<DamageType> getAnimalDamageList() {
+        return this.animalDamageList;
+    }
+
+    @Override
+    @NotNull
+    public SmartList<DamageType> getPlayerDamageList() {
+        return this.playerDamageList;
+    }
+
+    @Override
+    @NotNull
+    public SmartList<Command> getCommandUsageList() {
+        return this.commandUsageList;
     }
 }

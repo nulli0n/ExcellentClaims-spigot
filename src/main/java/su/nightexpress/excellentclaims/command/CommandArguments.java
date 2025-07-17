@@ -32,7 +32,7 @@ public class CommandArguments {
 
     @NotNull
     public static ArgumentBuilder<RegionClaim> regionArgument(@NotNull ClaimPlugin plugin, @Nullable ClaimPermission permission) {
-        return CommandArgument.builder(CommandArguments.REGION, (string, context) -> plugin.getClaimManager().getRegionClaim(context.getPlayerOrThrow().getWorld(), string))
+        return CommandArgument.builder(CommandArguments.REGION, (string, context) -> plugin.getClaimManager().regionLookup().getById(context.getPlayerOrThrow().getWorld(), string))
             .customFailure(Lang.ERROR_COMMAND_INVALID_REGION_ARGUMENT)
             .localized(Lang.COMMAND_ARGUMENT_NAME_REGION)
             .withSamples(context -> {
@@ -40,10 +40,10 @@ public class CommandArguments {
                     Player player = context.getPlayer();
                     if (player == null) return Collections.emptyList();
 
-                    return plugin.getClaimManager().getRegionNames(player, permission);
+                    return plugin.getClaimManager().regionLookup().getNames(player, permission);
                 }
 
-                return plugin.getClaimManager().getRegionNames(context.getPlayerOrThrow().getWorld());
+                return plugin.getClaimManager().regionLookup().getNames(context.getPlayerOrThrow().getWorld());
             });
     }
 
@@ -70,7 +70,7 @@ public class CommandArguments {
 
     @NotNull
     public static ArgumentBuilder<Wilderness> forWilderness(@NotNull ClaimPlugin plugin) {
-        return CommandArgument.builder(CommandArguments.WORLD, (string, context) -> plugin.getClaimManager().getWilderness(string))
+        return CommandArgument.builder(CommandArguments.WORLD, (string, context) -> plugin.getClaimManager().getStorage().getWilderness(string))
             .customFailure(Lang.ERROR_COMMAND_INVALID_WORLD_ARGUMENT)
             .localized(Lang.COMMAND_ARGUMENT_NAME_WORLD)
             .withSamples(context -> BukkitThing.worldNames());
@@ -88,7 +88,7 @@ public class CommandArguments {
             return null;
         }
 
-        Wilderness wilderness = plugin.getClaimManager().getWilderness(player.getWorld());
+        Wilderness wilderness = plugin.getClaimManager().getStorage().getWilderness(player.getWorld());
         if (wilderness == null) {
             Lang.ERROR_INVALID_WORLD.getMessage().send(player);
             return null;

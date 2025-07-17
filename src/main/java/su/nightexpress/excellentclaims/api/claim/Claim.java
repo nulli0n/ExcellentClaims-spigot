@@ -1,21 +1,27 @@
 package su.nightexpress.excellentclaims.api.claim;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.command.Command;
+import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import su.nightexpress.excellentclaims.api.flag.ClaimFlag;
 import su.nightexpress.excellentclaims.api.flag.Flag;
 import su.nightexpress.excellentclaims.api.flag.FlagValue;
 import su.nightexpress.excellentclaims.api.member.Member;
 import su.nightexpress.excellentclaims.api.member.MemberRank;
 import su.nightexpress.excellentclaims.util.UserInfo;
-import su.nightexpress.excellentclaims.util.pos.BlockPos;
-import su.nightexpress.excellentclaims.util.pos.DirectionalPos;
+import su.nightexpress.excellentclaims.util.list.SmartList;
 import su.nightexpress.nightcore.util.bukkit.NightItem;
+import su.nightexpress.nightcore.util.geodata.Cuboid;
+import su.nightexpress.nightcore.util.geodata.pos.BlockPos;
+import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
+import su.nightexpress.nightcore.util.geodata.pos.ExactPos;
 
 import java.io.File;
 import java.util.Map;
@@ -45,13 +51,9 @@ public interface Claim {
 
     boolean isActive();
 
-    default boolean isInactive() {
-        return !this.isActive();
-    }
+    boolean isInactive();
 
-    default boolean isWilderness() {
-        return false;
-    }
+    boolean isWilderness();
 
     void reactivate();
 
@@ -61,24 +63,13 @@ public interface Claim {
 
     void deactivate();
 
-    default boolean isInside(@NotNull Entity entity) {
-        return this.isInside(entity.getLocation());
-    }
+    boolean isInside(@NotNull Entity entity);
 
-    default boolean isInside(@NotNull Block block) {
-        return this.isInside(block.getLocation());
-    }
+    boolean isInside(@NotNull Block block);
 
-    default boolean isInside(@NotNull Location location) {
-        World world = location.getWorld();
-        if (world == null) return false;
+    boolean isInside(@NotNull Location location);
 
-        return this.isInside(world, BlockPos.from(location));
-    }
-
-    default boolean isInside(@NotNull World world, @NotNull BlockPos blockPos) {
-        return this.isInside(world.getName(), blockPos);
-    }
+    boolean isInside(@NotNull World world, @NotNull BlockPos blockPos);
 
     boolean isInside(@NotNull String worldName, @NotNull BlockPos blockPos);
 
@@ -117,9 +108,13 @@ public interface Claim {
 
     void setIcon(@NotNull NightItem icon);
 
-    @NotNull DirectionalPos getSpawnLocation();
+    @NotNull ExactPos getSpawnLocation();
 
-    void setSpawnLocation(@NotNull DirectionalPos spawnLocation);
+    void setSpawnLocation(@NotNull ExactPos spawnLocation);
+
+    @NotNull Set<ChunkPos> getEffectiveChunkPositions();
+
+    boolean isIntersecting(@NotNull Cuboid cuboid);
 
 
 
@@ -129,27 +124,15 @@ public interface Claim {
 
     void setOwner(@NotNull UserInfo owner);
 
-    @NotNull
-    default UUID getOwnerId() {
-        return this.getOwner().getPlayerId();
-    }
+    @NotNull UUID getOwnerId();
 
-    @NotNull
-    default String getOwnerName() {
-        return this.getOwner().getPlayerName();
-    }
+    @NotNull String getOwnerName();
 
-    default boolean isOwnerOrMember(@NotNull Player player) {
-        return this.isOwnerOrMember(player.getUniqueId());
-    }
+    boolean isOwnerOrMember(@NotNull Player player);
 
-    default boolean isOwnerOrMember(@NotNull UUID playerId) {
-        return this.isOwner(playerId) || this.isMember(playerId);
-    }
+    boolean isOwnerOrMember(@NotNull UUID playerId);
 
-    default boolean isOwner(@NotNull Player player) {
-        return this.isOwner(player.getUniqueId());
-    }
+    boolean isOwner(@NotNull Player player);
 
     boolean isOwner(@NotNull UUID playerId);
 
@@ -160,9 +143,7 @@ public interface Claim {
 
     @NotNull Set<Member> getMembers();
 
-    default boolean isMember(@NotNull Player player) {
-        return this.isMember(player.getUniqueId());
-    }
+    boolean isMember(@NotNull Player player);
 
     boolean isMember(@NotNull UUID playerId);
 
@@ -176,33 +157,53 @@ public interface Claim {
 
     void removeMember(@NotNull UUID playerId);
 
-    @Nullable
-    default Member getMember(@NotNull Player player) {
-        return this.getMember(player.getUniqueId());
-    }
+    @Nullable Member getMember(@NotNull Player player);
 
     @Nullable Member getMember(@NotNull UUID playerId);
 
-    @Nullable
-    default MemberRank getMemberRank(@NotNull Player player) {
-        return this.getMemberRank(player.getUniqueId());
-    }
+    @Nullable MemberRank getMemberRank(@NotNull Player player);
 
     @Nullable MemberRank getMemberRank(@NotNull UUID playerId);
 
 
 
+    @NotNull SmartList<EntityType> getMobSpawnList();
+
+    @NotNull SmartList<EntityType> getMobInteractList();
+
+    @NotNull SmartList<Material> getBlockUsageList();
+
+    @NotNull SmartList<DamageType> getAnimalDamageList();
+
+    @NotNull SmartList<DamageType> getPlayerDamageList();
+
+    @NotNull SmartList<Command> getCommandUsageList();
+
+
+
     @NotNull Map<String, FlagValue> getFlags();
 
-    boolean hasFlag(@NotNull Flag flag);
+    <T> boolean hasFlag(@NotNull Flag<T> flag);
 
-    <T> void setFlag(@NotNull ClaimFlag<T> flag, @NotNull T value);
+    <T> void setFlag(@NotNull Flag<T> flag, @NotNull T value);
 
-    @NotNull <T> FlagValue getFlagValue(@NotNull ClaimFlag<T> flag);
+    @NotNull <T> FlagValue getFlagValue(@NotNull Flag<T> flag);
 
-    @NotNull <T> T getFlag(@NotNull ClaimFlag<T> flag);
+    @NotNull <T> T getFlag(@NotNull Flag<T> flag);
 
-    @NotNull <T> T getFlag(@NotNull ClaimFlag<T> flag, @NotNull T defaultValue);
+    @NotNull <T> T getFlag(@NotNull Flag<T> flag, @NotNull T defaultValue);
 
-    @NotNull <T> T getFlag(@NotNull String name, @NotNull Class<T> clazz, @NotNull T defaultValue);
+
+
+    boolean canMobSpawn(@NotNull EntityType type);
+
+    boolean canUseMob(@NotNull EntityType type);
+
+    boolean canUseBlock(@NotNull Material blockType);
+
+    boolean isAnimalDamageAllowed(@NotNull DamageType type);
+
+    boolean isPlayerDamageAllowed(@NotNull DamageType type);
+
+    boolean isCommandAllowed(@NotNull Command command);
 }

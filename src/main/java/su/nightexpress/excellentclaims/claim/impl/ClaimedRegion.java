@@ -5,11 +5,13 @@ import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.Placeholders;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
 import su.nightexpress.excellentclaims.api.claim.RegionClaim;
-import su.nightexpress.excellentclaims.util.pos.BlockPos;
-import su.nightexpress.excellentclaims.util.Cuboid;
 import su.nightexpress.nightcore.config.FileConfig;
+import su.nightexpress.nightcore.util.geodata.Cuboid;
+import su.nightexpress.nightcore.util.geodata.pos.BlockPos;
+import su.nightexpress.nightcore.util.geodata.pos.ChunkPos;
 
 import java.io.File;
+import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public class ClaimedRegion extends AbstractClaim implements RegionClaim {
@@ -44,7 +46,17 @@ public class ClaimedRegion extends AbstractClaim implements RegionClaim {
     @Override
     protected void writeSettings(@NotNull FileConfig config) {
         super.writeSettings(config);
+    }
 
+    @Override
+    @NotNull
+    public Set<ChunkPos> getEffectiveChunkPositions() {
+        return this.cuboid.getIntersectingChunkPositions();
+    }
+
+    @Override
+    public boolean isIntersecting(@NotNull Cuboid cuboid) {
+        return this.cuboid.isIntersectingWith(cuboid);
     }
 
     @Override

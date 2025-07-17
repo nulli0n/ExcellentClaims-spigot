@@ -47,7 +47,7 @@ public class LandCommands {
             .description(Lang.COMMAND_LAND_CLAIM_DESC)
             .permission(Perms.COMMAND_LAND_CLAIM)
             .withArgument(ArgumentTypes.string(CommandArguments.NAME).localized(Lang.COMMAND_ARGUMENT_NAME_NAME)
-                .withSamples(context -> plugin.getClaimManager().getLandNames(context.getPlayerOrThrow(), ClaimPermission.ALL)))
+                .withSamples(context -> plugin.getClaimManager().landLookup().getNames(context.getPlayerOrThrow(), ClaimPermission.ALL)))
             .executes(LandCommands::claimLand)
         );
 
@@ -102,11 +102,11 @@ public class LandCommands {
             .executes((context, arguments) -> startMerge(context, arguments, MergeType.MERGE))
         );
 
-        root.addChildren(DirectNode.builder(plugin, "separate")
+        root.addChildren(DirectNode.builder(plugin, "split")
             .playerOnly()
-            .description(Lang.COMMAND_LAND_SEPARATE_DESC)
-            .permission(Perms.COMMAND_LAND_SEPARATE)
-            .executes((context, arguments) -> startMerge(context, arguments, MergeType.SEPARATE))
+            .description(Lang.COMMAND_LAND_SPLIT_DESC)
+            .permission(Perms.COMMAND_LAND_SPLIT)
+            .executes((context, arguments) -> startMerge(context, arguments, MergeType.SPLIT))
         );
 
         root.addChildren(DirectNode.builder(plugin, "setspawn")

@@ -13,12 +13,14 @@ import su.nightexpress.excellentclaims.config.Perms;
 import su.nightexpress.excellentclaims.data.storage.DataManager;
 import su.nightexpress.excellentclaims.data.user.UserManager;
 import su.nightexpress.excellentclaims.flag.FlagRegistry;
+import su.nightexpress.excellentclaims.hook.impl.PlaceholderHook;
 import su.nightexpress.excellentclaims.member.MemberManager;
 import su.nightexpress.excellentclaims.menu.MenuManager;
 import su.nightexpress.excellentclaims.selection.SelectionManager;
 import su.nightexpress.nightcore.NightPlugin;
 import su.nightexpress.nightcore.command.experimental.ImprovedCommands;
 import su.nightexpress.nightcore.config.PluginDetails;
+import su.nightexpress.nightcore.util.Plugins;
 
 public class ClaimPlugin extends NightPlugin implements ImprovedCommands {
 
@@ -36,8 +38,7 @@ public class ClaimPlugin extends NightPlugin implements ImprovedCommands {
         return PluginDetails.create("Claims", new String[]{"eclaim", "eclaims", "excellentclaims"})
             .setConfigClass(Config.class)
             .setLangClass(Lang.class)
-            .setPermissionsClass(Perms.class)
-            ;
+            .setPermissionsClass(Perms.class);
     }
 
     @Override
@@ -63,10 +64,18 @@ public class ClaimPlugin extends NightPlugin implements ImprovedCommands {
 
         this.selectionManager = new SelectionManager(this);
         this.selectionManager.setup();
+
+        if (Plugins.hasPlaceholderAPI()) {
+            PlaceholderHook.setup(this);
+        }
     }
 
     @Override
     public void disable() {
+        if (Plugins.hasPlaceholderAPI()) {
+            PlaceholderHook.shutdown();
+        }
+
         if (this.menuManager != null) this.menuManager.shutdown();
         if (this.selectionManager != null) this.selectionManager.shutdown();
         if (this.claimManager != null) this.claimManager.shutdown();

@@ -5,7 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
-import su.nightexpress.excellentclaims.flag.impl.list.BooleanFlag;
+import su.nightexpress.excellentclaims.flag.impl.ClaimFlag;
+
+import java.util.function.Predicate;
 
 public class Relation {
 
@@ -64,52 +66,80 @@ public class Relation {
     }
 
 
+    @Deprecated
     public boolean isOwnerOfBoth(@NotNull Player player) {
         return (this.targetClaim == null || this.targetClaim.isOwner(player)) && (this.sourceClaim == null || this.sourceClaim.isOwner(player));
     }
 
+    @Deprecated
     public boolean isMemberOfBoth(@NotNull Player player) {
         return this.isTargetMember(player) && (this.sourceClaim == null || this.sourceClaim.isOwnerOrMember(player));
     }
 
+    @Deprecated
     public boolean isTargetMember(@NotNull Player player) {
         return (this.targetClaim == null || this.targetClaim.isOwnerOrMember(player));
     }
 
 
+    @Deprecated
     public boolean hasBothPermission(@NotNull Player player, @NotNull ClaimPermission permission) {
         return this.isSameClaim() ? this.hasTargetPermission(player, permission) : this.hasTargetPermission(player, permission) && this.hasSourcePermission(player, permission);
     }
 
+    @Deprecated
     public boolean hasTargetPermission(@NotNull Player player, @NotNull ClaimPermission permission) {
         return this.hasPermission(player, permission, this.targetClaim);
     }
 
+    @Deprecated
     public boolean hasSourcePermission(@NotNull Player player, @NotNull ClaimPermission permission) {
         return this.hasPermission(player, permission, this.sourceClaim);
     }
 
+    @Deprecated
     private boolean hasPermission(@NotNull Player player, @NotNull ClaimPermission permission, @Nullable Claim claim) {
         return claim == null || claim.hasPermission(player, permission);
     }
 
 
-    public boolean checkBothFlag(@NotNull BooleanFlag flag) {
+    @Deprecated
+    public boolean checkBothFlag(@NotNull ClaimFlag<Boolean> flag) {
         if (this.isSameClaim()) return this.checkTargetFlag(flag);
 
         return this.checkTargetFlag(flag) && this.checkSourceFlag(flag);
     }
 
-    public boolean checkTargetFlag(@NotNull BooleanFlag flag) {
+    @Deprecated
+    public boolean checkTargetFlag(@NotNull ClaimFlag<Boolean> flag) {
         return this.checkFlag(flag, this.targetClaim);
     }
 
-    public boolean checkSourceFlag(@NotNull BooleanFlag flag) {
+    @Deprecated
+    public boolean checkSourceFlag(@NotNull ClaimFlag<Boolean> flag) {
         return this.checkFlag(flag, this.sourceClaim);
     }
 
-    private boolean checkFlag(@NotNull BooleanFlag flag, @Nullable Claim claim) {
+    @Deprecated
+    private boolean checkFlag(@NotNull ClaimFlag<Boolean> flag, @Nullable Claim claim) {
         return claim == null || (claim.isWilderness() && !claim.hasFlag(flag)) || claim.getFlag(flag);
+    }
+
+
+    public boolean testBoth(@NotNull Predicate<Claim> predicate) {
+        return this.testClaim(predicate, this.targetClaim) && this.testClaim(predicate, this.sourceClaim);
+    }
+
+    public boolean testTarget(@NotNull Predicate<Claim> predicate) {
+        return this.testClaim(predicate, this.targetClaim);
+    }
+
+    public boolean testSource(@NotNull Predicate<Claim> predicate) {
+        return this.testClaim(predicate, this.sourceClaim);
+    }
+
+    private boolean testClaim(@NotNull Predicate<Claim> predicate, @Nullable Claim claim) {
+        return claim == null || predicate.test(claim);
     }
 
 

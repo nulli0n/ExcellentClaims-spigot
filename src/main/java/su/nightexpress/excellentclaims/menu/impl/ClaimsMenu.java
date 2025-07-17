@@ -29,7 +29,6 @@ import java.util.stream.IntStream;
 import static su.nightexpress.excellentclaims.Placeholders.*;
 import static su.nightexpress.nightcore.util.text.tag.Tags.*;
 
-@SuppressWarnings("UnstableApiUsage")
 public class ClaimsMenu extends LinkedMenu<ClaimPlugin, ClaimsMenu.Data> implements Filled<Claim>, ConfigBased {
 
     public static final String FILE_NAME = "claim_list.yml";
@@ -119,16 +118,16 @@ public class ClaimsMenu extends LinkedMenu<ClaimPlugin, ClaimsMenu.Data> impleme
         if (userInfo != null) {
             // Display all player's claims.
             UUID playerId = userInfo.getPlayerId();
-            claims = this.plugin.getClaimManager().getClaims(type, claim -> claim.isActive() && claim.isOwnerOrMember(playerId))
+            claims = this.plugin.getClaimManager().getStorage().getClaims(type, claim -> claim.isActive() && claim.isOwnerOrMember(playerId))
                 .stream().sorted(Comparator.comparing((Claim claim) -> claim.isOwner(playerId)).reversed().thenComparing(Claim::getDisplayName)).toList();
         }
         else if (worldName != null) {
             // Display all world claims.
-            claims = this.plugin.getClaimManager().getClaims(worldName, type).stream().sorted(Comparator.comparing(Claim::getId)).toList();
+            claims = this.plugin.getClaimManager().getStorage().getClaims(worldName, type).stream().sorted(Comparator.comparing(Claim::getId)).toList();
         }
         else {
             // Display all claims.
-            claims = this.plugin.getClaimManager().getClaims(type).stream().sorted(Comparator.comparing(Claim::getId)).toList();
+            claims = this.plugin.getClaimManager().getStorage().getClaims(type).stream().sorted(Comparator.comparing(Claim::getId)).toList();
         }
 
         var autoFill = MenuFiller.builder(this);

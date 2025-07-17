@@ -2,32 +2,33 @@ package su.nightexpress.excellentclaims.menu;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import su.nightexpress.excellentclaims.ClaimPlugin;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimType;
-import su.nightexpress.excellentclaims.api.flag.FlagCategory;
 import su.nightexpress.excellentclaims.api.member.Member;
+import su.nightexpress.excellentclaims.config.Config;
 import su.nightexpress.excellentclaims.config.Lang;
-import su.nightexpress.excellentclaims.config.Perms;
 import su.nightexpress.excellentclaims.menu.impl.*;
+import su.nightexpress.excellentclaims.menu.type.ClaimMenu;
 import su.nightexpress.excellentclaims.util.UserInfo;
+import su.nightexpress.excellentclaims.util.list.SmartList;
 import su.nightexpress.nightcore.language.entry.LangText;
 import su.nightexpress.nightcore.manager.AbstractManager;
 
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class MenuManager extends AbstractManager<ClaimPlugin> {
 
-    private ClaimsMenu claimsMenu;
-    private ClaimMenu claimMenu;
-    private MemberMenu memberMenu;
-    private MembersMenu membersMenu;
-    private FlagsTypeMenu flagsTypeMenu;
-    private FlagsMenu flagsMenu;
-    private TransferMenu transferMenu;
-    private ConfirmMenu confirmMenu;
+    private ClaimsMenu         claimsMenu;
+    private SettingsMenu       settingsMenu;
+    private MemberMenu         memberMenu;
+    private MembersMenu        membersMenu;
+    private FlagsMenu          flagsMenu;
+    private EntrySelectionMenu selectionMenu;
+    private SelectPlayerMenu   addMemberMenu;
+    private SelectPlayerMenu   transferMenu;
 
     public MenuManager(@NotNull ClaimPlugin plugin) {
         super(plugin);
@@ -40,29 +41,31 @@ public class MenuManager extends AbstractManager<ClaimPlugin> {
 
     @Override
     protected void onShutdown() {
-        if (this.confirmMenu != null) this.confirmMenu.clear();
-        if (this.transferMenu != null) this.transferMenu.clear();
         if (this.memberMenu != null) this.memberMenu.clear();
-        if (this.membersMenu != null) this.membersMenu.clear();
-        if (this.flagsTypeMenu != null) this.flagsTypeMenu.clear();
-        if (this.flagsMenu != null) this.flagsMenu.clear();
-        if (this.claimMenu != null) this.claimMenu.clear();
         if (this.claimsMenu != null) this.claimsMenu.clear();
     }
 
     private void loadUI() {
         this.claimsMenu = new ClaimsMenu(this.plugin);
-        this.claimMenu = new ClaimMenu(this.plugin);
         this.memberMenu = new MemberMenu(this.plugin);
-        this.membersMenu = new MembersMenu(this.plugin);
-        this.flagsTypeMenu = new FlagsTypeMenu(this.plugin);
-        this.flagsMenu = new FlagsMenu(this.plugin);
-        this.transferMenu = new TransferMenu(this.plugin);
-        this.confirmMenu = new ConfirmMenu(this.plugin);
+
+        this.settingsMenu = this.addMenu(new SettingsMenu(this.plugin), Config.DIR_UI, "claim.yml");
+        this.membersMenu = this.addMenu(new MembersMenu(this.plugin), Config.DIR_UI, "claim_members.yml");
+        this.flagsMenu = this.addMenu(new FlagsMenu(this.plugin), Config.DIR_UI, "flags.yml");
+        this.transferMenu = this.addMenu(new SelectPlayerMenu(this.plugin, ClaimPermission.TRANSFER_CLAIM), Config.DIR_UI, "claim_transfer.yml");
+        this.addMemberMenu = this.addMenu(new SelectPlayerMenu(this.plugin, ClaimPermission.ADD_MEMBERS), Config.DIR_UI, "add_member.yml");
+
+        this.selectionMenu = this.addMenu(new EntrySelectionMenu(this.plugin), Config.DIR_UI, "entry_selection.yml");
     }
 
-    public void openConfirm(@NotNull Player player, @NotNull Confirmation confirmation) {
-        this.confirmMenu.open(player, confirmation);
+    @NotNull
+    public SettingsMenu getSettingsMenu() {
+        return this.settingsMenu;
+    }
+
+    @NotNull
+    public MembersMenu getMembersMenu() {
+        return this.membersMenu;
     }
 
     public void openClaimsMenu(@NotNull Player player, @NotNull ClaimType type) {
@@ -130,15 +133,11 @@ public class MenuManager extends AbstractManager<ClaimPlugin> {
     }
 
     public boolean openClaimMenu(@NotNull Player player, @NotNull Claim claim, boolean force) {
-        if (!force) {
-            if (!claim.hasPermission(player, ClaimPermission.MANAGE_CLAIM)) {
-                Lang.ERROR_NO_CLAIM_PERMISSION.getMessage().send(player);
-                return false;
-            }
-        }
+        return this.openMenu(player, claim, this.settingsMenu, menu -> menu.open(player, claim), force);
+    }
 
-        this.claimMenu.open(player, claim);
-        return true;
+    public <T> void openEntrySelection(@NotNull Player player, @NotNull Claim claim, @NotNull SmartList<T> list) {
+        this.selectionMenu.open(player, claim, list);
     }
 
     public boolean openFlagsMenu(@NotNull Player player, @NotNull Claim claim) {
@@ -146,24 +145,7 @@ public class MenuManager extends AbstractManager<ClaimPlugin> {
     }
 
     public boolean openFlagsMenu(@NotNull Player player, @NotNull Claim claim, boolean force) {
-        return openFlagsMenu(player, claim, null, force);
-    }
-
-    public boolean openFlagsMenu(@NotNull Player player, @NotNull Claim claim, @Nullable FlagCategory category) {
-        return this.openFlagsMenu(player, claim, category, false);
-    }
-
-    public boolean openFlagsMenu(@NotNull Player player, @NotNull Claim claim, @Nullable FlagCategory category, boolean force) {
-        if (!force) {
-            if (!claim.hasPermission(player, ClaimPermission.MANAGE_FLAGS) || (category != null && !player.hasPermission(Perms.FLAG_TYPE.apply(category)))) {
-                Lang.ERROR_NO_CLAIM_PERMISSION.getMessage().send(player);
-                return false;
-            }
-        }
-
-        if (category == null) this.flagsTypeMenu.open(player, claim);
-        else this.flagsMenu.open(player, claim, category);
-        return true;
+        return this.openMenu(player, claim, this.flagsMenu, menu -> menu.open(player, claim), force);
     }
 
     public boolean openMembersMenu(@NotNull Player player, @NotNull Claim claim) {
@@ -171,15 +153,7 @@ public class MenuManager extends AbstractManager<ClaimPlugin> {
     }
 
     public boolean openMembersMenu(@NotNull Player player, @NotNull Claim claim, boolean force) {
-        if (!force) {
-            if (!claim.hasPermission(player, ClaimPermission.VIEW_MEMBERS)) {
-                Lang.ERROR_NO_CLAIM_PERMISSION.getMessage().send(player);
-                return false;
-            }
-        }
-
-        this.membersMenu.open(player, claim);
-        return true;
+        return this.openMenu(player, claim, this.membersMenu, menu -> menu.open(player, claim), force);
     }
 
     public boolean openMemberMenu(@NotNull Player player, @NotNull Claim claim, @NotNull Member member) {
@@ -187,15 +161,7 @@ public class MenuManager extends AbstractManager<ClaimPlugin> {
     }
 
     public boolean openMemberMenu(@NotNull Player player, @NotNull Claim claim, @NotNull Member member, boolean force) {
-        if (!force) {
-            if (!claim.hasPermission(player, ClaimPermission.MANAGE_MEMBERS)) {
-                Lang.ERROR_NO_CLAIM_PERMISSION.getMessage().send(player);
-                return false;
-            }
-        }
-
-        this.memberMenu.open(player, claim, member);
-        return true;
+        return this.openMenu(player, claim, this.memberMenu, menu -> menu.open(player, claim, member), force);
     }
 
     public boolean openTransferMenu(@NotNull Player player, @NotNull Claim claim) {
@@ -203,14 +169,24 @@ public class MenuManager extends AbstractManager<ClaimPlugin> {
     }
 
     public boolean openTransferMenu(@NotNull Player player, @NotNull Claim claim, boolean force) {
-        if (!force) {
-            if (!claim.hasPermission(player, ClaimPermission.TRANSFER_CLAIM)) {
-                Lang.ERROR_NO_CLAIM_PERMISSION.getMessage().send(player);
-                return false;
-            }
+        return this.openMenu(player, claim, this.transferMenu, menu -> menu.open(player, claim), force);
+    }
+
+    public boolean openAddMemberMenu(@NotNull Player player, @NotNull Claim claim) {
+        return this.openAddMemberMenu(player, claim, false);
+    }
+
+    public boolean openAddMemberMenu(@NotNull Player player, @NotNull Claim claim, boolean force) {
+        return this.openMenu(player, claim, this.addMemberMenu, menu -> menu.open(player, claim), force);
+    }
+
+    public <T extends ClaimMenu> boolean openMenu(@NotNull Player player, @NotNull Claim claim, @NotNull T menu, @NotNull Consumer<T> consumer, boolean force) {
+        if (!force && !menu.hasPermission(player, claim)) {
+            Lang.ERROR_NO_CLAIM_PERMISSION.getMessage().send(player);
+            return false;
         }
 
-        this.transferMenu.open(player, claim);
+        consumer.accept(menu);
         return true;
     }
 }

@@ -6,15 +6,15 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
-import su.nightexpress.excellentclaims.util.Cuboid;
 import su.nightexpress.nightcore.util.StringUtil;
+import su.nightexpress.nightcore.util.geodata.Cuboid;
 
 public class RegionCreateEvent extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
     private final Player player;
-    private final World world;
+    private final World  world;
     private final Cuboid cuboid;
 
     private String name;
