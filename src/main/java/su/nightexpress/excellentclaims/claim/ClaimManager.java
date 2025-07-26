@@ -89,9 +89,7 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
     }
 
     public void saveClaims(boolean whenRequired) {
-        Set<Claim> claims = this.storage.getClaims();
-        claims.addAll(this.storage.getWildernesses());
-
+        Set<Claim> claims = this.storage.getClaimsAndWildernesses();
 
         claims.forEach(claim -> {
             if (whenRequired && !claim.isSaveRequired()) return;

@@ -81,6 +81,14 @@ public class ClaimStorage {
         return this.landLookup;
     }
 
+    @NotNull
+    public Set<Claim> getClaimsAndWildernesses() {
+        Set<Claim> claims = new HashSet<>();
+        claims.addAll(this.getClaims());
+        claims.addAll(this.getWildernesses());
+        return claims;
+    }
+
     // Get all (in)active claims.
 
     @NotNull
