@@ -194,10 +194,10 @@ public class FlagUtils {
             }
         }
 
-        Predicate<Claim> predicate = new FlagPredicate(flag, permission, user);
+        FlagPredicate predicate = new FlagPredicate(flag, permission, user);
 
         if (flag == PlayerFlags.BLOCK_INTERACT) {
-            predicate = predicate.and(claim -> claim.canUseBlock(block.getType()));
+            predicate = predicate.withExtra(claim -> claim.canUseBlock(block.getType()));
         }
 
         return predicate;
@@ -225,7 +225,7 @@ public class FlagUtils {
         ClaimPermission permission = ClaimPermission.ENTITY_INTERACT;
 
         if (flag == null) {
-            return new FlagPredicate(PlayerFlags.ENTITY_INTERACT, permission, player).and(claim -> claim.canUseMob(entity.getType()));
+            return new FlagPredicate(PlayerFlags.ENTITY_INTERACT, permission, player).withExtra(claim -> claim.canUseMob(entity.getType()));
         }
         else {
             return new FlagPredicate(flag, permission, player);
@@ -237,7 +237,7 @@ public class FlagUtils {
         ClaimFlag<Boolean> flag = getSpecificEntitySpawnFlag(entity);
         if (flag != null) return new FlagPredicate(flag, null, null);
 
-        return new FlagPredicate(EntityFlags.ENTITY_SPAWN, null, null).and(claim -> claim.canMobSpawn(entity.getType()));
+        return new FlagPredicate(EntityFlags.ENTITY_SPAWN, null, null).withExtra(claim -> claim.canMobSpawn(entity.getType()));
     }
 
     @Nullable
@@ -257,16 +257,16 @@ public class FlagUtils {
         }
 
         if (victim instanceof Animals) {
-            return new FlagPredicate(EntityFlags.ANIMAL_DAMAGE, null, null).and(claim -> claim.isAnimalDamageAllowed(damageType));
+            return new FlagPredicate(EntityFlags.ANIMAL_DAMAGE, null, null).withExtra(claim -> claim.isAnimalDamageAllowed(damageType));
         }
         else if (victim instanceof Player) {
-            return new FlagPredicate(PlayerFlags.PLAYER_DAMAGE, null, null).and(claim -> claim.isPlayerDamageAllowed(damageType));
+            return new FlagPredicate(PlayerFlags.PLAYER_DAMAGE, null, null).withExtra(claim -> claim.isPlayerDamageAllowed(damageType));
         }
         else return null;
     }
 
     @NotNull
     public static Predicate<Claim> getCommandUsagePredicate(@NotNull Player player, @NotNull Command command) {
-        return new FlagPredicate(PlayerFlags.USE_COMMANDS, null, player).and(claim -> claim.isCommandAllowed(command));
+        return new FlagPredicate(PlayerFlags.USE_COMMANDS, null, player).withExtra(claim -> claim.isCommandAllowed(command));
     }
 }

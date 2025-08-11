@@ -16,6 +16,8 @@ public class FlagPredicate implements Predicate<Claim> {
     private final ClaimPermission permission;
     private final Player player;
 
+    private Predicate<Claim> extra;
+
     public FlagPredicate(@NotNull ClaimFlag<Boolean> flag, @Nullable ClaimPermission permission, @Nullable Player player) {
         this.flag = flag;
         this.permission = permission;
@@ -35,7 +37,13 @@ public class FlagPredicate implements Predicate<Claim> {
             }
         }
 
-        return !claim.hasFlag(this.flag) || claim.getFlag(this.flag);
+        return (!claim.hasFlag(this.flag) || claim.getFlag(this.flag)) && (this.extra == null || this.extra.test(claim));
+    }
+
+    @NotNull
+    public FlagPredicate withExtra(@NotNull Predicate<Claim> predicate) {
+        this.extra = predicate;
+        return this;
     }
 
     @NotNull
