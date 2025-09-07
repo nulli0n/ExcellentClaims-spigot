@@ -192,9 +192,7 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
     protected void writeFlags(@NotNull FileConfig config) {
         config.remove("Flags");
-        this.flags.forEach((flagName, value) -> {
-            value.write(config, "Flags." + flagName);
-        });
+        this.flags.forEach((flagName, value) -> value.write(config, "Flags." + flagName));
     }
 
     protected abstract boolean loadAdditional(@NotNull FileConfig config);
@@ -245,12 +243,12 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     }
 
     @Override
-    public boolean teleport(@NotNull Player player) {
-        return this.teleport(player, false);
+    public boolean teleportAsync(@NotNull Player player) {
+        return this.teleportAsync(player, false);
     }
 
     @Override
-    public boolean teleport(@NotNull Player player, boolean force) {
+    public boolean teleportAsync(@NotNull Player player, boolean force) {
         World world = this.getWorld();
         if (world == null) return false;
 
@@ -265,11 +263,12 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
 
         location = LocationUtil.setCenter2D(location);
 
-        if (!player.teleport(location)) {
-            return false;
-        }
+        player.teleportAsync(location).thenAccept(success -> {
+            if (success) {
+                Lang.CLAIM_TELEPORT_SUCCESS.getMessage().send(player, replacer -> replacer.replace(this.replacePlaceholders()));
+            }
+        });
 
-        Lang.CLAIM_TELEPORT_SUCCESS.getMessage().send(player, replacer -> replacer.replace(this.replacePlaceholders()));
         return true;
     }
 
@@ -320,7 +319,6 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
         if (this.worldName.equalsIgnoreCase(world.getName())) {
             this.world = world;
             this.active = true;
-            //this.plugin.debug("Claim activated: " + this.getId() + " in " + this.worldName);
         }
     }
 
@@ -335,7 +333,6 @@ public abstract class AbstractClaim extends AbstractFileData<ClaimPlugin> implem
     public void deactivate() {
         this.world = null;
         this.active = false;
-        //this.plugin.debug("Claim deactivated: " + this.getId() + " in " + this.worldName);
     }
 
     @Override

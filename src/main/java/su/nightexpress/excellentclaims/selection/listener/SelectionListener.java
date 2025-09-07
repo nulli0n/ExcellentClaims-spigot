@@ -55,8 +55,6 @@ public class SelectionListener extends AbstractListener<ClaimPlugin> {
         this.manager.resetTrackedChunks();
     }
 
-
-
     @EventHandler(priority = EventPriority.NORMAL)
     public void onQuit(PlayerQuitEvent event) {
         this.manager.removeAll(event.getPlayer());

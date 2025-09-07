@@ -12,11 +12,8 @@ import su.nightexpress.nightcore.manager.AbstractListener;
 
 public class MemberListener extends AbstractListener<ClaimPlugin> {
 
-    //private final MemberManager manager;
-
     public MemberListener(@NotNull ClaimPlugin plugin, @NotNull MemberManager manager) {
         super(plugin);
-        //this.manager = manager;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -26,12 +23,10 @@ public class MemberListener extends AbstractListener<ClaimPlugin> {
 
         Player player = event.getPlayer();
 
-        this.plugin.runTaskAsync(task -> {
-            this.plugin.getClaimManager().getStorage().getClaimsByOwner(player).forEach(claim -> {
-                if (claim.getOwner().updatePlayerName(player)) {
-                    claim.setSaveRequired(true);
-                }
-            });
-        });
+        this.plugin.runTaskAsync(() -> this.plugin.getClaimManager().getStorage().getClaimsByOwner(player).forEach(claim -> {
+            if (claim.getOwner().updatePlayerName(player)) {
+                claim.setSaveRequired(true);
+            }
+        }));
     }
 }

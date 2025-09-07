@@ -50,11 +50,6 @@ public abstract class BlockHighlighter {
         this.destroyEntity(player, new ArrayList<>(entities));
     }
 
-//    public void addVisualBlock(@NotNull Player player, @NotNull Location location, @NotNull VisualType type, @NotNull ChatColor color, float size) {
-//        Material material = type == VisualType.CHUNK_BOUNDS ? Config.HIGHLIGHT_CHUNK_BLOCK_CORNER.get() : Config.HIGHLIGHT_REGION_BLOCK_CORNER.get();
-//        this.addVisualBlock(player, location, type, material.createBlockData(), color, size);
-//    }
-
     public void addVisualBlock(@NotNull Player player, @NotNull Location location, @NotNull HighlightType type, @NotNull BlockData blockData, @NotNull ChatColor color, float size) {
         List<FakeEntity> entities = this.getEntityMap(player.getUniqueId()).computeIfAbsent(type, k -> new ArrayList<>());
 

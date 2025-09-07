@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.UnaryOperator;
 
 public interface Claim {
@@ -77,12 +78,9 @@ public interface Claim {
 
     boolean hasPermission(@NotNull Player player, @NotNull ClaimPermission permission);
 
-    boolean teleport(@NotNull Player player);
+    boolean teleportAsync(@NotNull Player player);
 
-    boolean teleport(@NotNull Player player, boolean force);
-
-
-
+    boolean teleportAsync(@NotNull Player player, boolean force);
 
     @NotNull String getWorldName();
 
@@ -116,8 +114,6 @@ public interface Claim {
 
     boolean isIntersecting(@NotNull Cuboid cuboid);
 
-
-
     @NotNull UserInfo getOwner();
 
     void setOwner(@NotNull Player player);
@@ -135,9 +131,6 @@ public interface Claim {
     boolean isOwner(@NotNull Player player);
 
     boolean isOwner(@NotNull UUID playerId);
-
-
-
 
     @NotNull Map<UUID, Member> getMemberMap();
 
@@ -165,8 +158,6 @@ public interface Claim {
 
     @Nullable MemberRank getMemberRank(@NotNull UUID playerId);
 
-
-
     @NotNull SmartList<EntityType> getMobSpawnList();
 
     @NotNull SmartList<EntityType> getMobInteractList();
@@ -179,8 +170,6 @@ public interface Claim {
 
     @NotNull SmartList<Command> getCommandUsageList();
 
-
-
     @NotNull Map<String, FlagValue> getFlags();
 
     <T> boolean hasFlag(@NotNull Flag<T> flag);
@@ -192,8 +181,6 @@ public interface Claim {
     @NotNull <T> T getFlag(@NotNull Flag<T> flag);
 
     @NotNull <T> T getFlag(@NotNull Flag<T> flag, @NotNull T defaultValue);
-
-
 
     boolean canMobSpawn(@NotNull EntityType type);
 

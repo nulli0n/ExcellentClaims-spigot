@@ -53,18 +53,16 @@ public class Placeholders extends su.nightexpress.nightcore.util.Placeholders {
         return Lang.OTHER_LIST_ENTRY_BAD.getString().replace(GENERIC_VALUE, value);
     }
 
-    public static final PlaceholderList<Claim> CLAIM = PlaceholderList.create(list -> {
-        list
-            .add(CLAIM_ID, Claim::getId)
-            .add(CLAIM_NAME, Claim::getDisplayName)
-            .add(CLAIM_DESCRIPTION, claim -> claim.getDescription() == null ? Lang.OTHER_NO_DESCRIPTION.getString() : claim.getDescription())
-            .add(CLAIM_OWNER_NAME, Claim::getOwnerName)
-            .add(CLAIM_PRIORITY, claim -> NumberUtil.format(claim.getPriority()))
-            .add(CLAIM_WORLD, claim -> {
-                World world = claim.getWorld();
-                return world != null ? LangAssets.get(world) : claim.getWorldName();
-            });
-    });
+    public static final PlaceholderList<Claim> CLAIM = PlaceholderList.create(list -> list
+        .add(CLAIM_ID, Claim::getId)
+        .add(CLAIM_NAME, Claim::getDisplayName)
+        .add(CLAIM_DESCRIPTION, claim -> claim.getDescription() == null ? Lang.OTHER_NO_DESCRIPTION.getString() : claim.getDescription())
+        .add(CLAIM_OWNER_NAME, Claim::getOwnerName)
+        .add(CLAIM_PRIORITY, claim -> NumberUtil.format(claim.getPriority()))
+        .add(CLAIM_WORLD, claim -> {
+            World world = claim.getWorld();
+            return world != null ? LangAssets.get(world) : claim.getWorldName();
+        }));
 
     @NotNull
     public static final PlaceholderList<LandClaim> LAND_CLAIM = PlaceholderList.create(list -> list

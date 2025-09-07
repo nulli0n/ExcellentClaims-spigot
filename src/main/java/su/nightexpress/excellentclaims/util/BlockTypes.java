@@ -12,7 +12,6 @@ public class BlockTypes {
 
     public static boolean isButtonLever(@NotNull Material material) {
         return Tag.BUTTONS.isTagged(material) || material == Material.LEVER;
-        //return material.createBlockData() instanceof Switch;
     }
 
     public static boolean isDoor(@NotNull Material material) {

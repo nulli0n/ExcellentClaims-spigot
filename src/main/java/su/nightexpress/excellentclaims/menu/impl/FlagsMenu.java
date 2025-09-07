@@ -57,12 +57,6 @@ public class FlagsMenu extends LinkedMenu<ClaimPlugin, FlagsMenu.Data> implement
         super(plugin, MenuType.GENERIC_9X6, BLACK.wrap("Claim Flags: " + CLAIM_NAME));
     }
 
-//    @Override
-//    @NotNull
-//    public ClaimPermission getPermission() {
-//        return ClaimPermission.MANAGE_FLAGS;
-//    }
-
     public void open(@NotNull Player player, @NotNull Claim claim) {
         this.open(player, claim, null, false);
     }
@@ -94,16 +88,14 @@ public class FlagsMenu extends LinkedMenu<ClaimPlugin, FlagsMenu.Data> implement
                 .filter(flag -> flag.hasPermission(player))
                 .sorted(Comparator.comparing(Flag::getId))
                 .toList())
-            .setItemCreator(flag -> {
-                return flag.getIcon()
-                    .hideAllComponents()
-                    .setDisplayName(this.flagName)
-                    .setLore(this.flagLore)
-                    .replacement(replacer -> replacer
-                        .replace(flag.replacePlaceholders())
-                        .replace(GENERIC_VALUE, () -> flag.getValueLocalized(claim))
-                    );
-            })
+            .setItemCreator(flag -> flag.getIcon()
+                .hideAllComponents()
+                .setDisplayName(this.flagName)
+                .setLore(this.flagLore)
+                .replacement(replacer -> replacer
+                    .replace(flag.replacePlaceholders())
+                    .replace(GENERIC_VALUE, () -> flag.getValueLocalized(claim))
+                ))
             .setItemClick(flag -> (viewer1, event) -> {
                 if (event.getClick() == ClickType.DROP) {
                     claim.getFlags().remove(flag.getId());

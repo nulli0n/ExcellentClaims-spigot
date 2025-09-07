@@ -42,7 +42,6 @@ public class GenericListener extends AbstractListener<ClaimPlugin> {
     public void onPlayerMove(PlayerMoveEvent event) {
         Location from = event.getFrom();
         Location to = event.getTo();
-        if (to == null) return;
         if (to.getX() == from.getX() && to.getZ() == from.getZ() && to.getY() == from.getY()) return;
 
         Player player = event.getPlayer();
@@ -53,7 +52,6 @@ public class GenericListener extends AbstractListener<ClaimPlugin> {
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         Location from = event.getFrom();
         Location to = event.getTo();
-        if (to == null) return;
 
         Player player = event.getPlayer();
         this.handleMovement(player, from, to);

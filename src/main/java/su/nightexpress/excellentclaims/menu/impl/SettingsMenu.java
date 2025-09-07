@@ -54,12 +54,6 @@ public class SettingsMenu extends AbstractClaimMenu implements ConfigBased, Clai
         }
     }
 
-//    @Override
-//    @NotNull
-//    protected String getTitle(@NotNull MenuViewer viewer) {
-//        return this.getClaim(viewer).replacePlaceholders().apply(this.title);
-//    }
-
     @Override
     protected void onPrepare(@NotNull MenuViewer viewer, @NotNull InventoryView view) {
 
@@ -113,7 +107,6 @@ public class SettingsMenu extends AbstractClaimMenu implements ConfigBased, Clai
     }
 
     private void handleIcon(@NotNull MenuViewer viewer, @NotNull InventoryClickEvent event) {
-        //Player player = viewer.getPlayer();
         Claim claim = this.getLink(viewer);
         ItemStack cursor = event.getCursor();
         if (cursor == null || cursor.getType().isAir()) return;
@@ -142,7 +135,7 @@ public class SettingsMenu extends AbstractClaimMenu implements ConfigBased, Clai
     }
 
     private void handleTeleport(@NotNull MenuViewer viewer, @NotNull InventoryClickEvent event) {
-        this.runNextTick(() -> this.getLink(viewer).teleport(viewer.getPlayer()));
+        this.runNextTick(() -> this.getLink(viewer).teleportAsync(viewer.getPlayer()));
     }
 
     private void handleTransfer(@NotNull MenuViewer viewer, @NotNull InventoryClickEvent event) {
@@ -300,8 +293,6 @@ public class SettingsMenu extends AbstractClaimMenu implements ConfigBased, Clai
             .setSlots(33)
             .setHandler(this.createHandler("claim_transfer", this::handleTransfer, ClaimPermission.TRANSFER_CLAIM))
         );
-
-
 
         // ------------ Chunks only ------------ //
 
