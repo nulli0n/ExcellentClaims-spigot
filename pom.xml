@@ -6,7 +6,7 @@
 
     <groupId>su.nightexpress.excellentclaims</groupId>
     <artifactId>ExcellentClaims</artifactId>
-    <version>1.5.2</version>
+    <version>1.5.3</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -74,15 +74,8 @@
         <dependency>
             <groupId>su.nightexpress.nightcore</groupId>
             <artifactId>main</artifactId>
-            <version>2.7.15</version>
+            <version>2.9.4</version>
             <classifier>shaded</classifier>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>su.nightexpress.economybridge</groupId>
-            <artifactId>economy-bridge</artifactId>
-            <version>1.2.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -96,7 +89,7 @@
         <dependency>
             <groupId>com.github.retrooper</groupId>
             <artifactId>packetevents-spigot</artifactId>
-            <version>2.9.5</version>
+            <version>2.10.0</version>
             <scope>provided</scope>
         </dependency>
 
