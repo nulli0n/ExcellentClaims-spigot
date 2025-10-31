@@ -10,5 +10,4 @@ depend:
 softdepend:
   - ProtocolLib
   - packetevents
-  - EconomyBridge
   - PlaceholderAPI
