@@ -57,8 +57,6 @@ public class ClaimUtils {
     }
 
     public static void inheritanceSettings(@NotNull Claim claim, @NotNull Claim from) {
-        //claim.setDisplayName(from.getDisplayName());
-        //claim.setDescription(from.getDescription());
         claim.setIcon(from.getIcon());
         claim.setPriority(from.getPriority());
         claim.getFlags().putAll(from.getFlags());
@@ -78,7 +76,6 @@ public class ClaimUtils {
 
     public static boolean isSafeLocation(@NotNull Location origin) {
         Block block = origin.getBlock();
-        //Block under = block.getRelative(BlockFace.DOWN);
 
         return !isDangerousBlock(block) && isSafeBlock(block.getRelative(BlockFace.DOWN));
     }

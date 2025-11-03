@@ -101,7 +101,6 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
     public void saveClaim(@NotNull Claim claim) {
         claim.save();
         claim.setSaveRequired(false);
-        //plugin.debug("Claim saved on the disk: " + claim.getId());
     }
 
     @NotNull
@@ -797,8 +796,6 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
         return true;
     }
 
-
-
     public boolean testClaim(@NotNull Location location, @NotNull Supplier<Predicate<Claim>> predicateSupplier) {
         Claim claim = this.getPrioritizedClaim(location);
         if (claim == null) return true;
@@ -967,7 +964,6 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
         return !this.landLookup().getAt(worldName, pos).isEmpty();
     }
 
-
     // Check if there are one or more regions at given location.
 
     public boolean isRegionClaim(@NotNull Location location) {
@@ -986,8 +982,6 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
     public boolean isRegionClaim(@NotNull String worldName, @NotNull BlockPos pos) {
         return !this.regionLookup().getAt(worldName, pos).isEmpty();
     }
-
-
 
     @NotNull
     public String getClaimsDirectory(@NotNull ClaimType type, @NotNull World world) {
@@ -1026,8 +1020,6 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
         return claim instanceof LandClaim landClaim ? landClaim : null;
     }
 
-
-
     @Nullable
     public RegionClaim getPrioritizedRegion(@NotNull Block block) {
         return this.getPrioritizedRegion(this.getPrioritizedClaim(block));
@@ -1047,8 +1039,6 @@ public class ClaimManager extends AbstractManager<ClaimPlugin> {
     private RegionClaim getPrioritizedRegion(@Nullable Claim claim) {
         return claim instanceof RegionClaim regionClaim ? regionClaim : null;
     }
-
-
 
     @Nullable
     public Claim getPrioritizedClaim(@NotNull Block block) {

@@ -37,21 +37,6 @@ public class SmartList<T> implements Writeable {
         return list;
     }
 
-//    @NotNull
-//    public static <T> SmartList<T> read(@NotNull FileConfig config, @NotNull String path, @NotNull ListType<T> type) {
-//        ListMode mode = ConfigValue.create(path + ".Mode", ListMode.class, ListMode.BLACKLIST).read(config);
-//        Map<String, T> entries = new HashMap<>();
-//
-//        ConfigValue.create(path + ".Entries", new HashSet<>()).read(config).stream()
-//            .map(type::parse)
-//            .filter(Objects::nonNull)
-//            .map(type::toEntry)
-//            .forEach(entry -> entries.put(entry.getName(), entry.getBackend()));
-//            //.collect(Collectors.toCollection(HashSet::new));
-//
-//        return new SmartList<>(mode, entries, type);
-//    }
-
     public void load(@NotNull FileConfig config, @NotNull String path) {
         this.clear();
 

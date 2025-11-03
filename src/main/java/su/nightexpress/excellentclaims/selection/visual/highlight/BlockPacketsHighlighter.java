@@ -47,7 +47,6 @@ public class BlockPacketsHighlighter extends BlockHighlighter {
         EntityType type = EntityType.BLOCK_DISPLAY;
         UUID uuid = UUID.randomUUID();
         String entityUID = uuid.toString();
-        //StateType stateType = this.stateTypeMap.computeIfAbsent(material,  k -> StateTypes.getByName(BukkitThing.toString(material)));
         WrappedBlockState state = WrappedBlockState.getByString(blockData.getAsString());//WrappedBlockState.getDefaultState(stateType);
 
         var spawnPacket = this.createSpawnPacket(type, location, entityID, uuid);

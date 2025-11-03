@@ -65,7 +65,6 @@ public class Relation {
         return RelationType.WILDERNESS;
     }
 
-
     @Deprecated
     public boolean isOwnerOfBoth(@NotNull Player player) {
         return (this.targetClaim == null || this.targetClaim.isOwner(player)) && (this.sourceClaim == null || this.sourceClaim.isOwner(player));
@@ -80,7 +79,6 @@ public class Relation {
     public boolean isTargetMember(@NotNull Player player) {
         return (this.targetClaim == null || this.targetClaim.isOwnerOrMember(player));
     }
-
 
     @Deprecated
     public boolean hasBothPermission(@NotNull Player player, @NotNull ClaimPermission permission) {
@@ -101,7 +99,6 @@ public class Relation {
     private boolean hasPermission(@NotNull Player player, @NotNull ClaimPermission permission, @Nullable Claim claim) {
         return claim == null || claim.hasPermission(player, permission);
     }
-
 
     @Deprecated
     public boolean checkBothFlag(@NotNull ClaimFlag<Boolean> flag) {
@@ -125,7 +122,6 @@ public class Relation {
         return claim == null || (claim.isWilderness() && !claim.hasFlag(flag)) || claim.getFlag(flag);
     }
 
-
     public boolean testBoth(@NotNull Predicate<Claim> predicate) {
         return this.testClaim(predicate, this.targetClaim) && this.testClaim(predicate, this.sourceClaim);
     }
@@ -141,7 +137,6 @@ public class Relation {
     private boolean testClaim(@NotNull Predicate<Claim> predicate, @Nullable Claim claim) {
         return claim == null || predicate.test(claim);
     }
-
 
     public Claim getTargetClaim() {
         return targetClaim;

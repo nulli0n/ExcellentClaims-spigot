@@ -130,6 +130,12 @@ public class ClaimsMenu extends LinkedMenu<ClaimPlugin, ClaimsMenu.Data> impleme
             claims = this.plugin.getClaimManager().getStorage().getClaims(type).stream().sorted(Comparator.comparing(Claim::getId)).toList();
         }
 
+        var autoFill = getClaimBuilder(claims, player, type);
+
+        return autoFill.build();
+    }
+
+    private MenuFiller.@NotNull Builder<Claim> getClaimBuilder(Collection<Claim> claims, Player player, ClaimType type) {
         var autoFill = MenuFiller.builder(this);
 
         autoFill.setSlots(this.claimSlots);
@@ -154,7 +160,7 @@ public class ClaimsMenu extends LinkedMenu<ClaimPlugin, ClaimsMenu.Data> impleme
                 if (!claim.hasPermission(player, ClaimPermission.TELEPORT)) {
                     return;
                 }
-                this.runNextTick(() -> claim.teleport(player));
+                this.runNextTick(() -> claim.teleportAsync(player));
             }
             if (event.isRightClick()) {
                 if (!claim.hasPermission(player, ClaimPermission.MANAGE_CLAIM)) {
@@ -163,8 +169,7 @@ public class ClaimsMenu extends LinkedMenu<ClaimPlugin, ClaimsMenu.Data> impleme
                 this.runNextTick(() -> this.plugin.getMenuManager().openClaimMenu(player, claim));
             }
         });
-
-        return autoFill.build();
+        return autoFill;
     }
 
     @Override

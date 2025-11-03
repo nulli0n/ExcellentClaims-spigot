@@ -81,16 +81,6 @@ public class PlayerFlags {
         .description("Whether " + LIGHT_RED.wrap("non-members") + " can interact with entities.")
         .build();
 
-//    public static final ClaimFlag<Boolean> ITEM_USE = ClaimFlag.builder("item_use", FlagTypes.BOOLEAN)
-//        .category(FlagCategory.PLAYER)
-//        .defaultValue(true)
-//        .icon("ce67df8d715d1f0583c5955a83aa9ea0f13ed9826e1f70622e7a99cc8278e06d")
-//        .description(
-//            "Controls whether " + LIGHT_RED.wrap("non-members") + " can use",
-//            "items in this claim."
-//        )
-//        .build();
-
     public static final ClaimFlag<Boolean> PLAYER_DAMAGE = ClaimFlag.builder("player_damage", FlagTypes.BOOLEAN)
         .category(FlagCategory.PLAYER)
         .defaultValue(true)
@@ -188,8 +178,6 @@ public class PlayerFlags {
         .icon(Material.WIND_CHARGE)
         .description("Whether " + LIGHT_RED.wrap("non-members") + " can throw wind charges.")
         .build();
-
-
 
     public static final ClaimFlag<Boolean> USE_ANVILS = ClaimFlag.builder("use_anvils", FlagTypes.BOOLEAN)
         .category(FlagCategory.PLAYER)

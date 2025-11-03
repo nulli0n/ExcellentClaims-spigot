@@ -33,7 +33,6 @@ public class FlagPredicate implements Predicate<Claim> {
                 if (this.permission == null || claim.hasPermission(this.player, this.permission)) {
                     return true;
                 }
-                //return this.permission == null || claim.hasPermission(this.player, this.permission);
             }
         }
 

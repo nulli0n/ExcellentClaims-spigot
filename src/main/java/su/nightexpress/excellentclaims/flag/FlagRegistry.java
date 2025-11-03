@@ -152,7 +152,6 @@ public class FlagRegistry {
         flag.loadSettings(config, flag.getId());
 
         FLAG_MAP.put(flag.getId(), flag);
-        //plugin.info("Registered flag: '" + flag.getId() + "' [" + flag.getCategory().name() + "].");
 
         return flag;
     }

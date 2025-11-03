@@ -173,7 +173,6 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
 
         World world = player.getWorld();
         Location playerLocation = player.getLocation();
-        //Chunk playerChunk = playerLocation.getChunk();
 
         int centerX = playerLocation.getBlockX();
         int centerY = playerLocation.getBlockY();
@@ -336,8 +335,6 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         return data;
     }
 
-
-
     @NotNull
     public ItemStack getItem(@NotNull ItemType itemType) {
         ConfigValue<NightItem> value = switch (itemType) {
@@ -441,8 +438,6 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
         this.chunkTracker.remove(player.getUniqueId());
     }
 
-
-
     public void toggleChunkBounds(@NotNull Player player) {
         if (this.canSeeChunkBounds(player)) {
             this.disableChunkBounds(player);
@@ -454,17 +449,13 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
 
     public void enableChunkBounds(@NotNull Player player) {
         this.addTracker(player).setChunkBounds(true);
-        //this.chunkTracker.put(player.getUniqueId(), BlockPos.from(player.getLocation()));
         this.highlightChunkBounds(player);
     }
 
     public void disableChunkBounds(@NotNull Player player) {
         this.removeVisuals(player, HighlightType.CHUNK);
         this.removeTracker(player, tracker -> tracker.setChunkBounds(false));
-        //this.chunkTracker.remove(player.getUniqueId());
     }
-
-
 
     @NotNull
     public Selection startSelection(@NotNull Player player) {
@@ -502,14 +493,10 @@ public class SelectionManager extends AbstractManager<ClaimPlugin> {
             value = 2;
         }
 
-        this.plugin.runTaskAsync(task -> {
-            this.highlightSelection(player);
-        });
+        this.plugin.runTaskAsync(() -> this.highlightSelection(player));
 
         Lang.REGION_SELECTION_INFO.getMessage().send(player, replacer -> replacer.replace(Placeholders.GENERIC_VALUE, value));
     }
-
-
 
     public boolean isInMerge(@NotNull Player player) {
         return this.mergeMap.containsKey(player.getUniqueId());

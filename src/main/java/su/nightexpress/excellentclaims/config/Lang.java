@@ -65,7 +65,6 @@ public class Lang extends CoreLang {
     public static final LangString COMMAND_WILDERNESS_RENAME_DESC      = LangString.of("Command.Wilderness.Rename.Desc", "Rename wilderness.");
     public static final LangString COMMAND_WILDERNESS_DESCRIPTION_DESC = LangString.of("Command.Wilderness.Description.Desc", "Set wilderness description.");
 
-
     public static final LangText ADMIN_MODE_TOGGLE = LangText.of("AdminMode.Toggle",
         LIGHT_GRAY.wrap("Admin Mode: " + LIGHT_YELLOW.wrap(GENERIC_VALUE))
     );
@@ -160,12 +159,6 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("The chunk is not claimed.")
     );
 
-//    public static final LangText LAND_ERROR_NOT_OWNER = LangText.of("Land.Error.NotOwner",
-//        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
-//        LIGHT_RED.wrap(BOLD.wrap("Not Your Claim!")),
-//        LIGHT_GRAY.wrap("You do not own this chunk.")
-//    );
-
     public static final LangText LAND_MERGE_ERROR_FOREIGN = LangText.of("Land.Merge.Error.Foreign",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.wrap(BOLD.wrap("Foreign Claim!")),
@@ -239,7 +232,6 @@ public class Lang extends CoreLang {
         LIGHT_GREEN.wrap(BOLD.wrap("Chunk Split!")),
         LIGHT_GRAY.wrap("You successfully split chunk as new claim.")
     );
-
 
     public static final LangText REGION_CREATE_SUCCESS = LangText.of("Region.Create.Success",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.BLOCK_WOOD_PLACE),
@@ -325,20 +317,9 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("Region with such name does not exists.")
     );
 
-//    public static final LangText REGION_ERROR_NOT_OWNER = LangText.of("Region.Error.NotOwner",
-//        OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
-//        LIGHT_RED.wrap(BOLD.wrap("Not Your Region!")),
-//        LIGHT_GRAY.wrap("You're not the region owner.")
-//    );
-
-
     public static final LangText MEMBER_ADD_ERROR_OWNER = LangText.of("Member.Add.Error.Owner",
         LIGHT_GRAY.wrap(LIGHT_RED.wrap(PLAYER_NAME) + " is the claim owner. You can't add it as a member.")
     );
-
-//    public static final LangText MEMBER_ADD_ERROR_SELF = LangText.of("Member.Add.Error.Self",
-//        LIGHT_GRAY.wrap("You can't add yourself to members.")
-//    );
 
     public static final LangText MEMBER_ADD_ERROR_ALREADY = LangText.of("Member.Add.Error.AlreadyAdded",
         LIGHT_GRAY.wrap(LIGHT_RED.wrap(PLAYER_NAME) + " is already a member of the " + LIGHT_YELLOW.wrap(CLAIM_NAME) + " claim.")
@@ -348,18 +329,9 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("You added " + LIGHT_YELLOW.wrap(PLAYER_NAME) + " as " + LIGHT_YELLOW.wrap(RANK_NAME) + " to the " + LIGHT_YELLOW.wrap(CLAIM_NAME) + " claim.")
     );
 
-//    public static final LangText MEMBER_ADD_PROMPT = LangText.of("Member.Add.Prompt",
-//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Player Name]")),
-//        LIGHT_GRAY.wrap("To add it as a claim member.")
-//    );
-
     public static final LangString MEMBER_ADD_PROMPT = LangString.of("Member.Add.Dialog",
-        //OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
         LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Player Name]"))
-        //LIGHT_GRAY.wrap("To add it as a claim member.")
     );
-
 
     public static final LangText GREETING_CLAIM = LangText.of("Greeting.Claim",
         OUTPUT.wrap(10, 40),
@@ -373,17 +345,8 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("")
     );
 
-
-//    public static final LangText CLAIM_RENAME_PROMPT = LangText.of("Claim.Rename.Prompt",
-//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Name]")),
-//        LIGHT_GRAY.wrap("To rename your claim.")
-//    );
-
     public static final LangString CLAIM_RENAME_PROMPT = LangString.of("Claim.Rename.Dialog",
-        //OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
         LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Claim Name]"))
-        //LIGHT_GRAY.wrap("To rename your claim.")
     );
 
     public static final LangText CLAIM_RENAME_SUCCESS = LangText.of("Claim.Rename.Success",
@@ -398,16 +361,8 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("Name must be up to " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " characters.")
     );
 
-//    public static final LangText CLAIM_DESCRIPTION_PROMPT = LangText.of("Claim.Description.Prompt",
-//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Description Text]")),
-//        LIGHT_GRAY.wrap("To add claim description.")
-//    );
-
     public static final LangString CLAIM_DESCRIPTION_PROMPT = LangString.of("Claim.Description.Dialog",
-        //.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
         LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Description Text]"))
-        //LIGHT_GRAY.wrap("To add claim description.")
     );
 
     public static final LangText CLAIM_DESCRIPTION_SUCCESS = LangText.of("Claim.Description.Success",
@@ -422,18 +377,9 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("Description must be up to " + LIGHT_RED.wrap(GENERIC_AMOUNT) + " characters.")
     );
 
-//    public static final LangText CLAIM_PRIORITY_PROMPT = LangText.of("Claim.Priority.Prompt",
-//        OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
-//        LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Priority Value]")),
-//        LIGHT_GRAY.wrap("To change claim priority.")
-//    );
-
     public static final LangString CLAIM_PRIORITY_PROMPT = LangString.of("Claim.Priority.Dialog",
-        //OUTPUT.wrap(10, -1) + SOUND.wrap(Sound.BLOCK_LAVA_POP),
         LIGHT_GRAY.wrap("Enter " + LIGHT_GREEN.wrap("[Priority Value]"))
-        //LIGHT_GRAY.wrap("To change claim priority.")
     );
-
 
     public static final LangText CLAIM_SET_SPAWN_ERROR_OUTSIDE = LangText.of("Claim.SetSpawn.Error.OutSide",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
@@ -453,7 +399,6 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap("Successfully set spawn for " + LIGHT_GREEN.wrap(CLAIM_NAME) + ".")
     );
 
-
     public static final LangText CLAIM_TELEPORT_ERROR_UNSAFE = LangText.of("Claim.Teleport.Error.Unsafe",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
         LIGHT_RED.wrap(BOLD.wrap("Unsafe Location!")),
@@ -463,7 +408,6 @@ public class Lang extends CoreLang {
     public static final LangText CLAIM_TELEPORT_SUCCESS = LangText.of("Claim.Teleport.Success",
         LIGHT_GRAY.wrap("You teleported to the " + LIGHT_GREEN.wrap(CLAIM_NAME) + " spawn point.")
     );
-
 
     public static final LangText CLAIM_TRANSFER_ERROR_YOURSELF = LangText.of("Claim.TransferOwnership.Error.Yourself",
         OUTPUT.wrap(20, 60) + SOUND.wrap(Sound.ENTITY_VILLAGER_NO),
@@ -487,14 +431,10 @@ public class Lang extends CoreLang {
         LIGHT_GRAY.wrap(LIGHT_GREEN.wrap(PLAYER_NAME) + " transferred you ownership of the " + LIGHT_GREEN.wrap(CLAIM_NAME) + ".")
     );
 
-
-
     public static final LangText SELECTION_REGION_INFO = LangText.of("Selection.Region.Info",
         OUTPUT.wrap(OutputType.ACTION_BAR),
         LIGHT_CYAN.wrap("Selected " + WHITE.wrap(GENERIC_VOLUME + "/" + GENERIC_MAX) + " blocks.")
     );
-
-
 
     public static final LangText PROTECTION_BLOCK_BREAK = LangText.of("Protection.Info.BlockBreak",
         OUTPUT.wrap(OutputType.ACTION_BAR),

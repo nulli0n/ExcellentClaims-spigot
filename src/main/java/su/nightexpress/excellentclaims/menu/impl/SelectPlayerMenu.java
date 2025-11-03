@@ -77,13 +77,11 @@ public class SelectPlayerMenu extends AbstractClaimMenu implements Filled<Player
         return MenuFiller.builder(this)
             .setSlots(this.playerSlots)
             .setItems(players.stream().sorted(Comparator.comparing(Player::getName)).toList())
-            .setItemCreator(target -> {
-                return new NightItem(Material.PLAYER_HEAD)
-                    .setPlayerProfile(target)
-                    .setDisplayName(this.playerName)
-                    .setLore(this.playerLore)
-                    .replacement(replacer -> replacer.replace(Placeholders.forPlayer(target)));
-            })
+            .setItemCreator(target -> new NightItem(Material.PLAYER_HEAD)
+                .setPlayerProfile(target)
+                .setDisplayName(this.playerName)
+                .setLore(this.playerLore)
+                .replacement(replacer -> replacer.replace(Placeholders.forPlayer(target))))
             .setItemClick(target -> (viewer1, event) -> this.handleClick(player, claim, target))
             .build();
     }

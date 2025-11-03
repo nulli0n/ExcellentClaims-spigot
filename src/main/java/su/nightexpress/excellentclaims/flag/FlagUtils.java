@@ -146,10 +146,6 @@ public class FlagUtils {
         return null;
     }
 
-
-
-
-
     @NotNull
     public static Predicate<Claim> getBuildingPredicate(@NotNull Player player) {
         return new FlagPredicate(PlayerFlags.BLOCK_PLACE, ClaimPermission.BUILDING, player);

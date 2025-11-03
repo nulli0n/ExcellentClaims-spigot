@@ -81,8 +81,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Player player = event.getPlayer();
         if (player != null && this.isAdminMode(player)) return;
 
-        //plugin.debug("BlockFertilize = " + event.getBlock().getType().name());
-
         Block block = event.getBlock();
         Location originLocation = block.getLocation();
         Claim origin = this.manager.getPrioritizedClaim(originLocation);
@@ -125,8 +123,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         boolean isBoneMeal = event.isFromBonemeal();
         ClaimFlag<Boolean> flag = isMushroom ? NaturalFlags.MUSHROOM_GROW : NaturalFlags.TREE_GROW;
 
-        //plugin.debug("StructureGrow: " + player + " / isBoneMeal: " + isBoneMeal + " / " + flag.getId());
-
         Claim origin = this.manager.getPrioritizedClaim(sourceLocation);
         if (origin != null && origin.hasFlag(flag) && !origin.getFlag(flag)) {
             event.setCancelled(true);
@@ -151,8 +147,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Material fromType = block.getType();
         Material toType = newState.getType();
         ClaimFlag<Boolean> flag;
-
-        //plugin.debug("BlockGrow = " + fromType.name() + " -> " + toType.name());
 
         Location source = block.getLocation();
         Location target = newState.getLocation();
@@ -220,8 +214,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
 
         ClaimFlag<Boolean> flag;
 
-        //plugin.debug("BlockSpread = " + sourceType.name() + " -> " + targetType.name());
-
         if (targetType == Material.GRASS_BLOCK) {
             flag = NaturalFlags.GRASS_GROW;
         }
@@ -261,8 +253,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Material fromMaterial = block.getType();
         Material toMaterial = newState.getType();
         ClaimFlag<Boolean> flag;
-
-        //plugin.debug("BlockFade = " + fromMaterial.name() + " -> " + toMaterial.name());
 
         if (fromMaterial == Material.ICE && toMaterial == Material.WATER) {
             flag = NaturalFlags.ICE_MELT;
@@ -316,8 +306,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onBlockExplode(BlockExplodeEvent event) {
         List<Block> blockList = event.blockList();
-
-        //plugin.debug("BlockExplode = " + event.getExplodedBlockState().getType().name());
 
         ClaimFlag<Boolean> flag = NaturalFlags.EXPLOSION_BLOCK_DAMAGE;
 
@@ -401,7 +389,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         }
 
         if (block != null && !block.isEmpty() && event.useInteractedBlock() != Event.Result.DENY) {
-            //plugin.debug("PlayerInteractBlock = " + player.getName() + " -> " + block + " (" + event.getAction().name() + ")");
 
             if (!this.manager.canUseBlock(player, block, action)) {
                 event.setUseInteractedBlock(Event.Result.DENY);
@@ -543,8 +530,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         EntityType entityType = entity.getType();
         List<Block> blockList = event.blockList();
 
-        //plugin.debug("EntityExplode = " + entity);
-
         ClaimFlag<Boolean> flag;
 
         if (entityType == EntityType.TNT || entityType == EntityType.TNT_MINECART) {
@@ -577,8 +562,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Entity entity = event.getEntity();
         Block block = event.getBlock();
 
-        //plugin.debug("EntityInteract = " + entity + " -> " + block);
-
         if (!this.manager.canUseBlock(entity, block, null)) {
             event.setCancelled(true);
         }
@@ -594,12 +577,9 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Player player = entity instanceof Player p ? p : null;
         if (player != null && (this.isAdminMode(player) || claim.isOwnerOrMember(player))) return;
 
-        //BlockData toData = event.getBlockData();
         Material fromType = sourceBlock.getType();
         Material toType = event.getTo();
         EntityType entityType = entity.getType();
-
-        //plugin.debug("EntityBlockChange = " + entity.getType().name() + " changed " + fromType.name() + " -> " + toType.name());
 
         ClaimFlag<Boolean> flag;
         if (entityType == EntityType.SILVERFISH) {
@@ -639,8 +619,6 @@ public class FlagListener extends AbstractListener<ClaimPlugin> {
         Material fromType = sourceBlock.getType();
         Material toType = toState.getType();
         EntityType entityType = entity.getType();
-
-        //plugin.debug("EntityBlockForm = " + entity.getType().name() + " formed " + sourceBlock.getType().name() + " -> " + toType.name());
 
         ClaimFlag<Boolean> flag;
         if (entityType == EntityType.SNOW_GOLEM && toType == Material.SNOW) {

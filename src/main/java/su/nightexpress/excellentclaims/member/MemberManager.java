@@ -158,14 +158,6 @@ public class MemberManager extends AbstractManager<ClaimPlugin> {
     }
 
     public void addMember(@NotNull Player player, @NotNull Claim claim, @NotNull String name) {
-//        if (name.equalsIgnoreCase(player.getName())) {
-//            Lang.MEMBER_ADD_ERROR_SELF.getMessage()
-//                .replace(claim.replacePlaceholders())
-//                .replace(Placeholders.forPlayer(player))
-//                .send(player);
-//            return;
-//        }
-
         this.plugin.getUserManager().manageUser(name, user -> {
             if (user == null) {
                 Lang.ERROR_INVALID_PLAYER.getMessage(plugin).send(player);

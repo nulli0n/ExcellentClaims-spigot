@@ -277,7 +277,6 @@ public class Config {
         "[Default is " + BukkitThing.toString(Material.CHAIN) + "]"
     );
 
-
     public static boolean isEconomyEnabled() {
         return ECONOMY_ENABLED.get();
     }
