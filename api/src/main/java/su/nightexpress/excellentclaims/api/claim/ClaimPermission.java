@@ -1,0 +1,35 @@
+package su.nightexpress.excellentclaims.api.claim;
+
+public enum ClaimPermission {
+
+    ADMIN,
+    ADD_MEMBERS,
+    BUILDING,
+    BLOCK_INTERACT,
+    CHEST_ACCESS,
+    CONTAINERS,
+    DAMAGE_MOBS,
+    DEMOTE_MEMBERS,
+    DROP_ITEMS,
+    ENTITY_INTERACT,
+    ITEM_INTERACT,
+    MANAGE_CLAIM,
+    MANAGE_MEMBERS,
+    MANAGE_RULES,
+    MERGE_CLAIM,
+    PICKUP_ITEMS,
+    PROMOTE_MEMBERS,
+    PURGE_MEMBERS,
+    REMOVE_MEMBERS,
+    RENAME_CLAIM,
+    SET_CLAIM_DESCRIPTION,
+    SET_CLAIM_SPAWN,
+    SET_CLAIM_ICON,
+    SET_CLAIM_PRIORITY,
+    SPLIT_CLAIM,
+    TELEPORT,
+    USE_COMMANDS,
+    USE_PORTALS,
+    VIEW_MEMBERS,
+    ;
+}

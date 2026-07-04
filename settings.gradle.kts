@@ -1,0 +1,14 @@
+rootProject.name = "ExcellentClaims"
+
+include("api")
+include("integration-packetevents")
+include("integration-protocollib")
+include("module-admin")
+include("module-highlight")
+include("module-ranks")
+include("module-rules")
+include("module-lands")
+include("module-regions")
+include("module-wilderness")
+include("core")
+include("plugin")

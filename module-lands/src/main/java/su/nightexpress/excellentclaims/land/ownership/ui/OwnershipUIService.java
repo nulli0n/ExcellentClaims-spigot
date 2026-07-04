@@ -1,0 +1,30 @@
+package su.nightexpress.excellentclaims.land.ownership.ui;
+
+import org.bukkit.entity.Player;
+import org.jspecify.annotations.NullMarked;
+
+import su.nightexpress.excellentclaims.land.ownership.LandOwnershipService;
+import su.nightexpress.excellentclaims.land.ownership.ui.context.TransferTargetContext;
+import su.nightexpress.excellentclaims.land.ownership.ui.dialog.OwnershipDialogKeys;
+import su.nightexpress.excellentclaims.land.ui.LandUIService;
+import su.nightexpress.nightcore.ui.dialog.wrap.DialogRegistry;
+
+@NullMarked
+public class OwnershipUIService {
+
+    private final DialogRegistry dialogs;
+    //private final LandOwnershipService ownershipService;
+    //private final LandsUIService       coreUI;
+
+    public OwnershipUIService(DialogRegistry dialogs,
+                              LandOwnershipService ownershipService,
+                              LandUIService coreUI) {
+        this.dialogs = dialogs;
+        //this.ownershipService = ownershipService;
+        //this.coreUI = coreUI;
+    }
+
+    public void showTransferTargetSelectDialog(Player player, TransferTargetContext context) {
+        this.dialogs.show(player, OwnershipDialogKeys.TRANSFER_SELECT_TARGET, context, null);
+    }
+}
