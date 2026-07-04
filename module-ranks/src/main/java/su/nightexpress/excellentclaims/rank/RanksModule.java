@@ -29,7 +29,8 @@ public class RanksModule extends AbstractModule implements RanksAPI {
 
     @Override
     protected void onReload() {
-        this.loadRanks();
+        this.ioService.loadRanks();
+        this.ioService.recalculatePermissions();
     }
 
     @Override
@@ -39,12 +40,7 @@ public class RanksModule extends AbstractModule implements RanksAPI {
 
     @Override
     protected void onStart() {
-        this.loadRanks();
-    }
 
-    private void loadRanks() {
-        this.ioService.loadRanks();
-        this.ioService.recalculatePermissions();
     }
 
     @Override

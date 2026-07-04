@@ -8,18 +8,19 @@ import org.jspecify.annotations.NullMarked;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.core.id.Identifier;
 import su.nightexpress.excellentclaims.api.rank.Rank;
-import su.nightexpress.excellentclaims.rank.model.RankDefinition;
+import su.nightexpress.excellentclaims.api.rank.RankDefinition;
+import su.nightexpress.excellentclaims.rank.model.DefaultRankDefinition;
 import su.nightexpress.nightcore.util.placeholder.PlaceholderResolver;
 
 @NullMarked
 public class DefaultRank implements Rank {
 
-    private final Identifier     id;
-    private final RankDefinition definition;
+    private final Identifier            id;
+    private final DefaultRankDefinition definition;
 
     private final Set<ClaimPermission> effectivePermissions;
 
-    public DefaultRank(Identifier id, RankDefinition definition) {
+    public DefaultRank(Identifier id, DefaultRankDefinition definition) {
         this.id = id;
         this.definition = definition;
         this.effectivePermissions = new HashSet<>(definition.getPermissions());
@@ -57,6 +58,10 @@ public class DefaultRank implements Rank {
         return this.getPriority() == other.getPriority();
     }
 
+    @Override
+    public RankDefinition getDefinition() {
+        return this.definition;
+    }
 
     @Override
     public Identifier getId() {

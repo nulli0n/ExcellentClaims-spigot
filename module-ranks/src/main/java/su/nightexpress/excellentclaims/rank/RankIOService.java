@@ -13,7 +13,7 @@ import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.core.id.Identifier;
 import su.nightexpress.excellentclaims.api.rank.Rank;
 import su.nightexpress.excellentclaims.api.rank.RankRegistry;
-import su.nightexpress.excellentclaims.rank.model.RankDefinition;
+import su.nightexpress.excellentclaims.rank.model.DefaultRankDefinition;
 import su.nightexpress.nightcore.config.FileConfig;
 import su.nightexpress.nightcore.exception.ModelLoadException;
 
@@ -37,19 +37,19 @@ public class RankIOService {
 
         if (config.getSection(RANKS_PATH).isEmpty()) {
             this.loadDefaults(config);
-            return;
         }
-
-        config.getSection(RANKS_PATH).forEach(id -> {
-            try {
-                Rank rank = this.loadRank(config, RANKS_PATH + "." + id, id);
-                this.registry.register(rank);
-            }
-            catch (ModelLoadException exception) {
-                this.logger.log(Level.SEVERE, "Rank '%s' can not be loaded.".formatted(id));
-                this.logger.log(Level.SEVERE, "Reason: ", exception);
-            }
-        });
+        else {
+            config.getSection(RANKS_PATH).forEach(id -> {
+                try {
+                    Rank rank = this.loadRank(config, RANKS_PATH + "." + id, id);
+                    this.registry.register(rank);
+                }
+                catch (ModelLoadException exception) {
+                    this.logger.log(Level.SEVERE, "Rank '%s' can not be loaded.".formatted(id));
+                    this.logger.log(Level.SEVERE, "Reason: ", exception);
+                }
+            });
+        }
 
         config.saveChanges();
 
@@ -60,7 +60,7 @@ public class RankIOService {
         Identifier id = Identifier.parse(rawId).orElse(null);
         if (id == null) throw new ModelLoadException("Invalid rank ID");
 
-        RankDefinition definition = config.get(path, RankDefinition.class);
+        DefaultRankDefinition definition = config.get(path, DefaultRankDefinition.class);
         if (definition == null) throw new ModelLoadException("Unable to read rank definition");
 
         return new DefaultRank(id, definition);
@@ -68,7 +68,7 @@ public class RankIOService {
 
     private void loadDefaults(FileConfig config) {
         RankDefaults.getDefaultRanks().forEach(defRank -> {
-            config.set(RANKS_PATH + "." + defRank.id(), defRank);
+            config.set(RANKS_PATH + "." + defRank.id(), defRank.getDefinition());
             this.registry.register(defRank);
         });
     }

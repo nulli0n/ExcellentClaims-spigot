@@ -32,6 +32,9 @@ public final class RanksBootstrap {
         RankIOService rankIo = new RankIOService(ranksFile, registry, logger);
         RanksModule module = new RanksModule(registry, rankIo);
 
+        rankIo.loadRanks();
+        rankIo.recalculatePermissions();
+
         container.register(RanksAPI.class, module);
 
         return module;

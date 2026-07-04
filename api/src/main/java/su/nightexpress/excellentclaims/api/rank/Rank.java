@@ -11,6 +11,8 @@ import su.nightexpress.nightcore.util.placeholder.PlaceholderResolvable;
 @NullMarked
 public interface Rank extends Identifiable, PlaceholderResolvable {
 
+    RankDefinition getDefinition();
+
     String getDisplayName();
 
     int getPriority();

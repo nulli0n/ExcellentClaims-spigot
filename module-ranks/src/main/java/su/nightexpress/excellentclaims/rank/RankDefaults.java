@@ -7,7 +7,7 @@ import java.util.Set;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.core.id.Identifier;
-import su.nightexpress.excellentclaims.rank.model.RankDefinition;
+import su.nightexpress.excellentclaims.rank.model.DefaultRankDefinition;
 
 public final class RankDefaults {
 
@@ -49,10 +49,10 @@ public final class RankDefaults {
             ClaimPermission.ADMIN
         );
 
-        RankDefinition member = new RankDefinition("Member", 1, memberPerms);
-        RankDefinition trusted = new RankDefinition("Trusted", 10, trustedPerms);
-        RankDefinition moderator = new RankDefinition("Moderator", 25, moderPerms);
-        RankDefinition owner = new RankDefinition("Owner", 100, ownerPerms);
+        DefaultRankDefinition member = new DefaultRankDefinition("Member", 1, memberPerms);
+        DefaultRankDefinition trusted = new DefaultRankDefinition("Trusted", 10, trustedPerms);
+        DefaultRankDefinition moderator = new DefaultRankDefinition("Moderator", 25, moderPerms);
+        DefaultRankDefinition owner = new DefaultRankDefinition("Owner", 100, ownerPerms);
 
         list.add(new DefaultRank(Identifier.of("member"), member));
         list.add(new DefaultRank(Identifier.of("trusted"), trusted));
