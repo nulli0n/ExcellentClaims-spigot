@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.APIContainer;
 import su.nightexpress.excellentclaims.api.ClaimPlugin;
 import su.nightexpress.excellentclaims.api.ClaimsConstants;
 import su.nightexpress.excellentclaims.api.core.DependencyContainer;
@@ -20,6 +21,7 @@ public final class RanksBootstrap {
     }
 
     public static RanksModule bootstrap(DependencyContainer container) {
+        APIContainer apiContainer = container.get(APIContainer.class);
         Logger logger = container.get(Logger.class);
         ClaimPlugin plugin = container.get(ClaimPlugin.class);
 
@@ -36,6 +38,7 @@ public final class RanksBootstrap {
         rankIo.recalculatePermissions();
 
         container.register(RanksAPI.class, module);
+        apiContainer.container().register(RanksAPI.class, module);
 
         return module;
     }

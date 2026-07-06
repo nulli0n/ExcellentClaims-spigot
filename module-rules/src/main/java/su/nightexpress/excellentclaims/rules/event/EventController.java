@@ -109,17 +109,6 @@ public class EventController extends AbstractController {
             return RuleResult.pass();
         }
 
-        // There is no claim, so pass.
-        //Claim claim = behavior.getClaim(typedEvent, this.claimRegistry);
-        //if (claim == null) return RuleResult.pass();
-
-        //ClaimRules rules = claim.getRules();
-
-        // Wilderness can have "unset" properties to ignore their behavior, pass.
-        //if (claim.isSupportingUnsetRules() && !rules.has(rule)) {
-        //    return RuleResult.pass();
-        //}
-
         Player player = behavior.getUser(typedEvent);
         if (player != null && this.permissions.hasBypass(player)) {
             return RuleResult.allow();
@@ -144,8 +133,6 @@ public class EventController extends AbstractController {
                 return Optional.of(rules.getOrDefault(rule));
             }
         };
-
-        //T value = rules.getOrDefault(rule);
 
         RuleResult result = behavior.process(typedEvent, this.claimRegistry, context);
         EventState state = result.state();

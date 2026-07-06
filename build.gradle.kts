@@ -12,7 +12,7 @@ allprojects {
 
     // Redirect all build outputs to a centralized, hidden directory at the root.
     // This prevents VS Code from mistakenly linking to compiled submodule JARs.
-    //layout.buildDirectory.set(rootProject.layout.projectDirectory.dir(".gradle-out/${project.name}"))
+    layout.buildDirectory.set(rootProject.layout.projectDirectory.dir(".gradle-out/${project.name}"))
 }
 
 subprojects {

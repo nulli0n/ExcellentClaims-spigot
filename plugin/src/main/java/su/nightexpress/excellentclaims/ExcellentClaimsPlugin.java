@@ -9,6 +9,7 @@ import org.jspecify.annotations.NullMarked;
 import su.nightexpress.excellentclaims.admin.AdminBypassBoostrap;
 import su.nightexpress.excellentclaims.admin.AdminBypassModule;
 import su.nightexpress.excellentclaims.api.APIConfiguration;
+import su.nightexpress.excellentclaims.api.APIContainer;
 import su.nightexpress.excellentclaims.api.ClaimPlugin;
 import su.nightexpress.excellentclaims.api.ClaimRegistry;
 import su.nightexpress.excellentclaims.api.core.ComponentCore;
@@ -53,9 +54,13 @@ public class ExcellentClaimsPlugin extends NightPlugin implements ClaimPlugin {
     @Override
     public void enable() {
         DependencyContainer dependencies = new SimpleDependencies();
+        DependencyContainer apiDependencies = new SimpleDependencies(dependencies);
+
+        APIContainer apiContainer = new APIContainer(apiDependencies);
 
         ClaimRegistry claims = new ClaimRegistry();
 
+        dependencies.register(APIContainer.class, apiContainer);
         dependencies.register(ClaimPlugin.class, this);
         dependencies.register(Logger.class, this.getLogger());
         dependencies.register(EventPublisher.class, this);

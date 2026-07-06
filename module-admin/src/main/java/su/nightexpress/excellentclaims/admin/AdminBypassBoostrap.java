@@ -2,6 +2,7 @@ package su.nightexpress.excellentclaims.admin;
 
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.APIContainer;
 import su.nightexpress.excellentclaims.api.ClaimPlugin;
 import su.nightexpress.excellentclaims.api.admin.AdminBypassAPI;
 import su.nightexpress.excellentclaims.api.core.DependencyContainer;
@@ -16,6 +17,7 @@ public final class AdminBypassBoostrap {
     }
 
     public static AdminBypassModule bootstrap(DependencyContainer container) {
+        APIContainer apiContainer = container.get(APIContainer.class);
         ClaimPlugin plugin = container.get(ClaimPlugin.class);
 
         plugin.injectLang(AdminModeLang.class);
@@ -25,6 +27,7 @@ public final class AdminBypassBoostrap {
         AdminBypassModule module = new AdminBypassModule(ID, bypassService);
 
         container.register(AdminBypassAPI.class, bypassService);
+        apiContainer.container().register(AdminBypassAPI.class, bypassService);
 
         module.addComponent(new AdminModeCommand(plugin, bypassService));
 
