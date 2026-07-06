@@ -30,6 +30,7 @@ import su.nightexpress.excellentclaims.land.lang.LandLang;
 import su.nightexpress.excellentclaims.land.member.MemberConfiguration;
 import su.nightexpress.excellentclaims.land.ownership.LandOwnershipConfiguration;
 import su.nightexpress.excellentclaims.land.permission.LandPerms;
+import su.nightexpress.excellentclaims.land.placeholders.LandPlaceholdersConfiguration;
 import su.nightexpress.excellentclaims.land.rules.LandRulesConfiguration;
 import su.nightexpress.excellentclaims.land.settings.LandSettings;
 import su.nightexpress.excellentclaims.land.settings.LandSettingsConfiguration;
@@ -113,6 +114,8 @@ public class LandsBootstrap implements ClaimModuleBootstrap {
         MemberConfiguration.configure(module, landsContainer);
         //MergeConfiguration.configure(module, landsContainer);  // TODO If enabled
         BordersConfiguration.configure(module, landsContainer); // TODO If enabled
+
+        LandPlaceholdersConfiguration.configure(landsContainer);
 
         container.register(LandsModule.class, module);
 

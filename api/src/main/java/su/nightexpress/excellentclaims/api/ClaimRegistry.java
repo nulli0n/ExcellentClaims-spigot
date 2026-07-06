@@ -151,6 +151,11 @@ public class ClaimRegistry {
     // Prioritization & Boolean Checks
     // -----------------------------------------------------------------------
 
+    public @Nullable Claim getPrioritizedClaim(Player player) {
+        Location location = player.getLocation();
+        return location == null ? null : this.getPrioritizedClaim(location);
+    }
+
     public @Nullable Claim getPrioritizedClaim(Block block) {
         return this.getPrioritizedClaim(this.getAt(block));
     }

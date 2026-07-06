@@ -31,6 +31,7 @@ import su.nightexpress.excellentclaims.region.lang.RegionLang;
 import su.nightexpress.excellentclaims.region.member.MemberConfiguration;
 import su.nightexpress.excellentclaims.region.ownership.OwnershipConfiguration;
 import su.nightexpress.excellentclaims.region.permission.RegionPerms;
+import su.nightexpress.excellentclaims.region.placeholders.RegionPlaceholdersConfiguration;
 import su.nightexpress.excellentclaims.region.rules.RegionRulesConfiguration;
 import su.nightexpress.excellentclaims.region.selection.SelectionConfiguration;
 import su.nightexpress.excellentclaims.region.settings.RegionSettings;
@@ -115,6 +116,8 @@ public class RegionsBootstrap implements ClaimModuleBootstrap {
         MemberConfiguration.configure(module, regionsContainer);
         //BordersConfiguration.configure(module, regionsContainer);
         SelectionConfiguration.configure(module, regionsContainer);
+
+        RegionPlaceholdersConfiguration.configure(regionsContainer);
 
         container.register(RegionsModule.class, module);
 

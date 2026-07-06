@@ -27,6 +27,8 @@ public class Lang implements LangContainer {
     public static final TextLocale OTHER_UNSET      = LangEntry.builder("Other.Unset").text("< Unset >");
     public static final TextLocale OTHER_EVERYTHING = LangEntry.builder("Other.Everything").text("Everything");
 
+    public static final TextLocale PLACEHOLDER_NO_CLAIM = LangEntry.builder("Other.NoClaim").text("< No Claim >");
+
     public static final TextLocale COMMAND_ARGUMENT_NAME_TEXT = LangEntry.builder("Command.Argument.Name.Text")
         .text("text");
 

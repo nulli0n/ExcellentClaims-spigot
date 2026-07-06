@@ -15,6 +15,7 @@ import su.nightexpress.excellentclaims.engine.controller.ClaimAutoSaveController
 import su.nightexpress.excellentclaims.engine.controller.ClaimGreetingsController;
 import su.nightexpress.excellentclaims.engine.controller.WorldLifecycleController;
 import su.nightexpress.excellentclaims.engine.module.EngineModuleConfiguration;
+import su.nightexpress.excellentclaims.engine.placeholders.EnginePlaceholderConfiguration;
 import su.nightexpress.excellentclaims.engine.settings.EngineSettings;
 
 @NullMarked
@@ -39,6 +40,7 @@ public final class EngineBootstrap {
         EngineCodecsRegistrar.register();
         EngineSettings settings = configureSettings(engine, engineContainer);
         EngineModuleConfiguration.configure(engine, engineContainer);
+        EnginePlaceholderConfiguration.configure(engineContainer);
 
         engine.addComponent(new ReloadCommand(plugin));
         engine.addComponent(new ClaimAutoSaveController(plugin, modules, settings));

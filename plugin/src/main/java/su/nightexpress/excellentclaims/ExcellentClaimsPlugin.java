@@ -107,27 +107,4 @@ public class ExcellentClaimsPlugin extends NightPlugin implements ClaimPlugin {
     public void reloadPlugin() {
         this.core.reload();
     }
-
-    // TODO
-    /*this.userPlaceholders.put("lands_claimed", player -> String.valueOf(plugin.getClaimManager().countClaims(player, ClaimType.CHUNK)));
-    this.userPlaceholders.put("regions_claimed", player -> String.valueOf(plugin.getClaimManager().countClaims(player, ClaimType.REGION)));
-    
-    this.userPlaceholders.put("claim_name", player -> plugin.getClaimManager().getClaimName(player.getLocation(), null));
-    this.userPlaceholders.put("land_name", player -> plugin.getClaimManager().getClaimName(player.getLocation(), ClaimType.CHUNK));
-    this.userPlaceholders.put("region_name", player -> plugin.getClaimManager().getClaimName(player.getLocation(), ClaimType.REGION));
-    
-    this.userPlaceholders.put("claim_id", player -> plugin.getClaimManager().getClaimId(player.getLocation(), null));
-    this.userPlaceholders.put("land_id", player -> plugin.getClaimManager().getClaimId(player.getLocation(), ClaimType.CHUNK));
-    this.userPlaceholders.put("region_id", player -> plugin.getClaimManager().getClaimId(player.getLocation(), ClaimType.REGION));
-    
-    this.userPlaceholders.put("claim_owner", player -> plugin.getClaimManager().getClaimOwnerName(player.getLocation(), null));
-    this.userPlaceholders.put("land_owner", player -> plugin.getClaimManager().getClaimOwnerName(player.getLocation(), ClaimType.CHUNK));
-    this.userPlaceholders.put("region_owner", player -> plugin.getClaimManager().getClaimOwnerName(player.getLocation(), ClaimType.REGION));*/
-
-    /* this.userPlaceholders.put("is_claim_member", player -> {
-        Claim claim = this.plugin.getClaimManager().getPrioritizedClaim(player.getLocation());
-        return CoreLang.STATE_YES_NO.get(claim != null && claim.isOwnerOrMember(player));
-    });
-    
-    this.userPlaceholders.put("can_build", player -> CoreLang.STATE_YES_NO.get(plugin.getClaimManager().canBuild(player, player.getLocation()))); */
 }
