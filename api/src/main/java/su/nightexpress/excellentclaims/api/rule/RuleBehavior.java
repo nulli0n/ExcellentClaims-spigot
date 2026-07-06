@@ -7,7 +7,6 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import su.nightexpress.excellentclaims.api.ClaimRegistry;
-import su.nightexpress.excellentclaims.api.claim.Claim;
 
 @NullMarked
 public interface RuleBehavior<E extends Event, T> {
@@ -18,10 +17,12 @@ public interface RuleBehavior<E extends Event, T> {
 
     void allowEvent(E event);
 
-    RuleResult handle(E event, ClaimRegistry registry, Claim claim, ClaimRule<T> rule, T value);
+    RuleResult process(E event, ClaimRegistry registry, RuleContext<T> context);
 
+    /* RuleResult handle(E event, ClaimRegistry registry, Claim claim, ClaimRule<T> rule, T value);
+    
     @Nullable
-    Claim getClaim(E event, ClaimRegistry registry);
+    Claim getClaim(E event, ClaimRegistry registry); */
 
     @Nullable
     Player getUser(E event);

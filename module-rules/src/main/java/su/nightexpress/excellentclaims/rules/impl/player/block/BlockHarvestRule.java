@@ -1,5 +1,7 @@
 package su.nightexpress.excellentclaims.rules.impl.player.block;
 
+import java.util.Optional;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -7,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerHarvestBlockEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
@@ -35,23 +38,26 @@ public class BlockHarvestRule extends SimpleSpec<PlayerHarvestBlockEvent, Boolea
     public RuleBehavior<PlayerHarvestBlockEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
             .weight(10)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getHarvestedBlock()))
             .playerExtractor(event -> event.getPlayer())
             .shouldHandle(event -> true)
-            .trigger((event, registry, claim, rule, allowed) -> {
+            .process((event, registry, context) -> {
+                Claim claim = registry.getPrioritizedClaim(event.getHarvestedBlock());
+                if (claim == null) return RuleResult.allow();
+
                 Player player = event.getPlayer();
                 if (this.permissions.hasPermission(player, claim, ClaimPermission.BUILDING)) {
-                    return RuleResult.pass();
+                    return RuleResult.allow();
                 }
 
-                if (!allowed) {
+                Optional<Boolean> state = context.resolveValue(claim);
+                if (state.isPresent() && !state.get()) {
                     Block block = event.getHarvestedBlock();
                     return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_BLOCK_HARVEST, ctx -> ctx
                         .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(block.getType()))
                     ));
                 }
 
-                return RuleResult.pass();
+                return RuleResult.allow();
             })
             .build();
     }

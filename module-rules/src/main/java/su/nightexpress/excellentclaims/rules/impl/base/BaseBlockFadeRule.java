@@ -1,9 +1,12 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
+import java.util.Optional;
+
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
@@ -20,10 +23,11 @@ public abstract class BaseBlockFadeRule extends SimpleSpec<BlockFadeEvent, Boole
     @Override
     public RuleBehavior<BlockFadeEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getBlock()))
             .shouldHandle(this::shouldHandle)
-            .trigger((event, registry, claim, rule, allowed) -> {
-                return RuleResult.of(allowed);
+            .process((event, registry, context) -> {
+                Claim claim = registry.getPrioritizedClaim(event.getBlock());
+                Optional<Boolean> state = context.resolveValue(claim);
+                return state.isEmpty() ? RuleResult.allow() : RuleResult.of(state.get());
             })
             .build();
     }

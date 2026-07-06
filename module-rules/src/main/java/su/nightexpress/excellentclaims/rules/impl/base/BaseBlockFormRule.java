@@ -1,10 +1,13 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
+import java.util.Optional;
+
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockFormEvent;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
@@ -21,10 +24,11 @@ public abstract class BaseBlockFormRule extends SimpleSpec<BlockFormEvent, Boole
     @Override
     public RuleBehavior<BlockFormEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getNewState().getLocation()))
             .shouldHandle(this::shouldHandle)
-            .trigger((event, registry, claim, rule, allowed) -> {
-                return RuleResult.of(allowed);
+            .process((event, registry, context) -> {
+                Claim claim = registry.getPrioritizedClaim(event.getNewState().getLocation());
+                Optional<Boolean> state = context.resolveValue(claim);
+                return state.isEmpty() ? RuleResult.allow() : RuleResult.of(state.get());
             })
             .build();
     }

@@ -1,11 +1,14 @@
 package su.nightexpress.excellentclaims.rules.event;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.EventExecutor;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import su.nightexpress.excellentclaims.api.ClaimPlugin;
 import su.nightexpress.excellentclaims.api.ClaimRegistry;
@@ -16,6 +19,7 @@ import su.nightexpress.excellentclaims.api.claim.ClaimRules;
 import su.nightexpress.excellentclaims.api.core.AbstractController;
 import su.nightexpress.excellentclaims.api.rule.EventState;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
+import su.nightexpress.excellentclaims.api.rule.RuleContext;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
 import su.nightexpress.excellentclaims.api.service.ActionResult;
 import su.nightexpress.excellentclaims.rules.RuleRegistry;
@@ -106,24 +110,44 @@ public class EventController extends AbstractController {
         }
 
         // There is no claim, so pass.
-        Claim claim = behavior.getClaim(typedEvent, this.claimRegistry);
-        if (claim == null) return RuleResult.pass();
+        //Claim claim = behavior.getClaim(typedEvent, this.claimRegistry);
+        //if (claim == null) return RuleResult.pass();
 
-        ClaimRules rules = claim.getRules();
+        //ClaimRules rules = claim.getRules();
 
         // Wilderness can have "unset" properties to ignore their behavior, pass.
-        if (claim.isSupportingUnsetRules() && !rules.has(rule)) {
-            return RuleResult.pass();
-        }
+        //if (claim.isSupportingUnsetRules() && !rules.has(rule)) {
+        //    return RuleResult.pass();
+        //}
 
         Player player = behavior.getUser(typedEvent);
         if (player != null && this.permissions.hasBypass(player)) {
             return RuleResult.allow();
         }
 
-        T value = rules.getOrDefault(rule);
+        RuleContext<T> context = new RuleContext<>() {
 
-        RuleResult result = behavior.handle(typedEvent, this.claimRegistry, claim, rule, value);
+            @Override
+            public @NonNull ClaimRegistry getClaimRegistry() {
+                return claimRegistry;
+            }
+
+            @Override
+            public @NonNull Optional<T> resolveValue(@Nullable Claim claim) {
+                if (claim == null) return Optional.empty();
+
+                ClaimRules rules = claim.getRules();
+                if (claim.isSupportingUnsetRules() && !rules.has(rule)) {
+                    return Optional.empty(); // Unset rule ignored, pass.
+                }
+
+                return Optional.of(rules.getOrDefault(rule));
+            }
+        };
+
+        //T value = rules.getOrDefault(rule);
+
+        RuleResult result = behavior.process(typedEvent, this.claimRegistry, context);
         EventState state = result.state();
         if (state == EventState.DENY) {
             behavior.denyEvent(typedEvent);

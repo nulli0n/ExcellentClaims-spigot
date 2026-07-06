@@ -1,5 +1,7 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
+import java.util.Optional;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -8,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
@@ -47,26 +50,28 @@ public abstract class BasePlayerUseBlockRule extends SimpleSpec<PlayerInteractEv
                 Block block = event.getClickedBlock();
                 return block != null && !block.isEmpty() && this.shouldHandle(event, block);
             })
-            .claimExtractor((event, registry) -> {
-                Block block = event.getClickedBlock();
-                if (block == null) return null;
-
-                return registry.getPrioritizedClaim(block);
-            })
-            .playerExtractor(PlayerInteractEvent::getPlayer)
-            .trigger((event, registry, claim, rule, allowed) -> {
+            .process((event, registry, context) -> {
                 Block block = event.getClickedBlock();
                 if (block == null) return RuleResult.pass();
 
+                Claim claim = registry.getPrioritizedClaim(block);
+                if (claim == null) return RuleResult.allow();
+
                 Player player = event.getPlayer();
-                if (allowed || this.permissions.hasPermission(player, claim, this.getClaimPermission())) {
+                if (this.permissions.hasPermission(player, claim, this.getClaimPermission())) {
                     return RuleResult.allow();
                 }
 
-                return RuleResult.deny(ActionResult.fail(this.getFeedbackLocale(), ctx -> ctx
-                    .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(block.getType()))
-                ));
+                Optional<Boolean> state = context.resolveValue(claim);
+                if (state.isPresent() && !state.get()) {
+                    return RuleResult.deny(ActionResult.fail(this.getFeedbackLocale(), ctx -> ctx
+                        .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(block.getType()))
+                    ));
+                }
+
+                return RuleResult.allow();
             })
+            .playerExtractor(PlayerInteractEvent::getPlayer)
             .onDeny(event -> event.setUseInteractedBlock(Result.DENY))
             .build();
     }

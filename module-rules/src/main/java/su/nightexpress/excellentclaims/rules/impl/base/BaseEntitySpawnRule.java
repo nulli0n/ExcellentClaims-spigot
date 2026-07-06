@@ -1,10 +1,13 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
+import java.util.Optional;
+
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
@@ -22,9 +25,10 @@ public abstract class BaseEntitySpawnRule extends SimpleSpec<CreatureSpawnEvent,
     public RuleBehavior<CreatureSpawnEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOWEST)
             .shouldHandle(event -> this.shouldHandle(event, event.getEntity()))
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getLocation()))
-            .trigger((event, registry, claim, rule, allowed) -> {
-                return RuleResult.of(allowed);
+            .process((event, registry, context) -> {
+                Claim claim = registry.getPrioritizedClaim(event.getLocation());
+                Optional<Boolean> state = context.resolveValue(claim);
+                return state.isEmpty() ? RuleResult.allow() : RuleResult.of(state.get());
             })
             .build();
     }

@@ -22,9 +22,12 @@ public abstract class BaseEntityBlockChangeRule extends SimpleSpec<EntityChangeB
     public RuleBehavior<EntityChangeBlockEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
             .shouldHandle(event -> this.shouldHandle(event, event.getEntity()))
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getBlock()))
-            .trigger((event, registry, claim, rule, allowed) -> {
-                return RuleResult.of(allowed);
+            .process((event, registry, context) -> {
+                if (this.isAnyBlockDenied(registry, context, event.getBlock())) {
+                    return RuleResult.deny();
+                }
+
+                return RuleResult.allow();
             })
             .build();
     }

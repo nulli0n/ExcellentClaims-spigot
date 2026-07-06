@@ -22,10 +22,13 @@ public class FireDamageBlocksRule extends SimpleSpec<BlockBurnEvent, Boolean> {
     @Override
     public RuleBehavior<BlockBurnEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getBlock()))
             .shouldHandle(event -> true)
-            .trigger((event, registry, claim, rule, allowed) -> {
-                return RuleResult.of(allowed);
+            .process((event, registry, context) -> {
+                if (this.isAnyBlockDenied(registry, context, event.getBlock())) {
+                    return RuleResult.deny();
+                }
+
+                return RuleResult.allow();
             })
             .build();
     }

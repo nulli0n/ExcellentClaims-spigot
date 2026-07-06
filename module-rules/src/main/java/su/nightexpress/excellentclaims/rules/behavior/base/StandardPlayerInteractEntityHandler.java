@@ -10,16 +10,16 @@ import su.nightexpress.excellentclaims.api.ClaimRegistry;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
-import su.nightexpress.excellentclaims.api.rule.ClaimRule;
+import su.nightexpress.excellentclaims.api.rule.RuleContext;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
 import su.nightexpress.excellentclaims.api.service.ActionResult;
-import su.nightexpress.excellentclaims.rules.behavior.AbstractBehavior.HandleTrigger;
+import su.nightexpress.excellentclaims.rules.behavior.AbstractBehavior.RuleProcessor;
 import su.nightexpress.excellentclaims.rules.lang.RulesLang;
 import su.nightexpress.nightcore.util.LangUtil;
 import su.nightexpress.nightcore.util.placeholder.CommonPlaceholders;
 
 @NullMarked
-public abstract class StandardPlayerInteractEntityHandler<T> implements HandleTrigger<PlayerInteractAtEntityEvent, T> {
+public abstract class StandardPlayerInteractEntityHandler<T> implements RuleProcessor<PlayerInteractAtEntityEvent, T> {
 
     private final ClaimPermissionAPI permissions;
     private final ClaimPermission    permission;
@@ -30,14 +30,18 @@ public abstract class StandardPlayerInteractEntityHandler<T> implements HandleTr
     }
 
     @Override
-    public RuleResult handle(PlayerInteractAtEntityEvent event, ClaimRegistry registry, Claim claim, ClaimRule<T> rule,
-                             @NonNull T value) {
+    public RuleResult process(PlayerInteractAtEntityEvent event, ClaimRegistry registry, RuleContext<T> context) {
+        Claim claim = registry.getPrioritizedClaim(event.getRightClicked().getLocation());
+        if (claim == null) return RuleResult.pass();
+
         Player player = event.getPlayer();
         if (this.permissions.hasPermission(player, claim, this.permission)) {
             return RuleResult.allow();
         }
 
         EntityType type = event.getRightClicked().getType();
+        T value = context.resolveValue(claim).orElse(null);
+        if (value == null) return RuleResult.pass();
 
         if (!this.isEntityAllowed(type, value)) {
             return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_ENTITY_INTERACT, ctx -> ctx

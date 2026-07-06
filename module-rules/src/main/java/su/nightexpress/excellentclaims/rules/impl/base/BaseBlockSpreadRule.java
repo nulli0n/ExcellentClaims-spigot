@@ -1,10 +1,10 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
+import org.bukkit.block.Block;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.jspecify.annotations.NullMarked;
 
-import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
@@ -21,17 +21,12 @@ public abstract class BaseBlockSpreadRule extends SimpleSpec<BlockSpreadEvent, B
     @Override
     public RuleBehavior<BlockSpreadEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getBlock().getLocation()))
             .shouldHandle(this::shouldHandle)
-            .trigger((event, registry, claim, rule, allowed) -> {
-                // Check target claim first
-                if (!allowed) return RuleResult.deny();
-
-                // Check source claim then
-                Claim sourceClaim = registry.getPrioritizedClaim(event.getSource().getLocation());
-                if (sourceClaim != null && sourceClaim != claim) {
-                    Boolean state = sourceClaim.getRuleOrIgnoreIfUnset(rule).orElse(null);
-                    return state == null ? RuleResult.pass() : RuleResult.of(state);
+            .process((event, registry, context) -> {
+                Block targetBlock = event.getBlock();
+                Block sourceBlock = event.getSource();
+                if (this.isAnyBlockDenied(registry, context, targetBlock, sourceBlock)) {
+                    return RuleResult.deny();
                 }
 
                 return RuleResult.allow();

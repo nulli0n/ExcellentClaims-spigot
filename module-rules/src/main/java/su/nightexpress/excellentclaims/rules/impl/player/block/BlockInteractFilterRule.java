@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
@@ -87,31 +88,31 @@ public class BlockInteractFilterRule extends AbstractFilterSpec<PlayerInteractEv
                 Block block = event.getClickedBlock();
                 return block != null && GENERIC_BLOCKS.contains(block.getType());
             })
-            .claimExtractor((event, registry) -> {
-                Block block = event.getClickedBlock();
-                if (block == null) return null;
-
-                return registry.getPrioritizedClaim(block);
-            })
-            .playerExtractor(event -> event.getPlayer())
-            .trigger((event, registry, claim, rule, value) -> {
+            .process((event, registry, context) -> {
                 Block block = event.getClickedBlock();
                 if (block == null) return RuleResult.pass();
 
+                Claim claim = registry.getPrioritizedClaim(block);
+                if (claim == null) return RuleResult.allow();
+
                 Player player = event.getPlayer();
                 if (this.permissions.hasPermission(player, claim, ClaimPermission.BLOCK_INTERACT)) {
-                    return RuleResult.pass();
+                    return RuleResult.allow();
                 }
 
                 Material type = block.getType();
-                if (value.isAllowed(type)) {
-                    return RuleResult.pass();
+                FilteredSet<Material> blockList = context.resolveValue(claim).orElse(null);
+
+                if (blockList != null && !blockList.isAllowed(type)) {
+                    return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_BLOCK_INTERACT, ctx -> ctx
+                        .with(CommonPlaceholders.GENERIC_VALUE, () -> this.filterType.getDisplay().getNameLocalized(
+                            type))
+                    ));
                 }
 
-                return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_BLOCK_INTERACT, ctx -> ctx
-                    .with(CommonPlaceholders.GENERIC_VALUE, () -> this.filterType.getDisplay().getNameLocalized(type))
-                ));
+                return RuleResult.allow();
             })
+            .playerExtractor(event -> event.getPlayer())
             .onDeny(event -> event.setUseInteractedBlock(Result.DENY))
             .build();
     }

@@ -31,8 +31,8 @@ public class EntityTypeDisplay implements ElementDisplay<EntityType> {
     private static @Nullable Material getEntityIcon(EntityType type) {
         String name = BukkitThing.getAsString(type);
         String eggType = name + "_spawn_egg";
+
         Material eggMaterial = BukkitThing.getMaterial(eggType);
-        System.out.println("eggMaterial = " + eggMaterial);
         if (eggMaterial != null) return eggMaterial;
 
         return switch (type) {

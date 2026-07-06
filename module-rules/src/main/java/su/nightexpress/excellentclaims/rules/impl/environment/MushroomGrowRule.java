@@ -23,13 +23,12 @@ public class MushroomGrowRule extends SimpleSpec<StructureGrowEvent, Boolean> {
     @Override
     public RuleBehavior<StructureGrowEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getLocation()))
             .playerExtractor(StructureGrowEvent::getPlayer)
             .shouldHandle(event -> {
                 TreeType type = event.getSpecies();
                 return type == TreeType.RED_MUSHROOM || type == TreeType.BROWN_MUSHROOM;
             })
-            .trigger(new StandardStructureGrowHandler())
+            .process(new StandardStructureGrowHandler())
             .build();
     }
 

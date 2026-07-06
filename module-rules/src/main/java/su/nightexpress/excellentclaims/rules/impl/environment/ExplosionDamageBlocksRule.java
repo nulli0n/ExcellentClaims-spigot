@@ -28,16 +28,18 @@ public class ExplosionDamageBlocksRule extends SimpleSpec<BlockExplodeEvent, Boo
         return this.behaviorBuilder(EventPriority.LOW)
             .weight(10)
             .shouldHandle(event -> true)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getBlock()))
-            .trigger((event, registry, claim, rule, allowed) -> {
-                if (!allowed) return RuleResult.deny();
+            .process((event, registry, context) -> {
+                // Check source claim first
+                if (this.isAnyBlockDenied(registry, context, event.getBlock())) {
+                    return RuleResult.deny();
+                }
 
                 List<Block> blocks = event.blockList();
                 blocks.removeIf(block -> {
                     Claim nextClaim = registry.getPrioritizedClaim(block);
-                    if (nextClaim == null || nextClaim == claim) return false;
+                    if (nextClaim == null) return false;
 
-                    Boolean state = nextClaim.getRuleOrIgnoreIfUnset(rule).orElse(null);
+                    Boolean state = context.resolveValue(nextClaim).orElse(null);
                     return state != null && !state;
                 });
 

@@ -9,6 +9,7 @@ import su.nightexpress.nightcore.locale.LangEntry;
 import su.nightexpress.nightcore.locale.entry.ButtonLocale;
 import su.nightexpress.nightcore.locale.entry.EnumLocale;
 import su.nightexpress.nightcore.locale.entry.MessageLocale;
+import su.nightexpress.nightcore.locale.entry.TextLocale;
 import su.nightexpress.nightcore.util.placeholder.CommonPlaceholders;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
@@ -105,6 +106,10 @@ public final class RulesLang implements LangContainer {
         .actionBarMessage(
             TagWrappers.RED.wrap("You can't pickup items here!")
         );
+
+    public static final TextLocale FILTER_SUMMARY = LangEntry.builder("Rules.Other.FilterSummary")
+        .text(ClaimsPlaceholders.GENERIC_TYPE + " " +
+            TagWrappers.GRAY.wrap("(" + TagWrappers.WHITE.wrap(CommonPlaceholders.GENERIC_AMOUNT) + " items)"));
 
     public static final ButtonLocale UI_DIALOG_FILTER_BUTTON_MODE = LangEntry
         .builder("Rules.UI.Dialog.Filter.Button.Mode")

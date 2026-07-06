@@ -32,6 +32,10 @@ public class FilteredSet<T> {
         this.entries.clear();
     }
 
+    public int size() {
+        return this.entries.size();
+    }
+
     public boolean contains(T value) {
         return this.entries.contains(value);
     }

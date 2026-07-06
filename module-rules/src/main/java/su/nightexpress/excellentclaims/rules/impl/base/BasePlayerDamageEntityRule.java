@@ -1,5 +1,7 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
+import java.util.Optional;
+
 import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -9,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
@@ -35,30 +38,33 @@ public abstract class BasePlayerDamageEntityRule extends SimpleSpec<EntityDamage
     public RuleBehavior<EntityDamageByEntityEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOWEST)
             .shouldHandle(event -> this.shouldHandle(event, event.getEntity()))
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getEntity().getLocation()))
-            .playerExtractor(event -> {
-                DamageSource source = event.getDamageSource();
-                if (source.getCausingEntity() instanceof Player player) return player;
-
-                return null;
-            })
-            .trigger((event, registry, claim, rule, allowed) -> {
+            .process((event, registry, context) -> {
                 DamageSource source = event.getDamageSource();
                 if (!(source.getCausingEntity() instanceof Player player)) return RuleResult.pass();
+
+                Claim claim = registry.getPrioritizedClaim(event.getEntity().getLocation());
+                if (claim == null) return RuleResult.pass();
 
                 ClaimPermission permission = this.getClaimPermission();
                 if (permission != null && this.permissions.hasPermission(player, claim, permission)) {
                     return RuleResult.allow();
                 }
 
-                if (!allowed) {
+                Optional<Boolean> state = context.resolveValue(claim);
+                if (state.isPresent() && !state.get()) {
                     EntityType type = event.getEntityType();
                     return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_DAMAGE_ENTITY, ctx -> ctx
                         .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(type))
                     ));
                 }
 
-                return RuleResult.pass();
+                return RuleResult.allow();
+            })
+            .playerExtractor(event -> {
+                DamageSource source = event.getDamageSource();
+                if (source.getCausingEntity() instanceof Player player) return player;
+
+                return null;
             })
             .build();
     }

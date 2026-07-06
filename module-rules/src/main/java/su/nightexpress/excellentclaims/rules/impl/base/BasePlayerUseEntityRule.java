@@ -28,10 +28,9 @@ public abstract class BasePlayerUseEntityRule extends SimpleSpec<PlayerInteractA
     @Override
     public RuleBehavior<PlayerInteractAtEntityEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getRightClicked().getLocation()))
             .shouldHandle(event -> this.shouldHandle(event, event.getRightClicked()))
             .playerExtractor(PlayerInteractEntityEvent::getPlayer)
-            .trigger(
+            .process(
                 new StandardPlayerInteractEntityHandler<Boolean>(this.permissions, this.getClaimPermission()) {
 
                     @Override

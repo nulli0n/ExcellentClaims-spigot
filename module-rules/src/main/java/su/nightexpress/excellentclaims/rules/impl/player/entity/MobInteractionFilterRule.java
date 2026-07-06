@@ -36,10 +36,9 @@ public class MobInteractionFilterRule extends AbstractFilterSpec<PlayerInteractA
             .weight(50)
             .allValues(() -> BukkitThing.getAll(RegistryType.ENTITY_TYPE))
             .shouldHandle(event -> true)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getRightClicked().getLocation()))
             .playerExtractor(PlayerInteractAtEntityEvent::getPlayer)
-            .trigger(
-                new StandardPlayerInteractEntityHandler<FilteredSet<EntityType>>(permissions, ClaimPermission.ENTITY_INTERACT) {
+            .process(
+                new StandardPlayerInteractEntityHandler<FilteredSet<EntityType>>(this.permissions, ClaimPermission.ENTITY_INTERACT) {
 
                     @Override
                     protected boolean isEntityAllowed(EntityType type, FilteredSet<EntityType> mobList) {

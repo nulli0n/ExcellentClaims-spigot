@@ -1,5 +1,7 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
+import java.util.Optional;
+
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -7,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
@@ -27,18 +30,13 @@ public abstract class BasePlayerProjectileLaunchRule extends SimpleSpec<Projecti
     @Override
     public RuleBehavior<ProjectileLaunchEvent, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getLocation()))
             .shouldHandle(event -> this.shouldHandle(event, event.getEntity()))
-            .playerExtractor(event -> {
-                if (event.getEntity().getShooter() instanceof Player player) {
-                    return player;
-                }
-                return null;
-            })
-            .trigger((event, registry, claim, rule, allowed) -> {
+            .process((event, registry, context) -> {
                 if (!(event.getEntity().getShooter() instanceof Player)) return RuleResult.pass();
 
-                if (!allowed) {
+                Claim claim = registry.getPrioritizedClaim(event.getLocation());
+                Optional<Boolean> state = context.resolveValue(claim);
+                if (state.isPresent() && !state.get()) {
                     EntityType type = event.getEntityType();
                     return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_PROJECTILE_SHOOT, ctx -> ctx
                         .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(type)))
@@ -46,6 +44,12 @@ public abstract class BasePlayerProjectileLaunchRule extends SimpleSpec<Projecti
                 }
 
                 return RuleResult.allow();
+            })
+            .playerExtractor(event -> {
+                if (event.getEntity().getShooter() instanceof Player player) {
+                    return player;
+                }
+                return null;
             })
             .build();
     }

@@ -1,11 +1,14 @@
 package su.nightexpress.excellentclaims.rules.impl.player.item;
 
+import java.util.Optional;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
@@ -33,25 +36,28 @@ public class PickupItemsRule extends SimpleSpec<EntityPickupItemEvent, Boolean> 
         return this.behaviorBuilder(EventPriority.LOW)
             .weight(20)
             .shouldHandle(event -> true)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getEntity().getLocation()))
-            .playerExtractor(event -> {
-                if (event.getEntity() instanceof Player player) {
-                    return player;
-                }
-                return null;
-            })
-            .trigger((event, registry, claim, rule, allowed) -> {
+            .process((event, registry, context) -> {
                 if (!(event.getEntity() instanceof Player player)) return RuleResult.pass();
+
+                Claim claim = registry.getPrioritizedClaim(event.getEntity().getLocation());
+                if (claim == null) return RuleResult.allow();
 
                 if (this.permissions.hasPermission(player, claim, ClaimPermission.PICKUP_ITEMS)) {
                     return RuleResult.allow();
                 }
 
-                if (!allowed) {
+                Optional<Boolean> state = context.resolveValue(claim);
+                if (state.isPresent() && !state.get()) {
                     return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_ITEM_PICKUP));
                 }
 
                 return RuleResult.allow();
+            })
+            .playerExtractor(event -> {
+                if (event.getEntity() instanceof Player player) {
+                    return player;
+                }
+                return null;
             })
             .build();
     }

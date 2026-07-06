@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
@@ -47,25 +48,24 @@ public class CommandUseFilterRule extends AbstractFilterSpec<PlayerCommandPrepro
             .weight(50)
             .allValues(() -> getCommands())
             .shouldHandle(event -> true)
-            .claimExtractor((event, registry) -> {
+            .process((event, registry, context) -> {
                 Player player = event.getPlayer();
                 Location location = player.getLocation();
-
-                return location == null ? null : registry.getPrioritizedClaim(location);
-            })
-            .playerExtractor(PlayerCommandPreprocessEvent::getPlayer)
-            .trigger((event, registry, claim, rule, commandList) -> {
-                Player player = event.getPlayer();
-
-                if (this.permissions.hasPermission(player, claim, ClaimPermission.USE_COMMANDS)) {
-                    return RuleResult.allow();
-                }
+                if (location == null) return RuleResult.pass();
 
                 String name = CommandUtil.getCommandName(event.getMessage());
                 Command command = CommandUtil.getCommand(name).orElse(null);
                 if (command == null) return RuleResult.pass();
 
-                if (!commandList.isAllowed(command)) {
+                Claim claim = registry.getPrioritizedClaim(location);
+                if (claim == null) return RuleResult.allow();
+
+                if (this.permissions.hasPermission(player, claim, ClaimPermission.USE_COMMANDS)) {
+                    return RuleResult.allow();
+                }
+
+                FilteredSet<Command> commandList = context.resolveValue(claim).orElse(null);
+                if (commandList != null && !commandList.isAllowed(command)) {
                     return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_COMMAND_USAGE, ctx -> ctx
                         .with(CommonPlaceholders.GENERIC_VALUE, () -> "/" + command.getLabel())
                     ));
@@ -73,6 +73,7 @@ public class CommandUseFilterRule extends AbstractFilterSpec<PlayerCommandPrepro
 
                 return RuleResult.allow();
             })
+            .playerExtractor(PlayerCommandPreprocessEvent::getPlayer)
             .build();
     }
 

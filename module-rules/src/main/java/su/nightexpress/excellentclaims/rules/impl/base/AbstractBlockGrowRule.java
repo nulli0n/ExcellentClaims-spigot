@@ -8,7 +8,6 @@ import org.bukkit.event.block.BlockGrowEvent;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 
-import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
@@ -37,30 +36,12 @@ public abstract class AbstractBlockGrowRule<E extends BlockGrowEvent> extends Si
     public RuleBehavior<E, Boolean> createBehavior() {
         return this.behaviorBuilder(EventPriority.LOW)
             .weight(this.weight)
-            .claimExtractor((event, registry) -> {
-                return registry.getPrioritizedClaim(event.getBlock().getLocation());
-            })
             .shouldHandle(this::shouldHandle)
-            .trigger((event, registry, claim, rule, allowed) -> {
-                // Check target claim first.
-                if (!allowed) {
+            .process((event, registry, context) -> {
+                Block sourceBlock = this.growDirection == BlockFace.SELF ? null : this.getSourceBlock(event);
+                if (this.isAnyBlockDenied(registry, context, event.getBlock(), sourceBlock)) {
                     this.resetBlockAge(event);
                     return RuleResult.deny();
-                }
-
-                // Then check source claim.
-                if (this.growDirection != BlockFace.SELF) {
-                    Claim sourceClaim = registry.getPrioritizedClaim(this.getSourceBlock(event).getLocation());
-                    if (sourceClaim != null && sourceClaim != claim) {
-                        Boolean state = sourceClaim.getRuleOrIgnoreIfUnset(rule).orElse(null);
-                        if (state == null) return RuleResult.pass();
-
-                        if (!state) {
-                            this.resetBlockAge(event);
-                        }
-
-                        return RuleResult.of(state);
-                    }
                 }
 
                 return RuleResult.allow();

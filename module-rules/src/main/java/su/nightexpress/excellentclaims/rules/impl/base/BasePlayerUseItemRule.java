@@ -1,7 +1,8 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
+import java.util.Optional;
+
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Result;
@@ -10,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
@@ -49,28 +51,31 @@ public abstract class BasePlayerUseItemRule extends SimpleSpec<PlayerInteractEve
                 ItemStack itemStack = event.getItem();
                 return itemStack != null && !itemStack.getType().isAir() && this.shouldHandle(event, itemStack);
             })
-            .claimExtractor((event, registry) -> {
-                Block block = event.getClickedBlock();
-                if (block != null) return registry.getPrioritizedClaim(block);
-
-                Player player = event.getPlayer();
-                Location location = player.getLocation();
-                return location == null ? null : registry.getPrioritizedClaim(location);
-            })
-            .playerExtractor(PlayerInteractEvent::getPlayer)
-            .trigger((event, registry, claim, rule, allowed) -> {
+            .process((event, registry, context) -> {
                 ItemStack itemStack = event.getItem();
                 if (itemStack == null) return RuleResult.pass();
 
                 Player player = event.getPlayer();
-                if (allowed || this.permissions.hasPermission(player, claim, this.getClaimPermission())) {
+                Location location = player.getLocation();
+                if (location == null) return RuleResult.pass();
+
+                Claim claim = registry.getPrioritizedClaim(location);
+                if (claim == null) return RuleResult.allow();
+
+                if (this.permissions.hasPermission(player, claim, this.getClaimPermission())) {
                     return RuleResult.allow();
                 }
 
-                return RuleResult.deny(ActionResult.fail(this.getFeedbackLocale(), ctx -> ctx
-                    .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(itemStack.getType()))
-                ));
+                Optional<Boolean> state = context.resolveValue(claim);
+                if (state.isPresent() && !state.get()) {
+                    return RuleResult.deny(ActionResult.fail(this.getFeedbackLocale(), ctx -> ctx
+                        .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(itemStack.getType()))
+                    ));
+                }
+
+                return RuleResult.allow();
             })
+            .playerExtractor(PlayerInteractEvent::getPlayer)
             .onDeny(event -> event.setUseItemInHand(Result.DENY))
             .build();
     }

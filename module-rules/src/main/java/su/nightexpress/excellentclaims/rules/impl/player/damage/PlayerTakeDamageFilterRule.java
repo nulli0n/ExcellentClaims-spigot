@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
@@ -31,13 +32,17 @@ public class PlayerTakeDamageFilterRule extends AbstractFilterSpec<EntityDamageE
         return this.behaviorBuilder(EventPriority.LOWEST)
             .allValues(() -> BukkitThing.getAll(RegistryType.DAMAGE_TYPE))
             .shouldHandle(event -> true)
-            .claimExtractor((event, registry) -> registry.getPrioritizedClaim(event.getEntity().getLocation()))
-            .trigger((event, registry, claim, rule, damageList) -> {
+            .process((event, registry, context) -> {
                 if (!(event.getEntity() instanceof Player)) return RuleResult.pass();
+
+                Claim claim = registry.getPrioritizedClaim(event.getEntity().getLocation());
+                if (claim == null) return RuleResult.allow();
+
+                FilteredSet<DamageType> damageList = context.resolveValue(claim).orElse(null);
 
                 DamageSource source = event.getDamageSource();
                 DamageType type = source.getDamageType();
-                if (!damageList.isAllowed(type)) {
+                if (damageList != null && !damageList.isAllowed(type)) {
                     return RuleResult.deny();
                 }
 

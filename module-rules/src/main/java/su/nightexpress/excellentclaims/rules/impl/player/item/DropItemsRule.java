@@ -1,5 +1,7 @@
 package su.nightexpress.excellentclaims.rules.impl.player.item;
 
+import java.util.Optional;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -7,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
@@ -34,25 +37,26 @@ public class DropItemsRule extends SimpleSpec<PlayerDropItemEvent, Boolean> {
         return this.behaviorBuilder(EventPriority.LOW)
             .weight(20)
             .shouldHandle(event -> true)
-            .claimExtractor((event, registry) -> {
+            .process((event, registry, context) -> {
                 Player player = event.getPlayer();
                 Location location = player.getLocation();
+                if (location == null) return RuleResult.pass();
 
-                return location == null ? null : registry.getPrioritizedClaim(location);
-            })
-            .playerExtractor(PlayerDropItemEvent::getPlayer)
-            .trigger((event, registry, claim, rule, allowed) -> {
-                Player player = event.getPlayer();
+                Claim claim = registry.getPrioritizedClaim(location);
+                if (claim == null) return RuleResult.allow();
+
                 if (this.permissions.hasPermission(player, claim, ClaimPermission.DROP_ITEMS)) {
                     return RuleResult.allow();
                 }
 
-                if (!allowed) {
+                Optional<Boolean> state = context.resolveValue(claim);
+                if (state.isPresent() && !state.get()) {
                     return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_ITEM_DROP));
                 }
 
                 return RuleResult.allow();
             })
+            .playerExtractor(PlayerDropItemEvent::getPlayer)
             .build();
     }
 

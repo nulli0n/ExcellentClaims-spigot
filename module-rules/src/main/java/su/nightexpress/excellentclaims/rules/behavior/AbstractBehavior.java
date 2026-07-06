@@ -9,9 +9,8 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 import su.nightexpress.excellentclaims.api.ClaimRegistry;
-import su.nightexpress.excellentclaims.api.claim.Claim;
-import su.nightexpress.excellentclaims.api.rule.ClaimRule;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
+import su.nightexpress.excellentclaims.api.rule.RuleContext;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
 
 @NullMarked
@@ -22,12 +21,11 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
     private final int           weight;
 
     private final HandleCondition<E>  condition;
-    private final HandleTrigger<E, T> trigger;
+    private final RuleProcessor<E, T> processor;
 
     private final EventProcessor<E> eventDenier;
     private final EventProcessor<E> eventAllower;
 
-    private final ClaimExtractor<E>  claimExtractor;
     private final PlayerExtractor<E> playerExtractor;
 
     AbstractBehavior(BaseBuilder<E, T, ?> builder) {
@@ -36,18 +34,12 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
         this.weight = builder.weight;
 
         this.condition = builder.condition;
-        this.trigger = builder.trigger;
+        this.processor = builder.processor;
 
         this.eventDenier = builder.eventDenier;
         this.eventAllower = builder.eventAllower;
 
-        this.claimExtractor = builder.claimExtractor;
         this.playerExtractor = builder.playerExtractor;
-    }
-
-    @Override
-    public @Nullable Claim getClaim(E event, ClaimRegistry registry) {
-        return this.claimExtractor.getClaim(event, registry);
     }
 
     @Override
@@ -56,8 +48,8 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
     }
 
     @Override
-    public RuleResult handle(E event, ClaimRegistry registry, Claim claim, ClaimRule<T> rule, T value) {
-        return this.trigger.handle(event, registry, claim, rule, value);
+    public RuleResult process(E event, ClaimRegistry claims, RuleContext<T> context) {
+        return this.processor.process(event, claims, context);
     }
 
     @Override
@@ -103,16 +95,9 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
     }
 
     @FunctionalInterface
-    public interface HandleTrigger<E extends Event, T> {
+    public interface RuleProcessor<E extends Event, T> {
 
-        RuleResult handle(@NonNull E event, ClaimRegistry registry, Claim claim, ClaimRule<T> rule, @NonNull T value);
-    }
-
-    @FunctionalInterface
-    public interface ClaimExtractor<E extends Event> {
-
-        @Nullable
-        Claim getClaim(E event, ClaimRegistry registry);
+        RuleResult process(@NonNull E event, ClaimRegistry registry, RuleContext<T> context);
     }
 
     @FunctionalInterface
@@ -130,12 +115,11 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
         protected int           weight;
 
         protected HandleCondition<E>  condition;
-        protected HandleTrigger<E, T> trigger;
+        protected RuleProcessor<E, T> processor;
 
         protected EventProcessor<E> eventDenier;
         protected EventProcessor<E> eventAllower;
 
-        protected ClaimExtractor<E>  claimExtractor;
         protected PlayerExtractor<E> playerExtractor;
 
         public BaseBuilder(Class<E> eventType) {
@@ -147,7 +131,7 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
             this.priority = priority;
             this.condition = event -> true;
 
-            this.trigger = (event, registry, claim, rule, value) -> {
+            this.processor = (event, registry, resolved) -> {
                 return RuleResult.pass();
             };
 
@@ -161,7 +145,6 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
                 // Do nothing currently
             };
 
-            this.claimExtractor = (event, registry) -> null;
             this.playerExtractor = event -> null;
         }
 
@@ -182,8 +165,8 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
             return this.getThis();
         }
 
-        public B trigger(HandleTrigger<E, T> trigger) {
-            this.trigger = trigger;
+        public B process(RuleProcessor<E, T> processor) {
+            this.processor = processor;
             return this.getThis();
         }
 
@@ -194,11 +177,6 @@ public class AbstractBehavior<E extends Event, T> implements RuleBehavior<E, T> 
 
         public B onAllow(EventProcessor<E> processor) {
             this.eventAllower = processor;
-            return this.getThis();
-        }
-
-        public B claimExtractor(ClaimExtractor<E> claimExtractor) {
-            this.claimExtractor = claimExtractor;
             return this.getThis();
         }
 
