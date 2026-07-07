@@ -88,3 +88,16 @@ subprojects {
         }
     }
 }
+
+// Register a custom task that spawns a nested Gradle invocation
+tasks.register<GradleBuild>("buildLite") {
+    // Places the task inside the "build" folder
+    group = "build"
+    description = "Builds the Lite version of ExcellentClaims by excluding premium modules and features."
+    
+    // The exact tasks to run (equivalent to the command line)
+    tasks = listOf("clean", "build", "shadowJar")
+    
+    // Injects the -Plite flag at the very start of the nested configuration phase
+    startParameter.projectProperties = mapOf("lite" to "true")
+}

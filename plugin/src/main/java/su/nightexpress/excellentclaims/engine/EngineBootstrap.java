@@ -9,6 +9,7 @@ import su.nightexpress.excellentclaims.api.ClaimRegistry;
 import su.nightexpress.excellentclaims.api.ClaimsConstants;
 import su.nightexpress.excellentclaims.api.core.DependencyContainer;
 import su.nightexpress.excellentclaims.api.core.SimpleDependencies;
+import su.nightexpress.excellentclaims.core.BuildConstants;
 import su.nightexpress.excellentclaims.core.settings.SettingsFactory;
 import su.nightexpress.excellentclaims.engine.command.ReloadCommand;
 import su.nightexpress.excellentclaims.engine.controller.ClaimAutoSaveController;
@@ -40,7 +41,10 @@ public final class EngineBootstrap {
         EngineCodecsRegistrar.register();
         EngineSettings settings = configureSettings(engine, engineContainer);
         EngineModuleConfiguration.configure(engine, engineContainer);
-        EnginePlaceholderConfiguration.configure(engineContainer);
+
+        if (!BuildConstants.IS_LITE) {
+            EnginePlaceholderConfiguration.configure(engineContainer);
+        }
 
         engine.addComponent(new ReloadCommand(plugin));
         engine.addComponent(new ClaimAutoSaveController(plugin, modules, settings));

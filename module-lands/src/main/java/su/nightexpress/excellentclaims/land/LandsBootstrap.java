@@ -15,6 +15,7 @@ import su.nightexpress.excellentclaims.api.claim.module.ClaimModuleBootstrap;
 import su.nightexpress.excellentclaims.api.core.DependencyContainer;
 import su.nightexpress.excellentclaims.api.core.SimpleDependencies;
 import su.nightexpress.excellentclaims.api.core.id.Identifier;
+import su.nightexpress.excellentclaims.core.BuildConstants;
 import su.nightexpress.excellentclaims.core.StandardMessageDispatcher;
 import su.nightexpress.excellentclaims.land.borders.BordersConfiguration;
 import su.nightexpress.excellentclaims.land.claim.LandBillingService;
@@ -115,7 +116,9 @@ public class LandsBootstrap implements ClaimModuleBootstrap {
         //MergeConfiguration.configure(module, landsContainer);  // TODO If enabled
         BordersConfiguration.configure(module, landsContainer); // TODO If enabled
 
-        LandPlaceholdersConfiguration.configure(landsContainer);
+        if (!BuildConstants.IS_LITE) {
+            LandPlaceholdersConfiguration.configure(landsContainer);
+        }
 
         container.register(LandsModule.class, module);
 

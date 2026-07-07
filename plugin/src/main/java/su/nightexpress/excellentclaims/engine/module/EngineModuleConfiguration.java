@@ -1,5 +1,6 @@
 package su.nightexpress.excellentclaims.engine.module;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -9,12 +10,11 @@ import su.nightexpress.excellentclaims.api.ClaimRegistry;
 import su.nightexpress.excellentclaims.api.claim.module.ClaimModule;
 import su.nightexpress.excellentclaims.api.claim.module.ClaimModuleBootstrap;
 import su.nightexpress.excellentclaims.api.core.DependencyContainer;
+import su.nightexpress.excellentclaims.core.BuildConstants;
 import su.nightexpress.excellentclaims.engine.ClaimEngine;
 import su.nightexpress.excellentclaims.engine.ModuleRegistry;
 import su.nightexpress.excellentclaims.engine.settings.EngineSettings;
 import su.nightexpress.excellentclaims.land.LandsBootstrap;
-import su.nightexpress.excellentclaims.region.RegionsBootstrap;
-import su.nightexpress.excellentclaims.wilderness.WildernessBootstrap;
 
 @NullMarked
 public final class EngineModuleConfiguration {
@@ -30,11 +30,12 @@ public final class EngineModuleConfiguration {
         EngineModuleLoader moduleLoader = new EngineModuleLoader(modules, claims);
 
         // Define Available Bootstraps
-        List<ClaimModuleBootstrap> availableBootstraps = List.of(
-            new LandsBootstrap(),
-            new RegionsBootstrap(),
-            new WildernessBootstrap()
-        );
+        List<ClaimModuleBootstrap> availableBootstraps = new ArrayList<>();
+        availableBootstraps.add(new LandsBootstrap());
+
+        if (!BuildConstants.IS_LITE) {
+            availableBootstraps.addAll(EngineModuleBootstrapProvider.provide());
+        }
 
         // TODO ModuleConfigurationEvent with a list
 

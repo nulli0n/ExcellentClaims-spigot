@@ -2,17 +2,22 @@ plugins {
     id("com.gradleup.shadow")
 }
 
+val isLiteBuild = project.hasProperty("lite")
+
 dependencies {
     // Implementation scope ensures these modules are compiled and packed into the final JAR
     implementation(project(":api"))
+    implementation(project(":core"))
     implementation(project(":module-admin"))
     implementation(project(":module-highlight"))
     implementation(project(":module-ranks"))
     implementation(project(":module-rules"))
     implementation(project(":module-lands"))
-    implementation(project(":module-regions"))
-    implementation(project(":module-wilderness"))
-    implementation(project(":core"))
+    if (!isLiteBuild) {
+        implementation(project(":module-regions"))
+        implementation(project(":module-wilderness"))
+    }
+
 }
 
 tasks {
@@ -29,7 +34,7 @@ tasks {
     shadowJar {
         // Keeps the output JAR name clean (e.g., ExcellentClaims-2.0.0.jar)
         archiveBaseName.set(rootProject.name)
-        archiveClassifier.set("") 
+        archiveClassifier.set(if (isLiteBuild) "lite" else "full")
 
         mergeServiceFiles()
 
