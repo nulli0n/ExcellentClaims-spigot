@@ -5,16 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.bukkit.event.Event;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.core.LifecycleComponent;
 import su.nightexpress.excellentclaims.api.rule.ClaimRule;
-import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
+import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
 import su.nightexpress.excellentclaims.api.rule.RuleSpec;
 import su.nightexpress.excellentclaims.api.rule.RuleType;
+import su.nightexpress.excellentclaims.api.rule.context.ActionContext;
 import su.nightexpress.excellentclaims.rules.RuleRegistry;
 import su.nightexpress.excellentclaims.rules.registry.RegisteredRule;
 import su.nightexpress.nightcore.bridge.key.AdaptedKey;
@@ -57,12 +57,12 @@ public class RuleLoader implements LifecycleComponent {
         this.loadRules();
     }
 
-    public <E extends Event, T> void addRuleSpec(String id, RuleSpec<E, T> spec) {
+    public <E extends ActionContext, T> void addRuleSpec(String id, RuleSpec<E, T> spec) {
         AdaptedKey key = this.domain.make(id);
         this.addRuleSpec(key, spec);
     }
 
-    public <E extends Event, T> void addRuleSpec(AdaptedKey key, RuleSpec<E, T> spec) {
+    public <E extends ActionContext, T> void addRuleSpec(AdaptedKey key, RuleSpec<E, T> spec) {
         this.ruleSpecs.put(key, spec);
     }
 
@@ -76,10 +76,10 @@ public class RuleLoader implements LifecycleComponent {
     }
 
     @SuppressWarnings("unchecked")
-    private <E extends Event, T> void loadRule(AdaptedKey key,
-                                               RuleSpec<E, T> spec,
-                                               Path file,
-                                               String path) {
+    private <E extends ActionContext, T> void loadRule(AdaptedKey key,
+                                                       RuleSpec<E, T> spec,
+                                                       Path file,
+                                                       String path) {
         RuleType<T> type = spec.getType();
         ConfigCodec<T> codec = type.getCodec();
         RuleCategory category = spec.getCategory();

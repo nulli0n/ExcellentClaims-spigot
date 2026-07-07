@@ -1,5 +1,6 @@
 package su.nightexpress.excellentclaims.rules.registrar;
 
+import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.rules.impl.entity.block.AnimalGriefRule;
 import su.nightexpress.excellentclaims.rules.impl.entity.block.EnderDragonGriefRule;
 import su.nightexpress.excellentclaims.rules.impl.entity.block.EndermanGriefRule;
@@ -14,13 +15,13 @@ public final class MobGriefRulesRegistrar {
     private MobGriefRulesRegistrar() {
     }
 
-    public static void register(RuleLoader loader) {
-        loader.addRuleSpec("animal_grief", new AnimalGriefRule());
-        loader.addRuleSpec("villager_farm", new VillagerFarmRule());
-        loader.addRuleSpec("silverfish_infest", new SilverfishInfestRule());
-        loader.addRuleSpec("enderman_grief", new EndermanGriefRule());
-        loader.addRuleSpec("ender_dragon_grief", new EnderDragonGriefRule());
-        loader.addRuleSpec("ravager_grief", new RavagerGriefRule());
-        loader.addRuleSpec("snowman_trail", new SnowmanTrailRule());
+    public static void register(RuleLoader loader, ClaimPermissionAPI permissions) {
+        loader.addRuleSpec("animal_grief", new AnimalGriefRule(permissions));
+        loader.addRuleSpec("villager_farm", new VillagerFarmRule(permissions));
+        loader.addRuleSpec("silverfish_infest", new SilverfishInfestRule(permissions));
+        loader.addRuleSpec("enderman_grief", new EndermanGriefRule(permissions));
+        loader.addRuleSpec("ender_dragon_grief", new EnderDragonGriefRule(permissions));
+        loader.addRuleSpec("ravager_grief", new RavagerGriefRule(permissions));
+        loader.addRuleSpec("snowman_trail", new SnowmanTrailRule(permissions));
     }
 }

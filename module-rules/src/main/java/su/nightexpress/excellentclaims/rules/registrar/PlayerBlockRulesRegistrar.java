@@ -1,12 +1,12 @@
 package su.nightexpress.excellentclaims.rules.registrar;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
+import su.nightexpress.excellentclaims.rules.impl.entity.block.BlockTrampRule;
 import su.nightexpress.excellentclaims.rules.impl.player.block.BlockBreakRule;
 import su.nightexpress.excellentclaims.rules.impl.player.block.BlockFertilizeRule;
 import su.nightexpress.excellentclaims.rules.impl.player.block.BlockHarvestRule;
 import su.nightexpress.excellentclaims.rules.impl.player.block.BlockInteractFilterRule;
 import su.nightexpress.excellentclaims.rules.impl.player.block.BlockPlaceRule;
-import su.nightexpress.excellentclaims.rules.impl.player.block.BlockTrampRule;
 import su.nightexpress.excellentclaims.rules.impl.player.block.ChestAccessRule;
 import su.nightexpress.excellentclaims.rules.impl.player.block.ContainerAccessRule;
 import su.nightexpress.excellentclaims.rules.impl.player.block.UseAnvilsRule;

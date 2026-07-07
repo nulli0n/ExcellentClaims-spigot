@@ -4,8 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.Claim;
@@ -13,6 +11,7 @@ import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
+import su.nightexpress.excellentclaims.rules.evaluation.context.entity.EntityDamageContext;
 import su.nightexpress.excellentclaims.rules.filter.FilterMode;
 import su.nightexpress.excellentclaims.rules.filter.FilteredSet;
 import su.nightexpress.excellentclaims.rules.spec.AbstractFilterSpec;
@@ -21,26 +20,26 @@ import su.nightexpress.nightcore.util.BukkitThing;
 import su.nightexpress.nightcore.util.bridge.RegistryType;
 
 @NullMarked
-public class PlayerTakeDamageFilterRule extends AbstractFilterSpec<EntityDamageEvent, DamageType> {
+public class PlayerTakeDamageFilterRule extends AbstractFilterSpec<EntityDamageContext, DamageType> {
 
     public PlayerTakeDamageFilterRule() {
-        super(EntityDamageEvent.class, RuleTypes.DAMAGE_TYPES, RuleCategory.PLAYER);
+        super(EntityDamageContext.class, RuleTypes.DAMAGE_TYPES, RuleCategory.PLAYER);
     }
 
     @Override
-    public RuleBehavior<EntityDamageEvent, FilteredSet<DamageType>> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOWEST)
+    public RuleBehavior<EntityDamageContext, FilteredSet<DamageType>> createBehavior() {
+        return this.behaviorBuilder()
             .allValues(() -> BukkitThing.getAll(RegistryType.DAMAGE_TYPE))
-            .shouldHandle(event -> true)
-            .process((event, registry, context) -> {
-                if (!(event.getEntity() instanceof Player)) return RuleResult.pass();
+            .shouldHandle(context -> true)
+            .process((context, registry, resolver) -> {
+                if (!(context.entity() instanceof Player)) return RuleResult.pass();
 
-                Claim claim = registry.getPrioritizedClaim(event.getEntity().getLocation());
+                Claim claim = registry.getPrioritizedClaim(context.entity().getLocation());
                 if (claim == null) return RuleResult.allow();
 
-                FilteredSet<DamageType> damageList = context.resolveValue(claim).orElse(null);
+                FilteredSet<DamageType> damageList = resolver.resolveValue(claim).orElse(null);
 
-                DamageSource source = event.getDamageSource();
+                DamageSource source = context.damageSource();
                 DamageType type = source.getDamageType();
                 if (damageList != null && !damageList.isAllowed(type)) {
                     return RuleResult.deny();

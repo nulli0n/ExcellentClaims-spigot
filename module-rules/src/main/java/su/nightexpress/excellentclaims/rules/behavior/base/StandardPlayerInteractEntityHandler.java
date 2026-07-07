@@ -1,8 +1,8 @@
 package su.nightexpress.excellentclaims.rules.behavior.base;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.NullMarked;
 
@@ -10,16 +10,13 @@ import su.nightexpress.excellentclaims.api.ClaimRegistry;
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
-import su.nightexpress.excellentclaims.api.rule.RuleContext;
+import su.nightexpress.excellentclaims.api.rule.RuleLookup;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
-import su.nightexpress.excellentclaims.api.service.ActionResult;
 import su.nightexpress.excellentclaims.rules.behavior.AbstractBehavior.RuleProcessor;
-import su.nightexpress.excellentclaims.rules.lang.RulesLang;
-import su.nightexpress.nightcore.util.LangUtil;
-import su.nightexpress.nightcore.util.placeholder.CommonPlaceholders;
+import su.nightexpress.excellentclaims.rules.evaluation.context.entity.EntityInteractContext;
 
 @NullMarked
-public abstract class StandardPlayerInteractEntityHandler<T> implements RuleProcessor<PlayerInteractAtEntityEvent, T> {
+public abstract class StandardPlayerInteractEntityHandler<T> implements RuleProcessor<EntityInteractContext, T> {
 
     private final ClaimPermissionAPI permissions;
     private final ClaimPermission    permission;
@@ -30,23 +27,22 @@ public abstract class StandardPlayerInteractEntityHandler<T> implements RuleProc
     }
 
     @Override
-    public RuleResult process(PlayerInteractAtEntityEvent event, ClaimRegistry registry, RuleContext<T> context) {
-        Claim claim = registry.getPrioritizedClaim(event.getRightClicked().getLocation());
+    public RuleResult process(EntityInteractContext context, ClaimRegistry registry, RuleLookup<T> resolver) {
+        Entity entity = context.entity();
+
+        Claim claim = registry.getPrioritizedClaim(entity.getLocation());
         if (claim == null) return RuleResult.pass();
 
-        Player player = event.getPlayer();
+        Player player = context.actor();
         if (this.permissions.hasPermission(player, claim, this.permission)) {
             return RuleResult.allow();
         }
 
-        EntityType type = event.getRightClicked().getType();
-        T value = context.resolveValue(claim).orElse(null);
+        T value = resolver.resolveValue(claim).orElse(null);
         if (value == null) return RuleResult.pass();
 
-        if (!this.isEntityAllowed(type, value)) {
-            return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_ENTITY_INTERACT, ctx -> ctx
-                .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(type)))
-            );
+        if (!this.isEntityAllowed(entity.getType(), value)) {
+            return RuleResult.deny();
         }
 
         return RuleResult.allow();

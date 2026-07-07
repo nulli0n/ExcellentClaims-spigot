@@ -1,53 +1,40 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
-import java.util.List;
 import java.util.Optional;
 
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
+import su.nightexpress.excellentclaims.rules.evaluation.context.entity.EntityChangeBlockContext;
 import su.nightexpress.excellentclaims.rules.spec.SimpleSpec;
 import su.nightexpress.excellentclaims.rules.type.RuleTypes;
 
 @NullMarked
-public abstract class BaseEntityExplodeBlocksRule extends SimpleSpec<EntityExplodeEvent, Boolean> {
+public abstract class BaseEntityExplodeBlocksRule extends SimpleSpec<EntityChangeBlockContext, Boolean> {
 
     public BaseEntityExplodeBlocksRule() {
-        super(EntityExplodeEvent.class, RuleTypes.BOOLEAN, RuleCategory.ENTITY);
+        super(EntityChangeBlockContext.class, RuleTypes.BOOLEAN, RuleCategory.ENTITY);
     }
 
     @Override
-    public RuleBehavior<EntityExplodeEvent, Boolean> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOW)
-            .shouldHandle(event -> this.shouldHandle(event, event.getEntity()))
-            .process((event, registry, context) -> {
-                // Check origin claim first (if present)
-                Claim sourceClaim = registry.getPrioritizedClaim(event.getLocation());
-                Optional<Boolean> sourceState = context.resolveValue(sourceClaim);
-                if (sourceState.isPresent() && !sourceState.get()) return RuleResult.deny();
+    public RuleBehavior<EntityChangeBlockContext, Boolean> createBehavior() {
+        return this.behaviorBuilder()
+            .shouldHandle(context -> this.shouldHandle(context, context.entity()))
+            .process((context, registry, resolver) -> {
+                Claim claim = registry.getPrioritizedClaim(context.block());
+                Optional<Boolean> state = resolver.resolveValue(claim);
+                if (state.isPresent() && !state.get()) return RuleResult.deny();
 
-                List<Block> blocks = event.blockList();
-                blocks.removeIf(block -> {
-                    Claim claim = registry.getPrioritizedClaim(block);
-                    if (claim == null) return false;
-
-                    Boolean state = context.resolveValue(claim).orElse(null);
-                    return state != null && !state;
-                });
-
-                return blocks.isEmpty() ? RuleResult.deny() : RuleResult.allow();
+                return RuleResult.pass();
             })
             .build();
     }
 
-    protected abstract boolean shouldHandle(EntityExplodeEvent event, Entity entity);
+    protected abstract boolean shouldHandle(EntityChangeBlockContext context, Entity entity);
 
     @Override
     public Boolean getDefaultValue() {

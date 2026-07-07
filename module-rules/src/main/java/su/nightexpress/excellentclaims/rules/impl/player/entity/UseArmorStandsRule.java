@@ -3,11 +3,11 @@ package su.nightexpress.excellentclaims.rules.impl.player.entity;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
+import su.nightexpress.excellentclaims.rules.evaluation.context.entity.EntityInteractContext;
 import su.nightexpress.excellentclaims.rules.impl.base.BasePlayerUseEntityRule;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
@@ -19,7 +19,7 @@ public class UseArmorStandsRule extends BasePlayerUseEntityRule {
     }
 
     @Override
-    protected boolean shouldHandle(PlayerInteractAtEntityEvent event, Entity entity) {
+    protected boolean shouldHandle(EntityInteractContext context, Entity entity) {
         return entity instanceof ArmorStand;
     }
 

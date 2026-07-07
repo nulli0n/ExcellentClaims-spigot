@@ -1,32 +1,37 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
-import org.bukkit.block.Block;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockFromToEvent;
+import java.util.Optional;
+
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
+import su.nightexpress.excellentclaims.rules.evaluation.context.block.BlockFromToContext;
 import su.nightexpress.excellentclaims.rules.spec.SimpleSpec;
 import su.nightexpress.excellentclaims.rules.type.RuleTypes;
 
 @NullMarked
-public abstract class BaseBlockFromToRule extends SimpleSpec<BlockFromToEvent, Boolean> {
+public abstract class BaseBlockFromToRule extends SimpleSpec<BlockFromToContext, Boolean> {
 
     public BaseBlockFromToRule() {
-        super(BlockFromToEvent.class, RuleTypes.BOOLEAN, RuleCategory.NATURAL);
+        super(BlockFromToContext.class, RuleTypes.BOOLEAN, RuleCategory.NATURAL);
     }
 
     @Override
-    public RuleBehavior<BlockFromToEvent, Boolean> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOW)
+    public RuleBehavior<BlockFromToContext, Boolean> createBehavior() {
+        return this.behaviorBuilder()
             .shouldHandle(this::shouldHandle)
-            .process((event, registry, context) -> {
-                Block targetBlock = event.getToBlock();
-                Block sourceBlock = event.getBlock();
-                if (this.isAnyBlockDenied(registry, context, targetBlock, sourceBlock)) {
-                    return RuleResult.deny();
+            .process((context, registry, resolver) -> {
+                Claim sourceClaim = registry.getPrioritizedClaim(context.sourceBlock());
+                Claim targetClaim = registry.getPrioritizedClaim(context.targetBlock());
+
+                if (sourceClaim != targetClaim && targetClaim != null) {
+                    Optional<Boolean> state = resolver.resolveValue(targetClaim);
+                    if (state.isPresent() && !state.get()) {
+                        return RuleResult.deny();
+                    }
                 }
 
                 return RuleResult.allow();
@@ -34,7 +39,7 @@ public abstract class BaseBlockFromToRule extends SimpleSpec<BlockFromToEvent, B
             .build();
     }
 
-    protected abstract boolean shouldHandle(BlockFromToEvent event);
+    protected abstract boolean shouldHandle(BlockFromToContext event);
 
     @Override
     public Boolean getDefaultValue() {

@@ -1,15 +1,15 @@
 package su.nightexpress.excellentclaims.rules.registrar;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
+import su.nightexpress.excellentclaims.rules.impl.player.entity.BreakHangingRule;
+import su.nightexpress.excellentclaims.rules.impl.player.entity.BreakVehiclesRule;
 import su.nightexpress.excellentclaims.rules.impl.player.entity.EntityPlaceRule;
 import su.nightexpress.excellentclaims.rules.impl.player.entity.MobInteractionFilterRule;
+import su.nightexpress.excellentclaims.rules.impl.player.entity.PlaceHangingRule;
 import su.nightexpress.excellentclaims.rules.impl.player.entity.UseArmorStandsRule;
 import su.nightexpress.excellentclaims.rules.impl.player.entity.UseItemFramesRule;
 import su.nightexpress.excellentclaims.rules.impl.player.entity.UseVehiclesRule;
 import su.nightexpress.excellentclaims.rules.impl.player.entity.UseVillagersRule;
-import su.nightexpress.excellentclaims.rules.impl.player.hanging.BreakHangingRule;
-import su.nightexpress.excellentclaims.rules.impl.player.hanging.PlaceHangingRule;
-import su.nightexpress.excellentclaims.rules.impl.player.vehicle.BreakVehiclesRule;
 import su.nightexpress.excellentclaims.rules.load.RuleLoader;
 
 public final class PlayerEntityRulesRegistrar {

@@ -2,10 +2,9 @@ package su.nightexpress.excellentclaims.rules.impl.player.item;
 
 import java.util.Optional;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.Claim;
@@ -15,49 +14,44 @@ import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
-import su.nightexpress.excellentclaims.api.service.ActionResult;
-import su.nightexpress.excellentclaims.rules.lang.RulesLang;
+import su.nightexpress.excellentclaims.rules.evaluation.context.item.ItemPickupContext;
 import su.nightexpress.excellentclaims.rules.spec.SimpleSpec;
 import su.nightexpress.excellentclaims.rules.type.RuleTypes;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
 @NullMarked
-public class PickupItemsRule extends SimpleSpec<EntityPickupItemEvent, Boolean> {
+public class PickupItemsRule extends SimpleSpec<ItemPickupContext, Boolean> {
 
     private final ClaimPermissionAPI permissions;
 
     public PickupItemsRule(ClaimPermissionAPI permissions) {
-        super(EntityPickupItemEvent.class, RuleTypes.BOOLEAN, RuleCategory.PLAYER);
+        super(ItemPickupContext.class, RuleTypes.BOOLEAN, RuleCategory.PLAYER);
         this.permissions = permissions;
     }
 
     @Override
-    public RuleBehavior<EntityPickupItemEvent, Boolean> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOW)
+    public RuleBehavior<ItemPickupContext, Boolean> createBehavior() {
+        return this.behaviorBuilder()
             .weight(20)
-            .shouldHandle(event -> true)
-            .process((event, registry, context) -> {
-                if (!(event.getEntity() instanceof Player player)) return RuleResult.pass();
+            .shouldHandle(context -> true)
+            .process((context, registry, resolver) -> {
+                Player player = context.actor();
+                Location location = player.getLocation();
+                if (location == null) return RuleResult.pass();
 
-                Claim claim = registry.getPrioritizedClaim(event.getEntity().getLocation());
+                Claim claim = registry.getPrioritizedClaim(location);
                 if (claim == null) return RuleResult.allow();
 
                 if (this.permissions.hasPermission(player, claim, ClaimPermission.PICKUP_ITEMS)) {
                     return RuleResult.allow();
                 }
 
-                Optional<Boolean> state = context.resolveValue(claim);
+                Optional<Boolean> state = resolver.resolveValue(claim);
                 if (state.isPresent() && !state.get()) {
-                    return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_ITEM_PICKUP));
+                    return RuleResult.deny();
                 }
 
                 return RuleResult.allow();
-            })
-            .playerExtractor(event -> {
-                if (event.getEntity() instanceof Player player) {
-                    return player;
-                }
-                return null;
             })
             .build();
     }

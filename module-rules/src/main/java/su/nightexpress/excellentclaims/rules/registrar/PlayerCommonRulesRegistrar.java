@@ -2,7 +2,6 @@ package su.nightexpress.excellentclaims.rules.registrar;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.rules.impl.player.CommandUseFilterRule;
-import su.nightexpress.excellentclaims.rules.impl.player.EmptyBucketRule;
 import su.nightexpress.excellentclaims.rules.impl.player.FillBucketRule;
 import su.nightexpress.excellentclaims.rules.impl.player.UseEndPortalRule;
 import su.nightexpress.excellentclaims.rules.impl.player.UseNetherPortalRule;
@@ -21,7 +20,7 @@ public final class PlayerCommonRulesRegistrar {
         loader.addRuleSpec("pickup_items", new PickupItemsRule(permissions));
 
         loader.addRuleSpec("fill_buckets", new FillBucketRule(permissions));
-        loader.addRuleSpec("empty_buckets", new EmptyBucketRule(permissions));
+        //loader.addRuleSpec("empty_buckets", new EmptyBucketRule(permissions));
 
         loader.addRuleSpec("use_nether_portal", new UseNetherPortalRule(permissions));
         loader.addRuleSpec("use_end_portal", new UseEndPortalRule(permissions));

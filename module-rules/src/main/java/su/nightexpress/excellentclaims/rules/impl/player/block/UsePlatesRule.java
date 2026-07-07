@@ -4,11 +4,11 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
+import su.nightexpress.excellentclaims.rules.evaluation.context.block.BlockInteractContext;
 import su.nightexpress.excellentclaims.rules.impl.base.BasePlayerUseBlockRule;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
@@ -19,15 +19,13 @@ public class UsePlatesRule extends BasePlayerUseBlockRule {
         super(permissions);
     }
 
-    // TODO Check Item Owner
-
     private boolean isPlate(Material material) {
         return Tag.PRESSURE_PLATES.isTagged(material);
     }
 
     @Override
-    protected boolean shouldHandle(PlayerInteractEvent event, Block block) {
-        Action action = event.getAction();
+    protected boolean shouldHandle(BlockInteractContext context, Block block) {
+        Action action = context.action();
 
         return action == Action.PHYSICAL && this.isPlate(block.getType());
     }

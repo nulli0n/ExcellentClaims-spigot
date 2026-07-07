@@ -3,10 +3,7 @@ package su.nightexpress.excellentclaims.rules.impl.player.block;
 import java.util.Optional;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.Claim;
@@ -16,45 +13,38 @@ import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
-import su.nightexpress.excellentclaims.api.service.ActionResult;
-import su.nightexpress.excellentclaims.rules.lang.RulesLang;
+import su.nightexpress.excellentclaims.rules.evaluation.context.block.BlockPlaceContext;
 import su.nightexpress.excellentclaims.rules.spec.SimpleSpec;
 import su.nightexpress.excellentclaims.rules.type.RuleTypes;
-import su.nightexpress.nightcore.util.LangUtil;
-import su.nightexpress.nightcore.util.placeholder.CommonPlaceholders;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
 @NullMarked
-public class BlockPlaceRule extends SimpleSpec<BlockPlaceEvent, Boolean> {
+public class BlockPlaceRule extends SimpleSpec<BlockPlaceContext, Boolean> {
 
     private final ClaimPermissionAPI permissions;
 
     public BlockPlaceRule(ClaimPermissionAPI permissions) {
-        super(BlockPlaceEvent.class, RuleTypes.BOOLEAN, RuleCategory.PLAYER);
+        super(BlockPlaceContext.class, RuleTypes.BOOLEAN, RuleCategory.PLAYER);
         this.permissions = permissions;
     }
 
     @Override
-    public RuleBehavior<BlockPlaceEvent, Boolean> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOW)
+    public RuleBehavior<BlockPlaceContext, Boolean> createBehavior() {
+        return this.behaviorBuilder()
             .weight(10)
-            .playerExtractor(event -> event.getPlayer())
             .shouldHandle(event -> true)
-            .process((event, registry, context) -> {
-                Claim claim = registry.getPrioritizedClaim(event.getBlock());
+            .process((context, registry, resolver) -> {
+                Claim claim = registry.getPrioritizedClaim(context.block());
                 if (claim == null) return RuleResult.allow();
 
-                Player player = event.getPlayer();
+                Player player = context.actor();
                 if (this.permissions.hasPermission(player, claim, ClaimPermission.BUILDING)) {
                     return RuleResult.allow();
                 }
 
-                Optional<Boolean> state = context.resolveValue(claim);
+                Optional<Boolean> state = resolver.resolveValue(claim);
                 if (state.isPresent() && !state.get()) {
-                    Block block = event.getBlock();
-                    return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_BLOCK_PLACE, ctx -> ctx
-                        .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(block.getType()))
-                    ));
+                    return RuleResult.deny();
                 }
 
                 return RuleResult.pass();

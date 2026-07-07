@@ -1,35 +1,18 @@
 package su.nightexpress.excellentclaims.api.rule;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 import su.nightexpress.excellentclaims.api.ClaimRegistry;
+import su.nightexpress.excellentclaims.api.rule.context.ActionContext;
 
 @NullMarked
-public interface RuleBehavior<E extends Event, T> {
+public interface RuleBehavior<E extends ActionContext, T> {
 
-    boolean shouldHandle(E event);
+    boolean shouldHandle(E context);
 
-    void denyEvent(E event);
+    RuleResult process(E context, ClaimRegistry registry, RuleLookup<T> resolver);
 
-    void allowEvent(E event);
-
-    RuleResult process(E event, ClaimRegistry registry, RuleContext<T> context);
-
-    /* RuleResult handle(E event, ClaimRegistry registry, Claim claim, ClaimRule<T> rule, T value);
-    
-    @Nullable
-    Claim getClaim(E event, ClaimRegistry registry); */
-
-    @Nullable
-    Player getUser(E event);
-
-    Class<E> getEventType();
-
-    EventPriority getEventPriority();
+    Class<E> getContextType();
 
     int getWeight();
 }

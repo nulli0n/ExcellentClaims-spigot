@@ -25,13 +25,13 @@ public final class RulesLang implements LangContainer {
                 TagWrappers.YELLOW.wrap(CommonPlaceholders.GENERIC_VALUE) + " here!")
         );
 
-    public static final MessageLocale PROTECTION_BLOCK_BREAK = LangEntry.builder("Protection.Info.BlockBreak")
+    public static final MessageLocale PROTECTION_DESTROYING = LangEntry.builder("Protection.Info.BlockBreak")
         .actionBarMessage(
             TagWrappers.RED.wrap("You can't break " +
                 TagWrappers.YELLOW.wrap(CommonPlaceholders.GENERIC_VALUE) + " here!")
         );
 
-    public static final MessageLocale PROTECTION_BLOCK_PLACE = LangEntry.builder("Protection.Info.BlockPlace")
+    public static final MessageLocale PROTECTION_BUILDING = LangEntry.builder("Protection.Info.BlockPlace")
         .actionBarMessage(
             TagWrappers.RED.wrap("You can't place " +
                 TagWrappers.YELLOW.wrap(CommonPlaceholders.GENERIC_VALUE) + " here!")
@@ -49,9 +49,9 @@ public final class RulesLang implements LangContainer {
                 TagWrappers.YELLOW.wrap(CommonPlaceholders.GENERIC_VALUE) + " here!")
         );
 
-    public static final MessageLocale PROTECTION_BLOCK_TRAMP = LangEntry.builder("Protection.Info.BlockTramp")
+    public static final MessageLocale PROTECTION_BLOCK_CHANGE = LangEntry.builder("Protection.Info.BlockChange")
         .actionBarMessage(
-            TagWrappers.RED.wrap("You can't tramp " +
+            TagWrappers.RED.wrap("You can't change " +
                 TagWrappers.YELLOW.wrap(CommonPlaceholders.GENERIC_VALUE) + " here!")
         );
 

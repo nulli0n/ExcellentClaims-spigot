@@ -5,8 +5,6 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.Claim;
@@ -14,6 +12,7 @@ import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
+import su.nightexpress.excellentclaims.rules.evaluation.context.entity.CreatureSpawnContext;
 import su.nightexpress.excellentclaims.rules.filter.FilterMode;
 import su.nightexpress.excellentclaims.rules.filter.FilteredSet;
 import su.nightexpress.excellentclaims.rules.spec.AbstractFilterSpec;
@@ -22,7 +21,7 @@ import su.nightexpress.nightcore.util.BukkitThing;
 import su.nightexpress.nightcore.util.bridge.RegistryType;
 
 @NullMarked
-public class MobSpawnFilterRule extends AbstractFilterSpec<CreatureSpawnEvent, EntityType> {
+public class MobSpawnFilterRule extends AbstractFilterSpec<CreatureSpawnContext, EntityType> {
 
     private static final Set<EntityType> SPAWNABLE = BukkitThing.getAll(RegistryType.ENTITY_TYPE)
         .stream()
@@ -30,7 +29,7 @@ public class MobSpawnFilterRule extends AbstractFilterSpec<CreatureSpawnEvent, E
         .collect(Collectors.toSet());
 
     public MobSpawnFilterRule() {
-        super(CreatureSpawnEvent.class, RuleTypes.ENTITY_TYPES, RuleCategory.ENTITY);
+        super(CreatureSpawnContext.class, RuleTypes.ENTITY_TYPES, RuleCategory.ENTITY);
     }
 
     @Override
@@ -48,15 +47,16 @@ public class MobSpawnFilterRule extends AbstractFilterSpec<CreatureSpawnEvent, E
     }
 
     @Override
-    public RuleBehavior<CreatureSpawnEvent, FilteredSet<EntityType>> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOWEST)
+    public RuleBehavior<CreatureSpawnContext, FilteredSet<EntityType>> createBehavior() {
+        return this.behaviorBuilder()
             .weight(50)
             .allValues(() -> SPAWNABLE)
-            .shouldHandle(event -> SPAWNABLE.contains(event.getEntityType()))
-            .process((event, claims, context) -> {
-                Claim claim = claims.getPrioritizedClaim(event.getLocation());
-                FilteredSet<EntityType> mobList = context.resolveValue(claim).orElse(null);
-                return mobList == null ? RuleResult.pass() : RuleResult.of(mobList.isAllowed(event.getEntityType()));
+            .shouldHandle(context -> SPAWNABLE.contains(context.entity().getType()))
+            .process((context, claims, resolver) -> {
+                Claim claim = claims.getPrioritizedClaim(context.location());
+                FilteredSet<EntityType> mobList = resolver.resolveValue(claim).orElse(null);
+                return mobList == null ? RuleResult.pass() : RuleResult.of(mobList.isAllowed(context.entity()
+                    .getType()));
             })
             .build();
     }

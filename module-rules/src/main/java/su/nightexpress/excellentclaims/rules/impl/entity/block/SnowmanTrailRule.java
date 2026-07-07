@@ -1,37 +1,26 @@
 package su.nightexpress.excellentclaims.rules.impl.entity.block;
 
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Snowman;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.EntityBlockFormEvent;
 import org.jspecify.annotations.NullMarked;
 
-import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
-import su.nightexpress.excellentclaims.api.rule.RuleCategory;
+import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
-import su.nightexpress.excellentclaims.api.rule.RuleResult;
-import su.nightexpress.excellentclaims.rules.spec.SimpleSpec;
-import su.nightexpress.excellentclaims.rules.type.RuleTypes;
+import su.nightexpress.excellentclaims.rules.evaluation.context.entity.EntityChangeBlockContext;
+import su.nightexpress.excellentclaims.rules.impl.base.BaseEntityBlockChangeRule;
 import su.nightexpress.nightcore.util.bukkit.NightItem;
 
 @NullMarked
-public class SnowmanTrailRule extends SimpleSpec<EntityBlockFormEvent, Boolean> {
+public class SnowmanTrailRule extends BaseEntityBlockChangeRule {
 
-    public SnowmanTrailRule() {
-        super(EntityBlockFormEvent.class, RuleTypes.BOOLEAN, RuleCategory.ENTITY);
+    public SnowmanTrailRule(ClaimPermissionAPI permissions) {
+        super(permissions);
     }
 
     @Override
-    public RuleBehavior<EntityBlockFormEvent, Boolean> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOW)
-            .shouldHandle(event -> event.getEntity() instanceof Snowman)
-            .process((event, registry, context) -> {
-                if (this.isAnyBlockDenied(registry, context, event.getBlock())) {
-                    return RuleResult.deny();
-                }
-
-                return RuleResult.allow();
-            })
-            .build();
+    protected boolean shouldHandle(EntityChangeBlockContext context, Entity entity, Block block) {
+        return entity instanceof Snowman;
     }
 
     @Override

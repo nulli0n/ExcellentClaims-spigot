@@ -6,10 +6,13 @@ import org.jspecify.annotations.Nullable;
 
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.data.DirtyFlagger;
+import su.nightexpress.excellentclaims.api.rule.tester.RuleEvaluators;
 import su.nightexpress.excellentclaims.api.service.ActionResult;
 
 @NullMarked
 public interface RulesAPI {
+
+    RuleEvaluators getEvaluators();
 
     ActionResult canOpenRules(Player player, Claim claim);
 
@@ -19,5 +22,5 @@ public interface RulesAPI {
                                                  @Nullable RuleCategory category,
                                                  @Nullable Runnable onBack);
 
-    RuleLookup<?> getRegistry();
+    RuleRegistryLookup<?> getRegistry();
 }

@@ -17,17 +17,18 @@ public final class DefaultRulesRegistrar {
 
         EnvironmentRulesRegistrar.register(loader);
 
-        BlockGrowRulesRegistrar.register(loader, settings);
-        BlockFormRulesRegistrar.register(loader, settings);
+        BlockGrowRulesRegistrar.register(loader);
+        BlockFormRulesRegistrar.register(loader);
 
         MobSpawnRulesRegistrar.register(loader);
         MobDamageRulesRegistrar.register(loader);
-        MobGriefRulesRegistrar.register(loader);
+        MobGriefRulesRegistrar.register(loader, permissions);
 
         PlayerBlockRulesRegistrar.register(loader, permissions);
         PlayerItemRulesRegistrar.register(loader, permissions);
         PlayerDamageRulesRegistrar.register(loader, permissions);
         PlayerCommonRulesRegistrar.register(loader, settings, permissions);
+        PlayerEntityRulesRegistrar.register(loader, permissions);
 
         if (settings.isAllowHighFrequencyRules()) {
             HighFrequencyRulesRegistrar.register(loader, settings);

@@ -10,14 +10,14 @@ import su.nightexpress.excellentclaims.api.core.DependencyContainer;
 import su.nightexpress.excellentclaims.api.core.SimpleDependencies;
 import su.nightexpress.excellentclaims.api.rule.RuleResolver;
 import su.nightexpress.excellentclaims.api.rule.RulesAPI;
-import su.nightexpress.excellentclaims.rules.event.EventConfiguration;
+import su.nightexpress.excellentclaims.rules.api.RulesAPIConfiguration;
+import su.nightexpress.excellentclaims.rules.evaluation.EvaluatorConfiguration;
 import su.nightexpress.excellentclaims.rules.lang.RulesLangInjector;
 import su.nightexpress.excellentclaims.rules.load.RuleLoaderConfiguration;
 import su.nightexpress.excellentclaims.rules.permission.RulesPermissionsInjector;
 import su.nightexpress.excellentclaims.rules.registrar.DefaultRulesRegistrar;
 import su.nightexpress.excellentclaims.rules.settings.RulesSettingsConfiguration;
 import su.nightexpress.excellentclaims.rules.ui.RuleUIConfiguration;
-import su.nightexpress.excellentclaims.rules.ui.RuleUIService;
 import su.nightexpress.nightcore.bridge.key.KeyDomain;
 
 @NullMarked
@@ -54,24 +54,17 @@ public final class RulesBootstrap {
         // Register default rules into loader.
         DefaultRulesRegistrar.register(rulesContainer);
 
-        // Configure event controller to register listeners for registered (loaded) rules.
-        EventConfiguration.configure(module, rulesContainer);
+        // Configure evaluator engine.
+        EvaluatorConfiguration.configure(module, rulesContainer);
 
         // Configure UI
         RuleUIConfiguration.configure(module, rulesContainer);
 
         // Configure public API
-        RulesAPI api = configureAPI(rulesContainer);
+        RulesAPI api = RulesAPIConfiguration.configure(rulesContainer);
 
         container.register(RulesAPI.class, api);
 
         return module;
-    }
-
-    private static RulesAPI configureAPI(DependencyContainer container) {
-        RuleRegistry rules = container.get(RuleRegistry.class);
-        RuleUIService uiService = container.get(RuleUIService.class);
-
-        return new RulesAPIProvider(rules, uiService);
     }
 }

@@ -15,6 +15,8 @@ allprojects {
     layout.buildDirectory.set(rootProject.layout.projectDirectory.dir(".gradle-out/${project.name}"))
 }
 
+val publishedModules = setOf("api", "core")
+
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "maven-publish")
@@ -38,29 +40,49 @@ subprojects {
             languageVersion.set(JavaLanguageVersion.of(25))
         }
         withSourcesJar()
+        withJavadocJar()
     }
 
     tasks.withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
     }
 
-    configure<PublishingExtension> {
-        publications {
-            create<MavenPublication>("mavenJava") {
-                artifact(tasks.named("jar"))
-                artifact(tasks.named("sourcesJar")) {
-                    classifier = "sources"
+    // Configure the Javadoc generation task
+    tasks.withType<Javadoc>().configureEach {
+        options.encoding = "UTF-8"
+        
+        // Prevents the build from failing due to minor formatting errors 
+        // or missing tags in documentation comments.
+        (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
+    }
+
+    if (publishedModules.contains(project.name)) {
+        apply(plugin = "maven-publish")
+
+        configure<PublishingExtension> {
+            publications {
+                create<MavenPublication>("mavenJava") {
+                    artifact(tasks.named("jar"))
+
+                    artifact(tasks.named("sourcesJar")) {
+                        classifier = "sources"
+                    }
+
+                    artifact(tasks.named("javadocJar")) {
+                        classifier = "javadoc"
+                    }
+
+                    artifactId = project.name
                 }
-                artifactId = project.name
             }
-        }
-        repositories {
-            maven {
-                name = "nightexpress"
-                url = uri("https://repo.nightexpressdev.com/releases")
-                credentials {
-                    username = System.getenv("REPOSILITE_USER")
-                    password = System.getenv("REPOSILITE_PASSWORD")
+            repositories {
+                maven {
+                    name = "nightexpress"
+                    url = uri("https://repo.nightexpressdev.com/releases")
+                    credentials {
+                        username = System.getenv("REPOSILITE_USER")
+                        password = System.getenv("REPOSILITE_PASSWORD")
+                    }
                 }
             }
         }

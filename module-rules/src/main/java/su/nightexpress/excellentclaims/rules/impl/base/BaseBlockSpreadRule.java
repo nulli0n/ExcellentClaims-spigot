@@ -1,31 +1,27 @@
 package su.nightexpress.excellentclaims.rules.impl.base;
 
-import org.bukkit.block.Block;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.block.BlockSpreadEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
+import su.nightexpress.excellentclaims.rules.evaluation.context.block.BlockSpreadContext;
 import su.nightexpress.excellentclaims.rules.spec.SimpleSpec;
 import su.nightexpress.excellentclaims.rules.type.RuleTypes;
 
 @NullMarked
-public abstract class BaseBlockSpreadRule extends SimpleSpec<BlockSpreadEvent, Boolean> {
+public abstract class BaseBlockSpreadRule extends SimpleSpec<BlockSpreadContext, Boolean> {
 
     public BaseBlockSpreadRule() {
-        super(BlockSpreadEvent.class, RuleTypes.BOOLEAN, RuleCategory.NATURAL);
+        super(BlockSpreadContext.class, RuleTypes.BOOLEAN, RuleCategory.NATURAL);
     }
 
     @Override
-    public RuleBehavior<BlockSpreadEvent, Boolean> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOW)
+    public RuleBehavior<BlockSpreadContext, Boolean> createBehavior() {
+        return this.behaviorBuilder()
             .shouldHandle(this::shouldHandle)
-            .process((event, registry, context) -> {
-                Block targetBlock = event.getBlock();
-                Block sourceBlock = event.getSource();
-                if (this.isAnyBlockDenied(registry, context, targetBlock, sourceBlock)) {
+            .process((context, registry, resolver) -> {
+                if (this.isAnyBlockDenied(registry, resolver, context.targetBlock(), context.sourceBlock())) {
                     return RuleResult.deny();
                 }
 
@@ -34,7 +30,7 @@ public abstract class BaseBlockSpreadRule extends SimpleSpec<BlockSpreadEvent, B
             .build();
     }
 
-    protected abstract boolean shouldHandle(BlockSpreadEvent event);
+    protected abstract boolean shouldHandle(BlockSpreadContext event);
 
     @Override
     public Boolean getDefaultValue() {

@@ -277,7 +277,7 @@ public class RuleListMenu extends AbstractObjectMenu<RuleListContext> {
             properties.addAll(this.rules.values());
         }
         else {
-            properties.addAll(this.rules.values(category));
+            properties.addAll(this.rules.getRulesByCategory(category));
         }
 
         List<ClaimRule<?>> sortedProperties = properties.stream()

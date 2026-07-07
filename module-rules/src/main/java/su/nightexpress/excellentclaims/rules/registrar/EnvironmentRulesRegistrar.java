@@ -1,8 +1,8 @@
 package su.nightexpress.excellentclaims.rules.registrar;
 
-import su.nightexpress.excellentclaims.rules.impl.environment.ExplosionDamageBlocksRule;
-import su.nightexpress.excellentclaims.rules.impl.environment.FireDamageBlocksRule;
-import su.nightexpress.excellentclaims.rules.impl.environment.LeavesDecayRule;
+import su.nightexpress.excellentclaims.rules.impl.environment.block.ExplosionDamageBlocksRule;
+import su.nightexpress.excellentclaims.rules.impl.environment.block.FireDamageBlocksRule;
+import su.nightexpress.excellentclaims.rules.impl.environment.block.fade.LeavesDecayRule;
 import su.nightexpress.excellentclaims.rules.load.RuleLoader;
 
 public final class EnvironmentRulesRegistrar {

@@ -2,8 +2,6 @@ package su.nightexpress.excellentclaims.rules.impl.player.entity;
 
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
@@ -12,6 +10,7 @@ import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
 import su.nightexpress.excellentclaims.rules.behavior.base.StandardPlayerInteractEntityHandler;
+import su.nightexpress.excellentclaims.rules.evaluation.context.entity.EntityInteractContext;
 import su.nightexpress.excellentclaims.rules.filter.FilterMode;
 import su.nightexpress.excellentclaims.rules.filter.FilteredSet;
 import su.nightexpress.excellentclaims.rules.spec.AbstractFilterSpec;
@@ -21,22 +20,21 @@ import su.nightexpress.nightcore.util.bridge.RegistryType;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
 @NullMarked
-public class MobInteractionFilterRule extends AbstractFilterSpec<PlayerInteractAtEntityEvent, EntityType> {
+public class MobInteractionFilterRule extends AbstractFilterSpec<EntityInteractContext, EntityType> {
 
     private final ClaimPermissionAPI permissions;
 
     public MobInteractionFilterRule(ClaimPermissionAPI permissions) {
-        super(PlayerInteractAtEntityEvent.class, RuleTypes.ENTITY_TYPES, RuleCategory.PLAYER);
+        super(EntityInteractContext.class, RuleTypes.ENTITY_TYPES, RuleCategory.PLAYER);
         this.permissions = permissions;
     }
 
     @Override
-    public RuleBehavior<PlayerInteractAtEntityEvent, FilteredSet<EntityType>> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOWEST)
+    public RuleBehavior<EntityInteractContext, FilteredSet<EntityType>> createBehavior() {
+        return this.behaviorBuilder()
             .weight(50)
             .allValues(() -> BukkitThing.getAll(RegistryType.ENTITY_TYPE))
-            .shouldHandle(event -> true)
-            .playerExtractor(PlayerInteractAtEntityEvent::getPlayer)
+            .shouldHandle(context -> true)
             .process(
                 new StandardPlayerInteractEntityHandler<FilteredSet<EntityType>>(this.permissions, ClaimPermission.ENTITY_INTERACT) {
 

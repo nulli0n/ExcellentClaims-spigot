@@ -9,6 +9,7 @@ import org.jspecify.annotations.Nullable;
 
 import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
+import su.nightexpress.excellentclaims.api.rule.RulesAPI;
 
 @NullMarked
 public class ExcellentClaimsAPI implements ClaimsAPI {
@@ -46,5 +47,9 @@ public class ExcellentClaimsAPI implements ClaimsAPI {
     @Override
     public @Nullable Claim getPrioritizedClaim(Location location) {
         return this.getPrioritizedClaim(location);
+    }
+
+    public Optional<RulesAPI> rules() {
+        return this.getModule(RulesAPI.class);
     }
 }

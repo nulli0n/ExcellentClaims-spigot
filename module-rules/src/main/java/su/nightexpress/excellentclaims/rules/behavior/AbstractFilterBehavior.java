@@ -4,14 +4,13 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
 import org.jspecify.annotations.NullMarked;
 
+import su.nightexpress.excellentclaims.api.rule.context.ActionContext;
 import su.nightexpress.excellentclaims.rules.filter.FilteredSet;
 
 @NullMarked
-public class AbstractFilterBehavior<E extends Event, T> extends AbstractBehavior<E, FilteredSet<T>> implements FilterBehavior<E, T> {
+public class AbstractFilterBehavior<E extends ActionContext, T> extends AbstractBehavior<E, FilteredSet<T>> implements FilterBehavior<E, T> {
 
     private final Supplier<Set<T>> valuesSupplier;
     private final Predicate<T>     entryCondition;
@@ -32,17 +31,13 @@ public class AbstractFilterBehavior<E extends Event, T> extends AbstractBehavior
         return this.entryCondition.test(entry);
     }
 
-    public static class Builder<E extends Event, T> extends AbstractBehavior.BaseBuilder<E, FilteredSet<T>, Builder<E, T>> {
+    public static class Builder<E extends ActionContext, T> extends AbstractBehavior.BaseBuilder<E, FilteredSet<T>, Builder<E, T>> {
 
         private Supplier<Set<T>> valuesSupplier = Set::of;
         private Predicate<T>     entryCondition = item -> true;
 
         public Builder(Class<E> eventType) {
             super(eventType);
-        }
-
-        public Builder(Class<E> eventType, EventPriority priority) {
-            super(eventType, priority);
         }
 
         @Override

@@ -3,14 +3,14 @@ package su.nightexpress.excellentclaims.rules.registry;
 import java.util.List;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.rule.ClaimRule;
-import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
+import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
 import su.nightexpress.excellentclaims.api.rule.RuleType;
+import su.nightexpress.excellentclaims.api.rule.context.ActionContext;
 import su.nightexpress.excellentclaims.rules.RulesPlaceholders;
 import su.nightexpress.excellentclaims.rules.permission.RulesPermissions;
 import su.nightexpress.nightcore.bridge.key.AdaptedKey;
@@ -18,7 +18,7 @@ import su.nightexpress.nightcore.util.bukkit.NightItem;
 import su.nightexpress.nightcore.util.placeholder.PlaceholderResolver;
 
 @NullMarked
-public class RegisteredRule<E extends Event, T> implements ClaimRule<T> {
+public class RegisteredRule<E extends ActionContext, T> implements ClaimRule<T> {
 
     private final AdaptedKey         key;
     private final RuleCategory       category;

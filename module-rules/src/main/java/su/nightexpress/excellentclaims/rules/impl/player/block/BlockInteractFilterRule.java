@@ -3,33 +3,24 @@ package su.nightexpress.excellentclaims.rules.impl.player.block;
 import java.util.Set;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Result;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.jspecify.annotations.NullMarked;
 
-import su.nightexpress.excellentclaims.api.claim.Claim;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermission;
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
-import su.nightexpress.excellentclaims.api.rule.RuleResult;
-import su.nightexpress.excellentclaims.api.service.ActionResult;
+import su.nightexpress.excellentclaims.rules.behavior.base.StandardPlayerInteractBlockHandler;
+import su.nightexpress.excellentclaims.rules.evaluation.context.block.BlockInteractContext;
 import su.nightexpress.excellentclaims.rules.filter.FilterMode;
 import su.nightexpress.excellentclaims.rules.filter.FilteredSet;
-import su.nightexpress.excellentclaims.rules.lang.RulesLang;
 import su.nightexpress.excellentclaims.rules.spec.AbstractFilterSpec;
 import su.nightexpress.excellentclaims.rules.type.RuleTypes;
 import su.nightexpress.nightcore.util.Lists;
-import su.nightexpress.nightcore.util.placeholder.CommonPlaceholders;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
 @NullMarked
-public class BlockInteractFilterRule extends AbstractFilterSpec<PlayerInteractEvent, Material> {
+public class BlockInteractFilterRule extends AbstractFilterSpec<BlockInteractContext, Material> {
 
     private static final Set<Material> GENERIC_BLOCKS = Lists.newSet(
         Material.BEACON, Material.BREWING_STAND,
@@ -37,7 +28,7 @@ public class BlockInteractFilterRule extends AbstractFilterSpec<PlayerInteractEv
         Material.FURNACE, Material.BLAST_FURNACE, Material.SMOKER,
         Material.GRINDSTONE, Material.LECTERN, Material.LOOM,
         Material.SMITHING_TABLE, Material.STONECUTTER, Material.BEEHIVE,
-        Material.BELL, Material.CAKE, Material.CAMPFIRE,
+        Material.BELL, Material.CAMPFIRE,
         Material.SOUL_CAMPFIRE, Material.CHISELED_BOOKSHELF, Material.COMPOSTER,
         Material.DECORATED_POT, Material.END_PORTAL_FRAME, Material.FLETCHING_TABLE,
         Material.FLOWER_POT, Material.JUKEBOX, Material.LODESTONE,
@@ -52,7 +43,7 @@ public class BlockInteractFilterRule extends AbstractFilterSpec<PlayerInteractEv
     private final ClaimPermissionAPI permissions;
 
     public BlockInteractFilterRule(ClaimPermissionAPI permissions) {
-        super(PlayerInteractEvent.class, RuleTypes.MATERIALS, RuleCategory.PLAYER);
+        super(BlockInteractContext.class, RuleTypes.MATERIALS, RuleCategory.PLAYER);
         this.permissions = permissions;
     }
 
@@ -78,42 +69,20 @@ public class BlockInteractFilterRule extends AbstractFilterSpec<PlayerInteractEv
     }
 
     @Override
-    public RuleBehavior<PlayerInteractEvent, FilteredSet<Material>> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOWEST)
+    public RuleBehavior<BlockInteractContext, FilteredSet<Material>> createBehavior() {
+        return this.behaviorBuilder()
             .weight(10)
             .allValues(() -> GENERIC_BLOCKS)
-            .shouldHandle(event -> {
-                if (event.useInteractedBlock() == Event.Result.DENY) return false; // Ignore if already denied.
+            .shouldHandle(context -> GENERIC_BLOCKS.contains(context.block().getType()))
+            .process(
+                new StandardPlayerInteractBlockHandler<FilteredSet<Material>>(this.permissions, ClaimPermission.BLOCK_INTERACT) {
 
-                Block block = event.getClickedBlock();
-                return block != null && GENERIC_BLOCKS.contains(block.getType());
-            })
-            .process((event, registry, context) -> {
-                Block block = event.getClickedBlock();
-                if (block == null) return RuleResult.pass();
+                    @Override
+                    protected boolean isBlockAllowed(Material type, FilteredSet<Material> blockList) {
+                        return blockList.isAllowed(type);
+                    }
 
-                Claim claim = registry.getPrioritizedClaim(block);
-                if (claim == null) return RuleResult.allow();
-
-                Player player = event.getPlayer();
-                if (this.permissions.hasPermission(player, claim, ClaimPermission.BLOCK_INTERACT)) {
-                    return RuleResult.allow();
-                }
-
-                Material type = block.getType();
-                FilteredSet<Material> blockList = context.resolveValue(claim).orElse(null);
-
-                if (blockList != null && !blockList.isAllowed(type)) {
-                    return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_BLOCK_INTERACT, ctx -> ctx
-                        .with(CommonPlaceholders.GENERIC_VALUE, () -> this.filterType.getDisplay().getNameLocalized(
-                            type))
-                    ));
-                }
-
-                return RuleResult.allow();
-            })
-            .playerExtractor(event -> event.getPlayer())
-            .onDeny(event -> event.setUseInteractedBlock(Result.DENY))
+                })
             .build();
     }
 }

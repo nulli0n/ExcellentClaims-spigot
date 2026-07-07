@@ -7,7 +7,7 @@ import su.nightexpress.excellentclaims.rules.impl.player.item.UseFireworks;
 import su.nightexpress.excellentclaims.rules.impl.player.item.UseHornsRule;
 import su.nightexpress.excellentclaims.rules.impl.player.item.UseLighterRule;
 import su.nightexpress.excellentclaims.rules.impl.player.item.UseSpawnEggsRule;
-import su.nightexpress.excellentclaims.rules.impl.player.projectile.ShootBowRule;
+import su.nightexpress.excellentclaims.rules.impl.player.projectile.ShootArrowsRule;
 import su.nightexpress.excellentclaims.rules.impl.player.projectile.ThrowEggsRule;
 import su.nightexpress.excellentclaims.rules.impl.player.projectile.ThrowEnderEyesRule;
 import su.nightexpress.excellentclaims.rules.impl.player.projectile.ThrowPotionsRule;
@@ -33,6 +33,6 @@ public final class PlayerItemRulesRegistrar {
         loader.addRuleSpec("throw_potions", new ThrowPotionsRule());
         loader.addRuleSpec("throw_tridents", new ThrowTridentsRule());
         loader.addRuleSpec("throw_wind_charges", new ThrowWindChargesRule());
-        loader.addRuleSpec("shoot_bow", new ShootBowRule());
+        loader.addRuleSpec("shoot_bow", new ShootArrowsRule());
     }
 }

@@ -3,9 +3,9 @@ package su.nightexpress.excellentclaims.rules.impl.player;
 import java.util.Optional;
 
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerBucketFillEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.Claim;
@@ -15,49 +15,48 @@ import su.nightexpress.excellentclaims.api.rule.RuleBehavior;
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
 import su.nightexpress.excellentclaims.api.rule.RuleResult;
-import su.nightexpress.excellentclaims.api.service.ActionResult;
-import su.nightexpress.excellentclaims.rules.lang.RulesLang;
+import su.nightexpress.excellentclaims.rules.evaluation.context.block.BlockInteractContext;
 import su.nightexpress.excellentclaims.rules.spec.SimpleSpec;
 import su.nightexpress.excellentclaims.rules.type.RuleTypes;
-import su.nightexpress.nightcore.util.LangUtil;
-import su.nightexpress.nightcore.util.placeholder.CommonPlaceholders;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
 @NullMarked
-public class FillBucketRule extends SimpleSpec<PlayerBucketFillEvent, Boolean> {
+public class FillBucketRule extends SimpleSpec<BlockInteractContext, Boolean> {
 
     private final ClaimPermissionAPI permissions;
 
     public FillBucketRule(ClaimPermissionAPI permissions) {
-        super(PlayerBucketFillEvent.class, RuleTypes.BOOLEAN, RuleCategory.PLAYER);
+        super(BlockInteractContext.class, RuleTypes.BOOLEAN, RuleCategory.PLAYER);
         this.permissions = permissions;
     }
 
     @Override
-    public RuleBehavior<PlayerBucketFillEvent, Boolean> createBehavior() {
-        return this.behaviorBuilder(EventPriority.LOW)
-            .shouldHandle(event -> true)
+    public RuleBehavior<BlockInteractContext, Boolean> createBehavior() {
+        return this.behaviorBuilder()
+            .shouldHandle(context -> this.isFluid(context.block())) // Handle only fluid interactions
             .process((event, registry, context) -> {
-                Claim claim = registry.getPrioritizedClaim(event.getBlock());
+                Claim claim = registry.getPrioritizedClaim(event.block());
                 if (claim == null) return RuleResult.allow();
 
-                Player player = event.getPlayer();
+                Player player = event.actor();
                 if (this.permissions.hasPermission(player, claim, ClaimPermission.BUILDING)) {
                     return RuleResult.allow();
                 }
 
                 Optional<Boolean> state = context.resolveValue(claim);
                 if (state.isPresent() && !state.get()) {
-                    Material type = event.getBucket();
-                    return RuleResult.deny(ActionResult.fail(RulesLang.PROTECTION_BLOCK_INTERACT, ctx -> ctx
-                        .with(CommonPlaceholders.GENERIC_VALUE, () -> LangUtil.getSerializedName(type))
-                    ));
+                    return RuleResult.deny();
                 }
 
                 return RuleResult.allow();
             })
-            .playerExtractor(PlayerBucketFillEvent::getPlayer)
             .build();
+    }
+
+    private boolean isFluid(Block block) {
+        if (!(block.getBlockData() instanceof Levelled)) return false;
+
+        return block.getType() == Material.WATER || block.getType() == Material.LAVA;
     }
 
     @Override

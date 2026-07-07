@@ -1,14 +1,14 @@
 package su.nightexpress.excellentclaims.rules.spec;
 
-import org.bukkit.event.Event;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.rule.RuleCategory;
 import su.nightexpress.excellentclaims.api.rule.RuleSpec;
 import su.nightexpress.excellentclaims.api.rule.RuleType;
+import su.nightexpress.excellentclaims.api.rule.context.ActionContext;
 
 @NullMarked
-public abstract class AbstractSpec<E extends Event, T> implements RuleSpec<E, T> {
+public abstract class AbstractSpec<E extends ActionContext, T> implements RuleSpec<E, T> {
 
     protected final Class<E>     eventType;
     protected final RuleType<T>  type;

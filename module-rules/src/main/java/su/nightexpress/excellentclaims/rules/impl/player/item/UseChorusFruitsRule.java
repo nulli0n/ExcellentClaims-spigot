@@ -1,12 +1,12 @@
 package su.nightexpress.excellentclaims.rules.impl.player.item;
 
 import org.bukkit.Material;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
+import su.nightexpress.excellentclaims.rules.evaluation.context.item.ItemInteractContext;
 import su.nightexpress.excellentclaims.rules.impl.base.BasePlayerUseItemRule;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
@@ -18,7 +18,7 @@ public class UseChorusFruitsRule extends BasePlayerUseItemRule {
     }
 
     @Override
-    protected boolean shouldHandle(PlayerInteractEvent event, ItemStack itemStack) {
+    protected boolean shouldHandle(ItemInteractContext context, ItemStack itemStack) {
         return itemStack.getType() == Material.CHORUS_FRUIT;
     }
 

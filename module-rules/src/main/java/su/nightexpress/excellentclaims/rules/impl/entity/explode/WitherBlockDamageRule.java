@@ -4,17 +4,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Wither;
 import org.bukkit.entity.WitherSkull;
-import org.bukkit.event.entity.EntityExplodeEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
+import su.nightexpress.excellentclaims.rules.evaluation.context.entity.EntityChangeBlockContext;
 import su.nightexpress.excellentclaims.rules.impl.base.BaseEntityExplodeBlocksRule;
 
 @NullMarked
 public class WitherBlockDamageRule extends BaseEntityExplodeBlocksRule {
 
     @Override
-    protected boolean shouldHandle(EntityExplodeEvent event, Entity entity) {
+    protected boolean shouldHandle(EntityChangeBlockContext context, Entity entity) {
         return entity instanceof Wither || entity instanceof WitherSkull;
     }
 

@@ -3,11 +3,11 @@ package su.nightexpress.excellentclaims.rules.impl.player.block;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
+import su.nightexpress.excellentclaims.rules.evaluation.context.block.BlockInteractContext;
 import su.nightexpress.excellentclaims.rules.impl.base.BasePlayerUseBlockRule;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
@@ -23,7 +23,7 @@ public class UseBedsRule extends BasePlayerUseBlockRule {
     }
 
     @Override
-    protected boolean shouldHandle(PlayerInteractEvent event, Block block) {
+    protected boolean shouldHandle(BlockInteractContext context, Block block) {
         return this.isBed(block.getType());
     }
 

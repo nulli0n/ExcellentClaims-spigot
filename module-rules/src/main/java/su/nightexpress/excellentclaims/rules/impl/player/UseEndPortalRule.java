@@ -1,12 +1,12 @@
 package su.nightexpress.excellentclaims.rules.impl.player;
 
 import org.bukkit.Material;
-import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.jspecify.annotations.NullMarked;
 
 import su.nightexpress.excellentclaims.api.claim.ClaimPermissionAPI;
 import su.nightexpress.excellentclaims.api.rule.RuleDefinition;
+import su.nightexpress.excellentclaims.rules.evaluation.context.player.TeleportContext;
 import su.nightexpress.excellentclaims.rules.impl.base.BasePlayerPortalRule;
 import su.nightexpress.nightcore.util.text.night.wrapper.TagWrappers;
 
@@ -18,7 +18,7 @@ public class UseEndPortalRule extends BasePlayerPortalRule {
     }
 
     @Override
-    protected boolean shouldHandle(PlayerPortalEvent event, TeleportCause cause) {
+    protected boolean shouldHandle(TeleportContext context, TeleportCause cause) {
         return cause == TeleportCause.END_PORTAL;
     }
 

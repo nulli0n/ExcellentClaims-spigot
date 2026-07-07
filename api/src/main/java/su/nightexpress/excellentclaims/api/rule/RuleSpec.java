@@ -1,9 +1,10 @@
 package su.nightexpress.excellentclaims.api.rule;
 
-import org.bukkit.event.Event;
 import org.jspecify.annotations.NonNull;
 
-public interface RuleSpec<E extends Event, T> {
+import su.nightexpress.excellentclaims.api.rule.context.ActionContext;
+
+public interface RuleSpec<E extends ActionContext, T> {
 
     @NonNull
     RuleCategory getCategory();
