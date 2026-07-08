@@ -13,7 +13,7 @@ public final class EngineModuleBootstrapProvider {
     public static List<ClaimModuleBootstrap> provide() {
         List<ClaimModuleBootstrap> bootstraps = new ArrayList<>();
 
-        loadIfPresent(bootstraps, "su.nightexpress.excellentclaims.regions.RegionsBootstrap");
+        loadIfPresent(bootstraps, "su.nightexpress.excellentclaims.region.RegionsBootstrap");
         loadIfPresent(bootstraps, "su.nightexpress.excellentclaims.wilderness.WildernessBootstrap");
 
         return bootstraps;
