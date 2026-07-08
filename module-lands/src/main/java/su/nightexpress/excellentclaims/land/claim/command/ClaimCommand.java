@@ -40,7 +40,7 @@ public class ClaimCommand implements CommandExtension {
         return Commands.literal("claim", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_CLAIM_DESC)
-            .permission(LandPerms.COMMAND_CLAIM)
+            .permission(LandPerms.COMMAND_LAND_CLAIM)
             .withArguments(Arguments.string(ARG_NAME)
                 .optional()
                 .localized(CoreLang.COMMAND_ARGUMENT_NAME_NAME)

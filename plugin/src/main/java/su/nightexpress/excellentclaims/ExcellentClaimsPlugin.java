@@ -21,6 +21,7 @@ import su.nightexpress.excellentclaims.engine.ClaimEngine;
 import su.nightexpress.excellentclaims.engine.EngineBootstrap;
 import su.nightexpress.excellentclaims.highlighter.HighlightConfiguration;
 import su.nightexpress.excellentclaims.permission.PermissionConfiguration;
+import su.nightexpress.excellentclaims.premium.PremiumConfiguration;
 import su.nightexpress.excellentclaims.rank.RanksBootstrap;
 import su.nightexpress.excellentclaims.rank.RanksModule;
 import su.nightexpress.excellentclaims.rules.RulesBootstrap;
@@ -68,6 +69,7 @@ public class ExcellentClaimsPlugin extends NightPlugin implements ClaimPlugin {
         dependencies.register(UserDataManager.class, this.getUserDataManager());
         dependencies.register(ClaimRegistry.class, claims);
 
+        PremiumConfiguration.configure(dependencies);
         AdminBypassModule bypassModule = AdminBypassBoostrap.bootstrap(dependencies);
         RanksModule ranksModule = RanksBootstrap.bootstrap(dependencies);
 

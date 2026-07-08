@@ -46,7 +46,7 @@ public class TransferOwnershipCommand implements CommandExtension {
         return Commands.literal("transfer", builder -> builder
             .playerOnly()
             .description(OwnershipLang.COMMAND_LAND_TRANSFER_DESC)
-            .permission(LandPerms.COMMAND_TRANSFER)
+            .permission(LandPerms.COMMAND_LAND_TRANSFER)
             .withArguments(
                 Arguments.player(ARG_PLAYER),
                 Arguments.argument(ARG_CLAIM, LandClaim.class)

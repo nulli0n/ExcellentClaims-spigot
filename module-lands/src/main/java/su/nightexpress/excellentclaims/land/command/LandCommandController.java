@@ -60,7 +60,7 @@ public class LandCommandController implements CommandRegistry, LifecycleComponen
 
         this.command = NightCommand.hub(this.plugin, aliases, root -> {
             root.description(LandLang.COMMAND_LAND_DESC);
-            root.permission(LandPerms.COMMAND_ROOT);
+            root.permission(LandPerms.COMMAND_LAND);
 
             this.extensions.forEach(extension -> {
                 root.branch(extension.createCommand());

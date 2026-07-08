@@ -28,7 +28,7 @@ public class ListCommand implements CommandExtension {
         return Commands.literal("list", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_LIST_DESC)
-            .permission(LandPerms.COMMAND_LIST)
+            .permission(LandPerms.COMMAND_LAND_LIST)
             .executes((context, arguments) -> this.run(context))
         );
     }

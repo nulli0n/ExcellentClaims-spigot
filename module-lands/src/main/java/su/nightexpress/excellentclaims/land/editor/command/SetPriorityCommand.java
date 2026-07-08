@@ -45,7 +45,7 @@ public class SetPriorityCommand implements CommandExtension {
         return Commands.literal("priority", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_SET_PRIORITY_DESC)
-            .permission(LandPerms.COMMAND_SET_PRIORITY)
+            .permission(LandPerms.COMMAND_LAND_PRIORITY)
             .withArguments(
                 Arguments.integer(ARG_PRIORITY),
                 Arguments.argument(ARG_CLAIM, LandClaim.class)

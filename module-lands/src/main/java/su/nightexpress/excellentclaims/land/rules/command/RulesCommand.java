@@ -44,7 +44,7 @@ public class RulesCommand implements CommandExtension {
         return Commands.literal("rules", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_RULES_DESC)
-            .permission(LandPerms.COMMAND_RULES)
+            .permission(LandPerms.COMMAND_LAND_RULES)
             .withArguments(Arguments.argument(ARG_CLAIM, LandClaim.class)
                 .optional()
                 .suggestions(this.suggestions.memberOnly())

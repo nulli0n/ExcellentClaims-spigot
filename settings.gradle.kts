@@ -1,6 +1,7 @@
 rootProject.name = "ExcellentClaims"
 
 include("api")
+include("premium")
 include("integration-packetevents")
 include("integration-protocollib")
 include("module-admin")

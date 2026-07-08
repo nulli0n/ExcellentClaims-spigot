@@ -15,7 +15,7 @@ import su.nightexpress.excellentclaims.api.claim.module.ClaimModuleBootstrap;
 import su.nightexpress.excellentclaims.api.core.DependencyContainer;
 import su.nightexpress.excellentclaims.api.core.SimpleDependencies;
 import su.nightexpress.excellentclaims.api.core.id.Identifier;
-import su.nightexpress.excellentclaims.core.BuildConstants;
+import su.nightexpress.excellentclaims.api.premium.PremiumFeatures;
 import su.nightexpress.excellentclaims.core.StandardMessageDispatcher;
 import su.nightexpress.excellentclaims.land.borders.BordersConfiguration;
 import su.nightexpress.excellentclaims.land.claim.LandBillingService;
@@ -58,6 +58,7 @@ public class LandsBootstrap implements ClaimModuleBootstrap {
         //UserDataManager users = container.get(UserDataManager.class);
         Logger logger = container.get(Logger.class);
         ClaimPlugin plugin = container.get(ClaimPlugin.class);
+        PremiumFeatures features = container.get(PremiumFeatures.class);
 
         ClaimRegistry claims = container.get(ClaimRegistry.class);
         ClaimPermissionAPI permissions = container.get(ClaimPermissionAPI.class);
@@ -116,7 +117,7 @@ public class LandsBootstrap implements ClaimModuleBootstrap {
         //MergeConfiguration.configure(module, landsContainer);  // TODO If enabled
         BordersConfiguration.configure(module, landsContainer); // TODO If enabled
 
-        if (!BuildConstants.IS_LITE) {
+        if (features.isPremium()) {
             LandPlaceholdersConfiguration.configure(landsContainer);
         }
 

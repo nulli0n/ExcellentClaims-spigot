@@ -41,8 +41,8 @@ public class LandLang implements LangContainer {
     public static final TextLocale COMMAND_LAND_INSPECT_DESC = LangEntry.builder("Lands.Command.Land.Inspect.Desc")
         .text("Inspect player's claims.");
 
-    public static final TextLocale COMMAND_LAND_SET_SPAWN_DESC = LangEntry.builder("Lands.Command.Land.SetSpawn.Desc")
-        .text("Set claim spawn.");
+    public static final TextLocale COMMAND_LAND_SET_HOME_DESC = LangEntry.builder("Lands.Command.Land.SetHome.Desc")
+        .text("Set claim home.");
 
     public static final TextLocale COMMAND_LAND_BORDERS_DESC = LangEntry.builder("Lands.Command.Land.Borders.Desc")
         .text("Toggle claim borders.");

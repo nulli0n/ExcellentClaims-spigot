@@ -38,7 +38,7 @@ public class InspectCommand implements CommandExtension {
         return Commands.literal("inspect", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_INSPECT_DESC)
-            .permission(LandPerms.COMMAND_INSPECT)
+            .permission(LandPerms.COMMAND_LAND_INSPECT)
             .withArguments(Arguments.playerName(ARG_PLAYER))
             .executes(this::run)
         );

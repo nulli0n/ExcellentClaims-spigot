@@ -48,7 +48,7 @@ public class MembersCommand implements CommandExtension {
         return Commands.literal("members", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_MEMBERS_DESC)
-            .permission(LandPerms.COMMAND_MEMBERS)
+            .permission(LandPerms.COMMAND_LAND_MEMBERS)
             .withArguments(Arguments.argument(ARG_CLAIM, LandClaim.class)
                 .optional()
                 .suggestions(this.suggestions.memberOnly())

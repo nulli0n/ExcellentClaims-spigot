@@ -21,7 +21,7 @@ import su.nightexpress.nightcore.commands.exceptions.CommandSyntaxException;
 import su.nightexpress.nightcore.commands.tree.LiteralNode;
 
 @NullMarked
-public class SetSpawnCommand implements CommandExtension {
+public class SetHomeCommand implements CommandExtension {
 
     private static final String ARG_CLAIM = "claim";
 
@@ -30,10 +30,10 @@ public class SetSpawnCommand implements CommandExtension {
     private final LandEditorService      editor;
     private final MessageDispatcher      messages;
 
-    public SetSpawnCommand(LandCommandResolver resolver,
-                           LandCommandSuggestions suggestions,
-                           LandEditorService editor,
-                           MessageDispatcher messages) {
+    public SetHomeCommand(LandCommandResolver resolver,
+                          LandCommandSuggestions suggestions,
+                          LandEditorService editor,
+                          MessageDispatcher messages) {
         this.resolver = resolver;
         this.suggestions = suggestions;
         this.editor = editor;
@@ -42,10 +42,10 @@ public class SetSpawnCommand implements CommandExtension {
 
     @Override
     public LiteralNode createCommand() {
-        return Commands.literal("setspawn", builder -> builder
+        return Commands.literal("sethome", builder -> builder
             .playerOnly()
-            .description(LandLang.COMMAND_LAND_SET_SPAWN_DESC)
-            .permission(LandPerms.COMMAND_SET_SPAWN)
+            .description(LandLang.COMMAND_LAND_SET_HOME_DESC)
+            .permission(LandPerms.COMMAND_LAND_SET_HOME)
             .withArguments(Arguments.argument(ARG_CLAIM, LandClaim.class)
                 .optional()
                 .suggestions(this.suggestions.memberOnly())

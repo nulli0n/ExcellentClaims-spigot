@@ -44,7 +44,7 @@ public class MenuCommand implements CommandExtension {
         return Commands.literal("menu", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_MENU_DESC)
-            .permission(LandPerms.COMMAND_SETTINGS)
+            .permission(LandPerms.COMMAND_LAND_MENU)
             .withArguments(Arguments.argument(ARG_CLAIM, LandClaim.class)
                 .optional()
                 .suggestions(this.suggestions.memberOnly())

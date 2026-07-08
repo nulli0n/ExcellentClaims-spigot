@@ -39,4 +39,9 @@ public class BlockTrampRule extends BaseEntityBlockChangeRule {
             .icon(Material.WHEAT_SEEDS)
             .build();
     }
+
+    @Override
+    public Boolean getDefaultValue() {
+        return false;
+    }
 }

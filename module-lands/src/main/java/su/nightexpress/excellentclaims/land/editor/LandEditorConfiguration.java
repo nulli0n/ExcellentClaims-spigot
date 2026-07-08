@@ -18,7 +18,7 @@ import su.nightexpress.excellentclaims.land.data.LandDataService;
 import su.nightexpress.excellentclaims.land.editor.command.SetDescriptionCommand;
 import su.nightexpress.excellentclaims.land.editor.command.SetNameCommand;
 import su.nightexpress.excellentclaims.land.editor.command.SetPriorityCommand;
-import su.nightexpress.excellentclaims.land.editor.command.SetSpawnCommand;
+import su.nightexpress.excellentclaims.land.editor.command.SetHomeCommand;
 import su.nightexpress.excellentclaims.land.editor.ui.LandEditorUIController;
 import su.nightexpress.excellentclaims.land.editor.ui.LandEditorUIService;
 import su.nightexpress.excellentclaims.land.editor.ui.dialog.EditorDescriptionDialog;
@@ -71,7 +71,7 @@ public final class LandEditorConfiguration {
         commands.registerCommand(new SetNameCommand(resolver, suggestions, editor, messages));
         commands.registerCommand(new SetDescriptionCommand(resolver, suggestions, editor, messages));
         commands.registerCommand(new SetPriorityCommand(resolver, suggestions, editor, messages));
-        commands.registerCommand(new SetSpawnCommand(resolver, suggestions, editor, messages));
+        commands.registerCommand(new SetHomeCommand(resolver, suggestions, editor, messages));
     }
 
     private static void configureUI(DependencyContainer container, LandEditorService editor, LandEditorModule module) {

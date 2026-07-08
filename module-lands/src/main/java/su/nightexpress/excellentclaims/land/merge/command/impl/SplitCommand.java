@@ -40,7 +40,7 @@ public class SplitCommand implements CommandExtension {
         return Commands.literal("split", builder -> builder
             .playerOnly()
             .description(MergeLang.COMMAND_LAND_SPLIT_DESC)
-            .permission(LandPerms.COMMAND_SPLIT)
+            .permission(LandPerms.COMMAND_LAND_SPLIT)
             .executes(this::startSplit)
         );
     }

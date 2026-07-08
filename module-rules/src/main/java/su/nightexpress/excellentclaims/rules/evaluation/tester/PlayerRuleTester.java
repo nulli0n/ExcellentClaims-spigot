@@ -118,8 +118,8 @@ public class PlayerRuleTester implements PlayerTester {
     }
 
     @Override
-    public boolean canUseCommand(Player player, Command command) {
-        CommandPreProcessContext context = new CommandPreProcessContext(player, command);
+    public boolean canUseCommand(Player player, Location location, Command command) {
+        CommandPreProcessContext context = new CommandPreProcessContext(player, location, command);
         return this.engine.quickTest(context);
     }
 }

@@ -44,7 +44,7 @@ public class SetNameCommand implements CommandExtension {
         return Commands.literal("rename", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_SET_NAME_DESC)
-            .permission(LandPerms.COMMAND_SET_NAME)
+            .permission(LandPerms.COMMAND_LAND_NAME)
             .withArguments(
                 Arguments.argument(ARG_CLAIM, LandClaim.class)
                     .suggestions(this.suggestions.memberOnly()),

@@ -46,8 +46,7 @@ public class CommandUseFilterRule extends AbstractFilterSpec<CommandPreProcessCo
             .shouldHandle(context -> true)
             .process((context, registry, resolver) -> {
                 Player player = context.actor();
-                Location location = player.getLocation();
-                if (location == null) return RuleResult.pass();
+                Location location = context.location();
 
                 Claim claim = registry.getPrioritizedClaim(location);
                 if (claim == null) return RuleResult.allow();

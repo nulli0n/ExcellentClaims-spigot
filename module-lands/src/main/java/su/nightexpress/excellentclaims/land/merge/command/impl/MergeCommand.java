@@ -40,7 +40,7 @@ public class MergeCommand implements CommandExtension {
         return Commands.literal("merge", builder -> builder
             .playerOnly()
             .description(MergeLang.COMMAND_LAND_MERGE_DESC)
-            .permission(LandPerms.COMMAND_MERGE)
+            .permission(LandPerms.COMMAND_LAND_MERGE)
             .executes(this::startMerge)
         );
     }

@@ -10,7 +10,7 @@ import su.nightexpress.excellentclaims.api.ClaimRegistry;
 import su.nightexpress.excellentclaims.api.claim.module.ClaimModule;
 import su.nightexpress.excellentclaims.api.claim.module.ClaimModuleBootstrap;
 import su.nightexpress.excellentclaims.api.core.DependencyContainer;
-import su.nightexpress.excellentclaims.core.BuildConstants;
+import su.nightexpress.excellentclaims.api.premium.PremiumFeatures;
 import su.nightexpress.excellentclaims.engine.ClaimEngine;
 import su.nightexpress.excellentclaims.engine.ModuleRegistry;
 import su.nightexpress.excellentclaims.engine.settings.EngineSettings;
@@ -26,6 +26,7 @@ public final class EngineModuleConfiguration {
         ClaimRegistry claims = container.get(ClaimRegistry.class);
         ModuleRegistry modules = container.get(ModuleRegistry.class);
         EngineSettings settings = container.get(EngineSettings.class);
+        PremiumFeatures features = container.get(PremiumFeatures.class);
 
         EngineModuleLoader moduleLoader = new EngineModuleLoader(modules, claims);
 
@@ -33,7 +34,7 @@ public final class EngineModuleConfiguration {
         List<ClaimModuleBootstrap> availableBootstraps = new ArrayList<>();
         availableBootstraps.add(new LandsBootstrap());
 
-        if (!BuildConstants.IS_LITE) {
+        if (features.isPremium()) {
             availableBootstraps.addAll(EngineModuleBootstrapProvider.provide());
         }
 

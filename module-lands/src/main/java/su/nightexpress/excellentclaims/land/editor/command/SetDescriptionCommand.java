@@ -46,7 +46,7 @@ public class SetDescriptionCommand implements CommandExtension {
         return Commands.literal("description", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_SET_DESCRIPTION_DESC)
-            .permission(LandPerms.COMMAND_SET_DESCRIPTION)
+            .permission(LandPerms.COMMAND_LAND_DESCRIPTION)
             .withArguments(
                 Arguments.argument(ARG_CLAIM, LandClaim.class)
                     .suggestions(this.suggestions.memberOnly()),

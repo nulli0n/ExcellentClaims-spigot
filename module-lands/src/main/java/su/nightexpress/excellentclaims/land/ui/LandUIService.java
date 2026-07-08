@@ -61,7 +61,7 @@ public class LandUIService implements ButtonExtensionHolder {
     }
 
     public ActionResult canInspectClaims(Player player) {
-        if (!player.hasPermission(LandPerms.COMMAND_INSPECT)) {
+        if (!player.hasPermission(LandPerms.COMMAND_LAND_INSPECT)) {
             return ActionResult.fail(Lang.ERROR_NO_CLAIM_PERMISSION);
         }
 

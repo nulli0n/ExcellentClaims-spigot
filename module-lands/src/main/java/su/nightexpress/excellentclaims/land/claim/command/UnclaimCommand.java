@@ -42,7 +42,7 @@ public class UnclaimCommand implements CommandExtension {
         return Commands.literal("unclaim", builder -> builder
             .playerOnly()
             .description(LandLang.COMMAND_LAND_UNCLAIM_DESC)
-            .permission(LandPerms.COMMAND_UNCLAIM)
+            .permission(LandPerms.COMMAND_LAND_UNCLAIM)
             .withArguments(Arguments.argument(ARG_CLAIM, LandClaim.class)
                 .optional()
                 .suggestions(this.suggestions.ownerOnly())
