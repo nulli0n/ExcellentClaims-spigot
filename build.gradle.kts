@@ -8,7 +8,7 @@ plugins {
 
 allprojects {
     group = "su.nightexpress.excellentclaims"
-    version = "2.0.1"
+    version = "2.1.0"
 
     // Redirect all build outputs to a centralized, hidden directory at the root.
     // This prevents VS Code from mistakenly linking to compiled submodule JARs.
