@@ -28,7 +28,7 @@ import su.nightexpress.nightcore.util.placeholder.PlaceholderContext;
 public class LandClaimMenu extends AbstractObjectMenu<LandClaim> {
 
     private static final String DEFAULT_TITLE = "[%s] Menu"
-        .formatted(LandsPlaceholders.LAND_NAME);
+        .formatted(LandsPlaceholders.LAND_RAW_NAME);
 
     private final LandUIService uiService;
 

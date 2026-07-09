@@ -46,8 +46,9 @@ public class LandActionValidator {
             }
 
             if (existingByName.contains(ChunkPos.from(location))) {
-                return ActionResult.fail(LandLang.CLAIMING_ALREADY_CLAIMED, ctx -> ctx.with(existingByName
-                    .placeholders()));
+                return ActionResult.fail(LandLang.CLAIMING_ALREADY_CLAIMED, ctx -> ctx
+                    .with(existingByName.placeholders())
+                );
             }
         }
 
@@ -75,6 +76,7 @@ public class LandActionValidator {
 
         if (existingByName != null && !this.quota.canExpandClaim(player, existingByName)) {
             return ActionResult.fail(LandLang.CLAIMING_CHUNK_QUOTA, ctx -> ctx
+                .with(existingByName.placeholders())
                 .with(CommonPlaceholders.GENERIC_AMOUNT, () -> NumberUtil.format(this.quota.getMaxClaimSize(player)))
             );
         }

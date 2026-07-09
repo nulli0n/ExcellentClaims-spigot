@@ -59,7 +59,7 @@ import su.nightexpress.nightcore.util.placeholder.PlaceholderContext;
 @NullMarked
 public class RuleListMenu extends AbstractObjectMenu<RuleListContext> {
 
-    private static final String DEFAULT_TITLE = "[%s] Properties - %s"
+    private static final String DEFAULT_TITLE = "[%s] Rules - %s"
         .formatted(CommonPlaceholders.GENERIC_NAME, ClaimsPlaceholders.GENERIC_TYPE);
 
     private final RuleRegistry     rules;
